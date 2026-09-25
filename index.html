@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI_Criterio — Virtual Pixel Art Agency (296 Agentes)</title>
+    <link rel="stylesheet" href="css/pixel-office.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏢</text></svg>">
+</head>
+<body class="crt-effect">
+
+    <!-- Top App Navigation -->
+    <header class="app-header">
+        <div class="brand-section">
+            <div class="pixel-logo">🏢</div>
+            <div class="brand-info">
+                <h1>AI_CRITERIO</h1>
+                <div class="brand-subtitle">VIRTUAL PIXEL HEADQUARTERS • 296 AGENTES</div>
+            </div>
+        </div>
+
+        <!-- Floor Navigation -->
+        <nav class="floor-selector">
+            <button class="floor-btn active" data-floor="1">
+                <span>P1</span> Lobby & Growth (58)
+            </button>
+            <button class="floor-btn" data-floor="2">
+                <span>P2</span> Tech & Cyber (86)
+            </button>
+            <button class="floor-btn" data-floor="3">
+                <span>P3</span> Design & Lab (49)
+            </button>
+            <button class="floor-btn" data-floor="4">
+                <span>P4</span> Research & GIS (23)
+            </button>
+            <button class="floor-btn" data-floor="5">
+                <span>P5</span> Penthouse & Board (80)
+            </button>
+        </nav>
+
+        <!-- Action Controls -->
+        <div class="header-actions">
+            <button id="openDisciplinesTopBtn" class="action-btn" style="background: #4c1d95; border-color: #a78bfa; color: #ffffff;" title="Abrir panel lateral de Disciplinas y Reacción en Cadena">
+                <span>⚡</span> Disciplinas & Cadena <span id="headerChainBadge" style="display:none; background:#f59e0b; color:#000; padding:1px 5px; border-radius:10px; font-size:9px; font-weight:bold;">0</span>
+            </button>
+            <button id="openTaskforceBtn" class="action-btn" style="background: #e11d48; border-color: #fda4af; color: #ffffff;" title="Ver los 38 agentes activos en el Sprint de Criterio AI">
+                <span>🔥</span> Escuadrón Activo (38)
+            </button>
+            <button id="openWarRoomBtn" class="action-btn btn-primary" title="Concurrir una reunión de agentes">
+                <span>⚡</span> Sala de Crisis
+            </button>
+            <button id="openBusinessBtn" class="action-btn btn-gold" title="Ver y editar el contexto de Criterio AI">
+                <span>💼</span> Criterio AI Hub
+            </button>
+            <button id="soundToggleBtn" class="action-btn" title="Activar/Desactivar sonido retro">
+                🔊 Audio: ON
+            </button>
+            <button id="crtToggleBtn" class="action-btn btn-primary" title="Efecto monitor retro CRT">
+                📺 CRT: ON
+            </button>
+            <button id="openSettingsBtn" class="action-btn icon-btn" title="Configuraciones & API Key">
+                ⚙️
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="app-workspace">
+        
+        <!-- Left Side Panel: Disciplines & Chain Reaction Workflows -->
+        <aside id="disciplinesPanel" class="disciplines-panel">
+            <div class="disciplines-header">
+                <div class="disciplines-title-info">
+                    <h2><span>⚡</span> DISCIPLINAS & CADENAS</h2>
+                    <div class="disciplines-subtitle">296 NPCs • Pipelines Multidisciplinares</div>
+                </div>
+                <button id="toggleDisciplinesBtn" class="toggle-disciplines-btn" title="Ocultar / Mostrar panel">◀</button>
+            </div>
+
+            <!-- Panel Mode Tabs -->
+            <div class="disciplines-tabs">
+                <button class="disciplines-tab-btn active" data-tab="disciplines">
+                    📂 Disciplinas
+                </button>
+                <button class="disciplines-tab-btn" data-tab="chain">
+                    🔗 Cadena (<span id="chainStepCount">0 Pasos</span>)
+                </button>
+                <button class="disciplines-tab-btn" data-tab="presets">
+                    ⚡ Presets
+                </button>
+            </div>
+
+            <!-- Tab 1: Disciplines & NPCs Accordion -->
+            <div id="tabDisciplinesContent" class="disciplines-tab-content">
+                <div class="disciplines-search-bar">
+                    <input type="text" id="discSearchInput" class="filter-input" style="width:100%;" placeholder="🔍 Buscar NPC por nombre, skill o tool...">
+                </div>
+                <div class="disciplines-filter-pills">
+                    <button class="disc-filter-pill active" data-filter="all">Todos</button>
+                    <button class="disc-filter-pill" data-filter="taskforce">🔥 Sprint 14d</button>
+                    <button class="disc-filter-pill" data-filter="engineering">💻 Dev</button>
+                    <button class="disc-filter-pill" data-filter="design">🎨 UI</button>
+                    <button class="disc-filter-pill" data-filter="sales">💼 Ventas</button>
+                    <button class="disc-filter-pill" data-filter="marketing">🚀 Growth</button>
+                </div>
+                <div id="disciplinesAccordionContainer" class="disciplines-accordion"></div>
+            </div>
+
+            <!-- Tab 2: Chain Reaction Builder -->
+            <div id="tabChainContent" class="disciplines-tab-content" style="display:none;">
+                <div class="chain-config-box">
+                    <label style="font-weight:bold; color:var(--brand-gold); font-size:10px;">🎯 Objetivo de la Reacción en Cadena:</label>
+                    <textarea id="chainMissionGoalInput" class="chat-input" rows="2" style="width:100%; font-size:10px; margin-top:4px;" placeholder="¿Qué quieres que este equipo resuelva en cadena?">Desbloquear gocriterio.com y ejecutar el Sprint de 14 días para Catálogos WhatsApp en Bogotá</textarea>
+                </div>
+
+                <div class="chain-controls-bar">
+                    <span style="font-size:10px; color:#94a3b8;">Secuencia de Ejecución:</span>
+                    <button id="clearChainBtn" class="step-mini-btn" style="color:#ef4444; border-color:#ef4444;" title="Limpiar todos los agentes de la cadena">Limpiar</button>
+                </div>
+
+                <div id="chainEmptyState" class="chain-empty-state">
+                    <div style="font-size:28px; margin-bottom:6px;">⛓️</div>
+                    <div style="font-weight:bold; color:#cbd5e1; font-size:11px;">No hay agentes en la cadena</div>
+                    <div style="font-size:9px; color:#64748b; margin-top:4px;">
+                        Añade agentes con el botón <strong>[➕ A Cadena]</strong> desde la pestaña de Disciplinas o carga un Preset listo.
+                    </div>
+                </div>
+
+                <div id="chainPipelineContainer" class="chain-pipeline-list"></div>
+
+                <div class="chain-footer-action">
+                    <button id="triggerChainBtn" class="action-btn btn-primary trigger-chain-btn" disabled>
+                        <span>⚡</span> ¡DISPARAR REACCIÓN EN CADENA!
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab 3: Presets -->
+            <div id="tabPresetsContent" class="disciplines-tab-content" style="display:none;">
+                <div style="padding:8px; font-size:10px; color:#94a3b8; background:#0f172a; border-bottom:1px solid #1e293b;">
+                    💡 Presets tácticos para resolver los desafíos de <strong>Criterio AI</strong> en segundos:
+                </div>
+                <div id="presetsListContainer" class="presets-list"></div>
+            </div>
+        </aside>
+
+        <!-- Canvas Viewport -->
+        <div class="canvas-container">
+            <canvas id="officeCanvas"></canvas>
+
+            <!-- On-Screen HUD Stats -->
+            <div class="canvas-stats-badge">
+                <div class="stat-item">
+                    <span class="stat-label">Agentes:</span>
+                    <span id="statTotalAgents" class="stat-val">296</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">En este Piso:</span>
+                    <span id="statFloorAgents" class="stat-val">58</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Oficina:</span>
+                    <span id="statOfficeMood" class="stat-val">⚡ Máxima Productividad</span>
+                </div>
+            </div>
+
+            <!-- Canvas HUD Zoom Controls -->
+            <div class="canvas-hud-controls">
+                <button id="zoomInBtn" class="hud-btn" title="Acercar Cámara">+</button>
+                <button id="zoomOutBtn" class="hud-btn" title="Alejar Cámara">-</button>
+                <button id="resetViewBtn" class="hud-btn" title="Centrar Vista">⟲</button>
+            </div>
+        </div>
+
+        <!-- Right Side Panel: Agent Consultation & Terminal -->
+        <aside id="agentDrawer" class="agent-drawer hidden">
+            <div class="drawer-header">
+                <div class="drawer-agent-summary">
+                    <div id="drawerAvatar" class="drawer-avatar">🤖</div>
+                    <div class="drawer-title-info">
+                        <h2 id="drawerAgentName">Nombre del Agente</h2>
+                        <div id="drawerDeptTag" class="dept-tag">Departamento • Piso 1</div>
+                        <div id="drawerVibe" style="font-size: 9px; color: #94a3b8; margin-top: 2px;">"Vibe del agente"</div>
+                    </div>
+                </div>
+                <button id="closeDrawerBtn" class="close-drawer-btn" title="Cerrar panel">✕</button>
+            </div>
+
+            <div style="display: flex; gap: 8px; padding: 6px 16px; background: #0f172a; border-bottom: 1px solid #374151;">
+                <button id="teleportBtn" class="action-btn" style="flex:1; font-size:10px; padding:4px 6px;">
+                    🎯 Ir a su Escritorio
+                </button>
+                <button id="favoriteBtn" class="action-btn" style="flex:1; font-size:10px; padding:4px 6px;">
+                    ☆ Marcar Favorito
+                </button>
+            </div>
+
+            <!-- Tabs -->
+            <div class="drawer-tabs">
+                <div id="chatTabBtn" class="drawer-tab active">💬 Consultar para AI_Criterio</div>
+                <div id="dossierTabBtn" class="drawer-tab">📋 Dossier & Skills</div>
+            </div>
+
+            <!-- Chat & Consultation Tab Content -->
+            <div id="chatTabContent" class="chat-container">
+                <div id="chatHistory" class="chat-history"></div>
+
+                <!-- Quick Action Buttons -->
+                <div id="quickPromptsContainer" class="quick-prompts">
+                    <button class="quick-prompt-btn">¿Cuál es tu prioridad #1 para AI_Criterio hoy?</button>
+                    <button class="quick-prompt-btn">Diseña un plan de acción de 14 días</button>
+                    <button class="quick-prompt-btn">¿Qué métricas y KPIs debemos medir?</button>
+                    <button class="quick-prompt-btn">Audita riesgos y cuellos de botella</button>
+                </div>
+
+                <!-- Chat Input Form -->
+                <div class="chat-input-bar">
+                    <input type="text" id="chatInput" class="chat-input" placeholder="Escribe tu consulta para este especialista...">
+                    <button id="sendChatBtn" class="chat-send-btn">Enviar</button>
+                </div>
+            </div>
+
+            <!-- Dossier Tab Content -->
+            <div id="dossierTabContent" class="dossier-container" style="display: none;"></div>
+        </aside>
+
+        <!-- Bottom Collapsible Directory / Roster -->
+        <div id="directoryDrawer" class="directory-drawer collapsed">
+            <div id="toggleDirectoryBtn" class="directory-header">
+                <div class="directory-title">
+                    <span>👥</span> Directorio Completo de la Agencia (296 Especialistas)
+                </div>
+                <div class="directory-filters" onclick="event.stopPropagation()">
+                    <input type="text" id="agentSearchInput" class="filter-input" placeholder="🔍 Buscar por nombre, skill, tool...">
+                    <select id="deptFilter" class="dept-select"></select>
+                </div>
+                <div style="font-size: 11px; color: #9ca3af;">▲ Clic para expandir / ocultar</div>
+            </div>
+            <div id="directoryGrid" class="directory-grid"></div>
+        </div>
+
+    </main>
+
+    <!-- Modal 1: AI_Criterio Business Hub -->
+    <div id="businessModal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2><span>💼</span> Perfil & Contexto de Negocio: AI_Criterio</h2>
+                <button id="closeBusinessBtn" class="modal-close-btn">✕</button>
+            </div>
+            <div class="modal-body">
+                <p style="color:#94a3b8;">
+                    Todos los 296 agentes consultan este contexto corporativo para personalizar sus análisis, auditorías, estrategias y respuestas.
+                </p>
+                <div>
+                    <label style="font-weight:bold; color:var(--brand-gold);">Nombre de la Empresa:</label>
+                    <input type="text" id="bizCompanyName" class="chat-input" style="width:100%; margin-top:4px;">
+                </div>
+                <div>
+                    <label style="font-weight:bold; color:var(--brand-gold);">Eslogan / Propuesta de Valor:</label>
+                    <input type="text" id="bizTagline" class="chat-input" style="width:100%; margin-top:4px;">
+                </div>
+                <div>
+                    <label style="font-weight:bold; color:var(--brand-gold);">Misión Corporativa:</label>
+                    <textarea id="bizMission" class="chat-input" rows="2" style="width:100%; margin-top:4px;"></textarea>
+                </div>
+                <div>
+                    <label style="font-weight:bold; color:var(--brand-gold);">Público Objetivo & Clientes:</label>
+                    <input type="text" id="bizTarget" class="chat-input" style="width:100%; margin-top:4px;">
+                </div>
+                <div>
+                    <label style="font-weight:bold; color:var(--brand-gold);">Objetivo Estratégico Prioritario:</label>
+                    <input type="text" id="bizGoal" class="chat-input" style="width:100%; margin-top:4px;">
+                </div>
+                <div>
+                    <label style="font-weight:bold; color:var(--brand-gold);">Proyectos Activos (uno por línea):</label>
+                    <textarea id="bizProjects" class="chat-input" rows="3" style="width:100%; margin-top:4px;"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="saveBusinessBtn" class="action-btn btn-gold">Guardar Cambios de AI_Criterio</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: War Room / Boardroom Meeting -->
+    <div id="warRoomModal" class="modal-overlay hidden">
+        <div class="modal-box" style="width: 780px;">
+            <div class="modal-header">
+                <h2><span>⚡</span> Sala de Crisis (War Room) — Sesión Multidisciplinar</h2>
+                <button id="closeWarRoomBtn" class="modal-close-btn">✕</button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <label style="font-weight:bold; color:var(--brand-cyan);">Seleccionar Misión de Negocio para AI_Criterio:</label>
+                    <select id="warRoomMissionSelect" class="dept-select" style="width:100%; margin-top:4px; padding:6px;"></select>
+                </div>
+                <div>
+                    <label style="font-weight:bold; color:var(--brand-cyan);">Detalle del Reto o Misión Personalizada:</label>
+                    <input type="text" id="warRoomMissionInput" class="chat-input" style="width:100%; margin-top:4px;">
+                </div>
+                <div>
+                    <label style="font-weight:bold; color:var(--brand-gold);">Equipo Especializado Convocado:</label>
+                    <div id="warRoomTeamContainer" style="display:flex; gap:8px; margin-top:6px; flex-wrap:wrap;"></div>
+                </div>
+                <div style="margin-top:10px;">
+                    <label style="font-weight:bold; color:#ffffff;">Acta de la Sesión en Tiempo Real:</label>
+                    <div id="warRoomMeetingLogs" style="height:220px; overflow-y:auto; background:#0b0f19; border:2px solid #334155; padding:10px; margin-top:6px;">
+                        <div style="color:#64748b; text-align:center; padding:40px 0;">Haz clic en "Iniciar Sesión de Trabajo" para que los agentes debatan y formulen el plan maestro.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="runWarRoomBtn" class="action-btn btn-primary">Iniciar Sesión de Trabajo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Settings & API Key -->
+    <div id="settingsModal" class="modal-overlay hidden">
+        <div class="modal-box" style="width: 520px;">
+            <div class="modal-header">
+                <h2><span>⚙️</span> Configuración & Motor de Inteligencia</h2>
+                <button id="closeSettingsBtn" class="modal-close-btn">✕</button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <label style="font-weight:bold; color:var(--brand-gold);">Proveedor de Inferencia:</label>
+                    <select id="apiProviderSelect" class="dept-select" style="width:100%; margin-top:4px;">
+                        <option value="gemini">Google Gemini (Gemini 1.5 Flash)</option>
+                        <option value="openai">OpenAI (GPT-4o-mini)</option>
+                        <option value="offline">Motor Local Inteligente (Offline, Sin API Key)</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-weight:bold; color:var(--brand-gold);">API Key (Opcional - Se guarda localmente en tu navegador):</label>
+                    <input type="password" id="apiKeyInput" class="chat-input" style="width:100%; margin-top:4px;" placeholder="Pega tu clave API aquí...">
+                    <small style="color:#94a3b8; font-size:9px; display:block; margin-top:4px;">
+                        * Si no introduces ninguna API Key, el sistema utiliza el motor local inteligente con las 296 personalidades y frameworks de la agencia.
+                    </small>
+                </div>
+                <div style="margin-top:10px; display:flex; align-items:center; gap:8px;">
+                    <input type="checkbox" id="bgmToggleCheckbox" style="cursor:pointer;">
+                    <label for="bgmToggleCheckbox" style="cursor:pointer;">Música ambiental 8-bit sintetizada (Chiptune BGM)</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="saveSettingsBtn" class="action-btn btn-gold">Guardar Configuración</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: Taskforce 38 Agentes Criterio AI -->
+    <div id="taskforceModal" class="modal-overlay hidden">
+        <div class="modal-box" style="width: 860px; max-height: 90vh;">
+            <div class="modal-header">
+                <h2><span>🔥</span> Escuadrón Activo Criterio AI — 38 Especialistas en Acción</h2>
+                <button id="closeTaskforceBtn" class="modal-close-btn">✕</button>
+            </div>
+            <div class="modal-body">
+                <div style="background:#0f172a; border:2px solid #334155; padding:10px 14px; margin-bottom:10px;">
+                    <div style="color:var(--brand-gold); font-weight:bold; font-size:12px; margin-bottom:4px;">
+                        🎯 Misión del Escuadrón: Sprint 14 Días (25-sep al 8-oct 2026)
+                    </div>
+                    <p style="color:#e2e8f0; font-size:10px; line-height:1.5;">
+                        Vender Catálogos WhatsApp a $400.000 COP + Carta Viva ($200.000 COP/mes) a restaurantes de Bogotá, desbloqueando el sitio gocriterio.com (Netlify forms, links reales de WhatsApp, WCAG AA y WhatsApp previews).
+                    </p>
+                    <div style="display:flex; gap:12px; margin-top:6px; font-size:10px; color:#38bdf8;">
+                        <span>📍 Target: 119 negocios Bogotá</span>
+                        <span>💰 Ticket: $400k + $200k/mes</span>
+                        <span>⭐ Clientes Verificados: 5</span>
+                    </div>
+                </div>
+
+                <!-- Tabs per front -->
+                <div id="taskforceFrontsTabs" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;"></div>
+
+                <!-- Agents list of the selected front -->
+                <div id="taskforceListContainer" style="display:flex; flex-direction:column; gap:10px; max-height:380px; overflow-y:auto; padding-right:4px;"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="highlightTaskforceOnCanvasBtn" class="action-btn btn-primary">
+                    🎯 Resaltar en la Oficina Virtual
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 5: Chain Reaction Execution Console HUD -->
+    <div id="chainExecModal" class="modal-overlay hidden">
+        <div class="modal-box" style="width: 840px; max-height: 90vh;">
+            <div class="modal-header" style="background:#3b0764; border-bottom:2px solid #8b5cf6;">
+                <h2><span>⚡</span> CONSOLA DE REACCIÓN EN CADENA — MULTIDISCIPLINAR</h2>
+                <button id="closeExecModalBtn" class="modal-close-btn">✕</button>
+            </div>
+            <div class="modal-body">
+                <div style="background:#0f172a; border:2px solid #334155; padding:8px 12px; margin-bottom:10px;">
+                    <div style="font-size:10px; color:#a78bfa; font-weight:bold;">MISIÓN EN EJECUCIÓN:</div>
+                    <div id="execModalMissionTitle" style="color:#ffffff; font-size:12px; font-weight:bold; margin-top:2px;"></div>
+                </div>
+
+                <!-- Progress Meter -->
+                <div style="margin-bottom:12px;">
+                    <div style="display:flex; justify-content:space-between; font-size:10px; margin-bottom:4px;">
+                        <span id="execStatusText" style="color:#38bdf8; font-weight:bold;">Iniciando secuencia...</span>
+                        <span id="execProgressPct" style="color:#fde047; font-weight:bold;">0%</span>
+                    </div>
+                    <div style="height:10px; background:#0b0f19; border:1px solid #475569; position:relative; overflow:hidden;">
+                        <div id="execProgressBar" style="height:100%; width:0%; background:linear-gradient(90deg, #7c3aed, #e11d48, #f59e0b); transition:width 0.4s ease;"></div>
+                    </div>
+                </div>
+
+                <!-- Split view: Live Log Terminal on Left, Cumulative Deliverables on Right -->
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; height:340px;">
+                    <div style="display:flex; flex-direction:column; background:#050811; border:2px solid #1e293b; padding:8px;">
+                        <div style="font-size:10px; font-weight:bold; color:#94a3b8; border-bottom:1px solid #1e293b; padding-bottom:4px; margin-bottom:6px;">
+                            📟 TELEMETRÍA DE PASOS & TELETRANSPORTE:
+                        </div>
+                        <div id="execLogsConsole" style="flex:1; overflow-y:auto; font-family:var(--pixel-font); font-size:10px; line-height:1.5; color:#34d399;"></div>
+                    </div>
+
+                    <div style="display:flex; flex-direction:column; background:#0f172a; border:2px solid #1e293b; padding:8px;">
+                        <div style="font-size:10px; font-weight:bold; color:var(--brand-gold); border-bottom:1px solid #1e293b; padding-bottom:4px; margin-bottom:6px;">
+                            📦 ENTREGABLES Y CÓDIGO GENERADOS:
+                        </div>
+                        <div id="execDeliverablesList" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display:flex; justify-content:space-between;">
+                <button id="cancelExecBtn" class="action-btn" style="background:#451a03; border-color:#f97316; color:#fdba74;">
+                    ⏹ Detener Secuencia
+                </button>
+                <button id="copyExecReportBtn" class="action-btn btn-gold" style="display:none;">
+                    📋 Copiar Informe Consolidado (.md)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Embedded Data (Ensures 100% immediate load offline, with file:// and with http://) -->
+    <script src="js/taskforce_data.js"></script>
+    <script src="js/agents_data.js"></script>
+    <script src="js/agents_full_data.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/agents_manager.js"></script>
+    <script src="js/consultation_engine.js"></script>
+    <script src="js/war_room.js"></script>
+    <script src="js/pixel_engine.js"></script>
+    <script src="js/chain_reaction.js"></script>
+    <script src="js/disciplines_panel.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
