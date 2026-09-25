@@ -7,7 +7,7 @@ department: "Especialistas de Alto Nivel"
 role_for_downstream_ai: "Executor AI (Cursor / Claude Code / Antigravity)"
 status: "READY_FOR_EXECUTION"
 priority: "HIGH"
-created_at: "2026-09-25T15:52:16.682785"
+created_at: "2026-09-25T16:19:23.565668"
 business: "Criterio AI (gocriterio.com)"
 mission: "Prospectar 119 restaurantes de Bogotá sin web, presentar catálogo demo con anticipo 50% ($200k) y cerrar ventas directas."
 target_files:
