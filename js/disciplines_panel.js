@@ -19,11 +19,152 @@ class DisciplinesPanel {
             { id: 'support', name: 'Legal, Finanzas & Soporte', icon: '⚖️', depts: ['support'] },
             { id: 'spatial', name: 'GIS, Research & Datos', icon: '🌐', depts: ['spatial', 'academic'] },
         ];
+
+        // 8 Synergistic Combos based on complementary disciplines & skill sets
+        this.combos = [
+            {
+                id: 'combo-web-killer',
+                name: '🛠️ Desbloqueo Web & Frontend Killer',
+                badge: 'Web Killer',
+                tagline: 'Forense de código + Netlify Forms + WhatsApp + WCAG AA',
+                disciplines: 'Frontend ✕ QA ✕ DevOps ✕ Forensic',
+                goal: 'Reparar el formulario de /briefing/, reemplazar WhatsApp inventado por +57 318 941 1010 y validar diseño accesible con contraste 4.5:1 en gocriterio.com.',
+                synergy: 'Arqueólogo extrae deuda técnica → Frontend reescribe inputs y enlaces → UI Finish pule tokens y gaps → Accesibilidad valida WCAG AA → DevOps automatiza build y deploy.',
+                agents: [
+                    'specialized-codebase-archaeologist',
+                    'engineering-frontend-developer',
+                    'design-ui-finish-gate-reviewer',
+                    'testing-accessibility-auditor',
+                    'engineering-devops-automator'
+                ],
+                themeColor: '#38bdf8'
+            },
+            {
+                id: 'combo-bogota-closers',
+                name: '🥩 Bogotá Deal Closers (Food & Retail)',
+                badge: 'Bogotá Closers',
+                tagline: 'Filtro PYMEs + Blindaje Legal + Demo en Mano + Cierre',
+                disciplines: 'Ventas ✕ Legal ✕ Pricing ✕ Prospección',
+                goal: 'Prospectar 119 restaurantes de Bogotá sin web, presentar catálogo demo con anticipo 50% ($200k) y cerrar ventas directas.',
+                synergy: 'Lead Gen detecta negocios con menú PDF → Legal blinda prospección Ley 1581 → Outreach envía screen recording Demo en Mano → Pricing estructura paquete $400k+$200k → Deal Strategist vence objeción comisión Rappi 30%.',
+                agents: [
+                    'specialized-pricing-analyst',
+                    'support-legal-compliance-checker',
+                    'sales-offer-lead-gen-strategist',
+                    'sales-outreach',
+                    'sales-deal-strategist'
+                ],
+                themeColor: '#f59e0b'
+            },
+            {
+                id: 'combo-viral-growth',
+                name: '🚀 Flywheel de Crecimiento & Contenido Viral',
+                badge: 'Viral Growth',
+                tagline: 'Dolor PYME + Copywriting The Futur + 6 Slides + Email',
+                disciplines: 'Marketing ✕ Copy ✕ Redes ✕ Outbound',
+                goal: 'Convertir casos de estudio de WhatsApp en carruseles virales de Instagram/LinkedIn y reactivar lista de correos.',
+                synergy: 'Social Media detecta quejas de restaurantes con PDFs pesados → Content Creator redacta narrativa de 6 diapositivas → Carousel Engine genera visuales estilo The Futur → Growth Hacker diseña tests de gancho → Email Strategist reactiva base de datos.',
+                agents: [
+                    'marketing-social-media-strategist',
+                    'marketing-content-creator',
+                    'marketing-carousel-growth-engine',
+                    'marketing-growth-hacker',
+                    'marketing-email-strategist'
+                ],
+                themeColor: '#ec4899'
+            },
+            {
+                id: 'combo-mobile-speed',
+                name: '📱 Mobile First & Rendimiento Extremo',
+                badge: 'Mobile Speed',
+                tagline: 'Viewport Móvil + Touch Targets 48px + LCP < 1.2s',
+                disciplines: 'Mobile ✕ UX ✕ Performance ✕ Reality QA',
+                goal: 'Asegurar que los catálogos de WhatsApp abran en menos de 1.2s en redes móviles 4G y que la barra fija no tape los productos.',
+                synergy: 'Mobile App Builder optimiza CSS y touch targets → UX Architect rediseña barra de navegación flotante → Performance Benchmarker comprime imágenes y reduce LCP → Reality Checker elimina dependencias innecesarias.',
+                agents: [
+                    'engineering-mobile-app-builder',
+                    'design-ux-architect',
+                    'testing-performance-benchmarker',
+                    'testing-reality-checker'
+                ],
+                themeColor: '#10b981'
+            },
+            {
+                id: 'combo-mrr-retention',
+                name: '🔄 Retención Carta Viva & Finanzas MRR',
+                badge: 'MRR Retention',
+                tagline: 'Onboarding WhatsApp + Menú al Día + Cobro $200k/mes',
+                disciplines: 'Producto ✕ Customer Success ✕ QA ✕ Finanzas',
+                goal: 'Consolidar el servicio recurrente Carta Viva ($200.000 COP/mes) para retener a clientes con menú vivo y recaudar cartera.',
+                synergy: 'Product Manager define SLA de actualización en 24h → Customer Success crea canal VIP de soporte por WhatsApp → Workflow Optimizer automatiza carga de nuevos platos → Finance Tracker factura suscripción mensual y recauda saldos.',
+                agents: [
+                    'product-manager',
+                    'customer-success-manager',
+                    'testing-workflow-optimizer',
+                    'support-finance-tracker'
+                ],
+                themeColor: '#8b5cf6'
+            },
+            {
+                id: 'combo-brand-fortress',
+                name: '🎨 Fortaleza de Marca & Design System',
+                badge: 'Brand Fortress',
+                tagline: 'Tokens criterio.css + Tipografía 400 + Visual Sobrio',
+                disciplines: 'Diseño ✕ Marca ✕ Storytelling ✕ Creatividad',
+                goal: 'Blindar la identidad visual sobria y elegante de Criterio AI: Negro espacial, Oro ámbar, Cian neón, sin artificios.',
+                synergy: 'Creative Strategist define la propuesta de valor sin ruido → UI Designer traduce reglas a tokens CSS criterio.css → Brand Guardian supervisa contraste y coherencia tipográfica → Visual Storyteller unifica la voz en presentaciones y web.',
+                agents: [
+                    'paid-media-creative-strategist',
+                    'design-ui-designer',
+                    'design-brand-guardian',
+                    'design-visual-storyteller'
+                ],
+                themeColor: '#fde047'
+            },
+            {
+                id: 'combo-smart-automation',
+                name: '🧠 Automatización Inteligente & APIs',
+                badge: 'Smart Automation',
+                tagline: 'Orquestación de Agentes + Prompt Engineering + APIs',
+                disciplines: 'Nexus ✕ AI Engineering ✕ APIs ✕ Prompts',
+                goal: 'Conectar el scraping de Google Maps con la generación automática de catálogos Netlify y respuestas IA en WhatsApp.',
+                synergy: 'Agents Orchestrator coordina el pipeline de datos → Prompt Engineer afina las instrucciones de cotización y ventas → API Platform conecta webhooks de Maps y Netlify → AI Engineer despliega el bot conversacional de pedidos.',
+                agents: [
+                    'agents-orchestrator',
+                    'engineering-prompt-engineer',
+                    'engineering-api-platform-engineer',
+                    'engineering-ai-engineer'
+                ],
+                themeColor: '#06b6d4'
+            },
+            {
+                id: 'combo-governance-strategy',
+                name: '⚖️ Gobernanza Estratégica & Gestión de Riesgos',
+                badge: 'Governance & Risk',
+                tagline: 'Estrategia 14 Días + Habeas Data + Mitigación de Riesgo',
+                disciplines: 'Estrategia ✕ Legal ✕ Gobernanza ✕ Privacidad',
+                goal: 'Mantener a toda la agencia enfocada en la meta de facturación a 14 días, blindando operaciones bajo leyes colombianas.',
+                synergy: 'Nexus Strategy congela frentes no prioritarios para proteger el sprint → Automation Governance audita límites de ejecución → Data Privacy Officer certifica cumplimiento de Ley 1581 → Legal Compliance blinda contratos y acuerdos comerciales.',
+                agents: [
+                    'nexus-strategy',
+                    'automation-governance-architect',
+                    'data-privacy-officer',
+                    'support-legal-compliance-checker'
+                ],
+                themeColor: '#ef4444'
+            }
+        ];
+    }
+
+    getAgentCombos(agentId) {
+        if (!agentId || !this.combos) return [];
+        return this.combos.filter(c => c.agents.includes(agentId));
     }
 
     init() {
         this.bindEvents();
         this.renderDisciplinesList();
+        this.renderCombosList();
         this.renderChainPipeline();
         this.renderPresetsList();
         this.updateChainBadge();
@@ -155,10 +296,17 @@ class DisciplinesPanel {
             b.classList.toggle('active', b.dataset.tab === tab);
         });
 
-        document.getElementById('tabDisciplinesContent').style.display = tab === 'disciplines' ? 'block' : 'none';
-        document.getElementById('tabChainContent').style.display = tab === 'chain' ? 'block' : 'none';
-        document.getElementById('tabPresetsContent').style.display = tab === 'presets' ? 'block' : 'none';
+        const tabDisc = document.getElementById('tabDisciplinesContent');
+        const tabCombos = document.getElementById('tabCombosContent');
+        const tabChain = document.getElementById('tabChainContent');
+        const tabPresets = document.getElementById('tabPresetsContent');
 
+        if (tabDisc) tabDisc.style.display = tab === 'disciplines' ? 'block' : 'none';
+        if (tabCombos) tabCombos.style.display = tab === 'combos' ? 'block' : 'none';
+        if (tabChain) tabChain.style.display = tab === 'chain' ? 'block' : 'none';
+        if (tabPresets) tabPresets.style.display = tab === 'presets' ? 'block' : 'none';
+
+        if (tab === 'combos') this.renderCombosList();
         if (tab === 'chain') this.renderChainPipeline();
         if (tab === 'presets') this.renderPresetsList();
         if (window.pixelAudio) window.pixelAudio.playClick();
@@ -248,6 +396,7 @@ class DisciplinesPanel {
         
         // Draw mini pixel avatar preview canvas
         const isAlreadyInChain = window.chainReactionEngine.pipeline.some(p => p.agentId === agent.id);
+        const agentCombos = this.getAgentCombos(agent.id);
 
         card.innerHTML = `
             <div class="npc-card-main">
@@ -261,6 +410,15 @@ class DisciplinesPanel {
                     </div>
                     <div class="npc-card-role">Piso ${agent.floor} • ${agent.department_name}</div>
                     <div class="npc-card-vibe">"${agent.vibe}"</div>
+                    ${agentCombos.length > 0 ? `
+                        <div class="npc-combos-row">
+                            ${agentCombos.map(c => `
+                                <span class="npc-combo-badge" style="border-color:${c.themeColor}; color:${c.themeColor};" title="Combo Sinergia: ${c.name}">
+                                    💥 ${c.badge}
+                                </span>
+                            `).join('')}
+                        </div>
+                    ` : ''}
                 </div>
             </div>
             <div class="npc-card-actions">
@@ -423,6 +581,89 @@ class DisciplinesPanel {
 
             container.appendChild(card);
         });
+    }
+
+    renderCombosList() {
+        const container = document.getElementById('combosListContainer');
+        if (!container) return;
+        container.innerHTML = '';
+
+        this.combos.forEach(combo => {
+            const card = document.createElement('div');
+            card.className = 'combo-card';
+            card.style.borderLeftColor = combo.themeColor;
+
+            // Collect agent summary objects
+            const agentsList = combo.agents.map(aid => {
+                const found = window.agentsManager.agentsSummary.find(a => a.id === aid);
+                return found || { id: aid, name: aid, emoji: '🤖', floor: 1, department_name: 'Especialista' };
+            });
+
+            card.innerHTML = `
+                <div class="combo-card-header">
+                    <div>
+                        <div class="combo-card-title" style="color:${combo.themeColor};">${combo.name}</div>
+                        <div class="combo-card-disciplines">${combo.disciplines}</div>
+                    </div>
+                    <span class="combo-badge-tag" style="background:${combo.themeColor}22; border-color:${combo.themeColor}; color:${combo.themeColor};">
+                        👥 ${combo.agents.length} Especialistas
+                    </span>
+                </div>
+                <div class="combo-card-tagline">${combo.tagline}</div>
+                <div class="combo-synergy-box">
+                    <span style="color:#fde047; font-weight:bold; font-size:9.5px; display:block; margin-bottom:2px;">⚡ Sinergia de Habilidades:</span>
+                    <div style="font-size:9px; line-height:1.45; color:#cbd5e1;">${combo.synergy}</div>
+                </div>
+                <div class="combo-agents-grid">
+                    ${agentsList.map(a => `
+                        <div class="combo-agent-chip" title="${a.name} (Piso ${a.floor || 1})">
+                            <span style="font-size:12px;">${a.emoji || '🤖'}</span>
+                            <span class="combo-agent-chip-name">${a.name}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="combo-card-actions">
+                    <button class="action-btn combo-load-btn" style="flex:1; font-size:10px; padding:4px 6px;">
+                        🔗 Cargar a Cadena
+                    </button>
+                    <button class="action-btn btn-gold combo-fire-btn" style="flex:1; font-size:10px; padding:4px 6px;">
+                        ⚡ Disparar Inmediato
+                    </button>
+                </div>
+            `;
+
+            // Load to chain
+            card.querySelector('.combo-load-btn').addEventListener('click', () => {
+                this.loadComboToPipeline(combo);
+                this.switchTab('chain');
+                if (window.pixelAudio) window.pixelAudio.playLaser();
+            });
+
+            // Fire immediate
+            card.querySelector('.combo-fire-btn').addEventListener('click', () => {
+                this.loadComboToPipeline(combo);
+                this.openExecutionModal();
+                window.chainReactionEngine.triggerChain();
+                if (window.pixelAudio) window.pixelAudio.playPowerUp();
+            });
+
+            container.appendChild(card);
+        });
+    }
+
+    loadComboToPipeline(combo) {
+        window.chainReactionEngine.clearPipeline();
+        window.chainReactionEngine.missionGoal = combo.goal;
+        const goalInput = document.getElementById('chainMissionGoalInput');
+        if (goalInput) goalInput.value = combo.goal;
+
+        combo.agents.forEach(agentId => {
+            window.chainReactionEngine.addAgent(agentId);
+        });
+
+        this.renderChainPipeline();
+        this.updateChainBadge();
+        this.renderDisciplinesList();
     }
 
     updateChainBadge() {

@@ -90,6 +90,9 @@
                 <button class="disciplines-tab-btn active" data-tab="disciplines">
                     📂 Disciplinas
                 </button>
+                <button class="disciplines-tab-btn" data-tab="combos">
+                    💥 Combos
+                </button>
                 <button class="disciplines-tab-btn" data-tab="chain">
                     🔗 Cadena (<span id="chainStepCount">0 Pasos</span>)
                 </button>
@@ -149,6 +152,15 @@
                     💡 Presets tácticos para resolver los desafíos de <strong>Criterio AI</strong> en segundos:
                 </div>
                 <div id="presetsListContainer" class="presets-list"></div>
+            </div>
+
+            <!-- Tab 4: Synergistic Skill Combos -->
+            <div id="tabCombosContent" class="disciplines-tab-content" style="display:none;">
+                <div style="padding:8px 10px; font-size:10px; color:#c7d2fe; background:#1e1b4b; border-bottom:1px solid #4338ca;">
+                    💥 <strong>Combos Tácticos & Sinergias de Habilidades:</strong><br>
+                    Equipos donde las habilidades de cada disciplina se encadenan para multiplicar el impacto en Criterio AI.
+                </div>
+                <div id="combosListContainer" style="display:flex; flex-direction:column; gap:10px; padding:10px 8px; max-height: calc(100vh - 210px); overflow-y:auto;"></div>
             </div>
         </aside>
 
