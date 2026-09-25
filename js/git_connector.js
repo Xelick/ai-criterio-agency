@@ -398,6 +398,9 @@ class GitConnector {
                     <div style="margin-top:6px; display:flex; justify-content:space-between; align-items:center;">
                         <span style="font-size:10px; color:#64748b;">Ruta: <code>tasks/${d.filename}</code></span>
                         <div style="display:flex; gap:6px;">
+                            <button class="copy-antigravity-btn" data-file="${d.filename}" style="background:#4338ca; color:#ffffff; border:1px solid #818cf8; font-size:9.5px; padding:3px 7px; font-weight:bold;" title="Copiar orden directa para Antigravity">
+                                🤖 Ordenar a Antigravity
+                            </button>
                             <button class="copy-prompt-btn" data-file="${d.filename}" title="Copiar prompt listo para Cursor / Claude">
                                 📋 Copiar Prompt
                             </button>
@@ -412,6 +415,14 @@ class GitConnector {
 
         html += `</div>`;
         container.innerHTML = html;
+
+        // Bind Antigravity buttons
+        container.querySelectorAll('.copy-antigravity-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const fname = btn.dataset.file;
+                this.copyAntigravityPromptForFile(fname);
+            });
+        });
 
         // Bind copy buttons
         container.querySelectorAll('.copy-prompt-btn').forEach(btn => {
@@ -435,6 +446,13 @@ class GitConnector {
                 this.switchTab('files');
             });
         }
+    }
+
+    copyAntigravityPromptForFile(filename) {
+        const prompt = `Antigravity, ejecuta la tarea tasks/${filename} de Criterio AI: lee sus instrucciones, aplica las soluciones de código requeridas y márcala como completada.`;
+        navigator.clipboard.writeText(prompt);
+        this.showToast(`🤖 ¡Orden copiada! Pégala en el chat de Antigravity: "Ejecuta tasks/${filename}"`, '#818cf8');
+        if (window.pixelAudio) window.pixelAudio.playPowerUp();
     }
 
     copyPromptForFile(filename) {

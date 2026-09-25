@@ -457,6 +457,99 @@ def list_agents(filter_dept=None):
     if len(agents) > 50:
         print(f"... y {len(agents) - 50} más. Filtra por departamento usando: python criterio_query.py list <dept>")
 
+def list_pending():
+    if not os.path.exists(TASKS_DIR):
+        print("No hay carpeta tasks/ todavía.")
+        return
+
+    files = [f for f in os.listdir(TASKS_DIR) if f.endswith('.md')]
+    print("\n" + "=" * 75)
+    print("  📋 TAREAS EN LA COLA DE CRITERIO AI (tasks/)")
+    print("=" * 75 + "\n")
+
+    pending_count = 0
+    for f in sorted(files):
+        fpath = os.path.join(TASKS_DIR, f)
+        with open(fpath, 'r', encoding='utf-8') as fp:
+            content = fp.read()
+        
+        status = "DESCONOCIDO"
+        title = f
+        agent = "Especialista"
+        
+        for line in content.split('\n'):
+            if line.startswith('status:'):
+                status = line.split(':', 1)[1].strip().strip('"\'')
+            elif line.startswith('title:'):
+                title = line.split(':', 1)[1].strip().strip('"\'')
+            elif line.startswith('agent_name:'):
+                agent = line.split(':', 1)[1].strip().strip('"\'')
+
+        badge = "🟢 COMPLETADA" if "COMPLETE" in status.upper() else "🟡 PENDIENTE"
+        if "PENDIENTE" in badge:
+            pending_count += 1
+        print(f"{badge} | {f}")
+        print(f"   👤 {agent} • {title}")
+        print("-" * 75)
+
+    print(f"\nTotal: {len(files)} tareas | Pendientes: {pending_count}")
+
+def mark_task_completed(task_id_or_file):
+    if not os.path.exists(TASKS_DIR):
+        print("No existe la carpeta tasks/")
+        return
+
+    target_file = None
+    if task_id_or_file.endswith('.md'):
+        candidate = os.path.join(TASKS_DIR, task_id_or_file)
+        if os.path.exists(candidate):
+            target_file = candidate
+    else:
+        for f in os.listdir(TASKS_DIR):
+            if task_id_or_file.lower() in f.lower():
+                target_file = os.path.join(TASKS_DIR, f)
+                break
+
+    if not target_file:
+        print(f"[!] No se encontró ninguna tarea que coincida con '{task_id_or_file}'.")
+        return
+
+    # Update file content
+    with open(target_file, 'r', encoding='utf-8') as f:
+        content = f.read()
+
+    new_content = content.replace('status: "READY_FOR_EXECUTION"', 'status: "COMPLETED"')
+    new_content = new_content.replace('status: ready_for_execution', 'status: completed')
+    
+    with open(target_file, 'w', encoding='utf-8') as f:
+        f.write(new_content)
+
+    fname = os.path.basename(target_file)
+    print(f"[✓] Tarea {fname} marcada como COMPLETADA.")
+
+    # Update AI_EXECUTION_QUEUE.md
+    if os.path.exists(QUEUE_FILE):
+        with open(QUEUE_FILE, 'r', encoding='utf-8') as f:
+            queue_data = f.read()
+        # Find line with fname and replace 🟡 PENDIENTE with 🟢 COMPLETADA
+        lines = queue_data.split('\n')
+        updated_lines = []
+        for line in lines:
+            if fname in line:
+                line = line.replace('🟡 PENDIENTE', '🟢 COMPLETADA').replace('🟡 LISTO', '🟢 COMPLETADA')
+            updated_lines.append(line)
+        with open(QUEUE_FILE, 'w', encoding='utf-8') as f:
+            f.write('\n'.join(updated_lines))
+        print(f"[✓] AI_EXECUTION_QUEUE.md actualizado.")
+
+    # Git commit
+    try:
+        subprocess.run(["git", "add", target_file, QUEUE_FILE], cwd=BASE_DIR, capture_output=True)
+        subprocess.run(["git", "commit", "-m", f"chore(task): marcar {fname} como completada"], cwd=BASE_DIR, capture_output=True)
+        print("[✓] Commit en Git registrado.")
+    except Exception:
+        pass
+
 def main():
     parser = argparse.ArgumentParser(description="Criterio AI Bridge CLI")
     subparsers = parser.add_subparsers(dest="command")
@@ -478,6 +571,13 @@ def main():
     # Combos list
     subparsers.add_parser("combos", help="Listar todos los combos")
 
+    # Pending
+    subparsers.add_parser("pending", help="Listar tareas pendientes en tasks/")
+
+    # Complete
+    complete_parser = subparsers.add_parser("complete", help="Marcar una tarea como completada")
+    complete_parser.add_argument("task", help="Archivo o ID de la tarea")
+
     # List
     list_parser = subparsers.add_parser("list", help="Listar especialistas")
     list_parser.add_argument("dept", nargs="?", default=None, help="Filtrar por departamento")
@@ -494,6 +594,10 @@ def main():
         print(json.dumps(res, indent=2, ensure_ascii=False))
     elif args.command == "combos":
         list_combos()
+    elif args.command == "pending":
+        list_pending()
+    elif args.command == "complete":
+        mark_task_completed(args.task)
     elif args.command == "list":
         list_agents(args.dept)
     else:
@@ -501,3 +605,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

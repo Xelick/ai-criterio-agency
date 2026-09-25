@@ -821,15 +821,20 @@ class DisciplinesPanel {
                 </div>
             </div>
 
-            <!-- Master Prompt for Cursor / Claude Code Button -->
-            <div style="background:#050811; border:1px solid #334155; padding:10px 14px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+            <!-- Master Prompt for Cursor / Claude Code / Antigravity Button -->
+            <div style="background:#050811; border:1px solid #334155; padding:10px 14px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                 <div>
                     <div style="font-size:11px; font-weight:bold; color:#38bdf8;">🤖 ¿Quieres que una IA aplique todo esto en tu código?</div>
-                    <div style="font-size:9.5px; color:#94a3b8;">Copia este prompt maestro y pégalo en Cursor (Ctrl+L) o en Claude Code CLI.</div>
+                    <div style="font-size:9.5px; color:#94a3b8;">Ejecuta directamente con Antigravity en tu chat o copia el prompt para Cursor (Ctrl+L) y Claude Code.</div>
                 </div>
-                <button id="copyMasterPromptBtn" class="action-btn btn-gold" style="font-size:10px; padding:6px 12px; white-space:nowrap;">
-                    📋 Copiar Prompt Maestro para Cursor / Claude
-                </button>
+                <div style="display:flex; gap:8px; align-items:center;">
+                    <button id="copyAntigravityMasterBtn" class="action-btn" style="background:#4338ca; color:#ffffff; border:1px solid #818cf8; font-size:10px; padding:6px 12px; white-space:nowrap; font-weight:bold;">
+                        🤖 Ordenar a Antigravity
+                    </button>
+                    <button id="copyMasterPromptBtn" class="action-btn btn-gold" style="font-size:10px; padding:6px 12px; white-space:nowrap;">
+                        📋 Copiar Prompt Cursor / Claude
+                    </button>
+                </div>
             </div>
 
             <!-- Compressed Results Table -->
@@ -868,6 +873,19 @@ class DisciplinesPanel {
         `;
 
         container.innerHTML = html;
+
+        // Bind Antigravity direct copy button
+        const antigravityBtn = document.getElementById('copyAntigravityMasterBtn');
+        if (antigravityBtn) {
+            antigravityBtn.addEventListener('click', () => {
+                const prompt = `Antigravity, lee AI_EXECUTION_QUEUE.md e implementa las tareas generadas para la misión: "${goal}". Aplica los cambios de código necesarios en el repositorio y marca las tareas como completadas.`;
+                navigator.clipboard.writeText(prompt);
+                if (window.gitConnector) {
+                    window.gitConnector.showToast("🤖 ¡Orden para Antigravity copiada! Solo pégala en el chat de Antigravity y pulsa Enter.", "#818cf8");
+                }
+                if (window.pixelAudio) window.pixelAudio.playPowerUp();
+            });
+        }
 
         // Bind master prompt copy button
         const masterBtn = document.getElementById('copyMasterPromptBtn');
