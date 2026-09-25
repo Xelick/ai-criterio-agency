@@ -1,0 +1,118 @@
+<!-- 
+  =============================================================================
+  CRITERIO AI — PARCHE DE FORMULARIO DE BRIEFING (gocriterio.com)
+  =============================================================================
+  Especialistas: Codebase Archaeologist + Frontend Developer + Accessibility Auditor
+  Bloqueante Resuelto: Envío fallido por falta de input 'form-name' y labels sin 'for'
+  WhatsApp Verificado: +57 318 941 1010
+  Accesibilidad: WCAG 2.1 AA (Contraste 4.5:1, font-weight: 400/700)
+-->
+
+<form name="briefing" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" class="formulario-criterio" id="briefingForm">
+  <!-- 1. Campo obligatorio para detección de Netlify Forms -->
+  <input type="hidden" name="form-name" value="briefing" />
+  
+  <!-- 2. Honeypot anti-spam -->
+  <p class="oculto-anti-spam" style="display:none;">
+    <label for="campo-bot">No llenes este campo si eres humano: <input id="campo-bot" name="bot-field" /></label>
+  </p>
+
+  <!-- Paso 1: Información de Contacto -->
+  <fieldset class="bloque-paso activo" id="paso-1">
+    <legend class="paso-titulo">1. Datos del Negocio & Contacto</legend>
+
+    <div class="campo-grupo">
+      <label for="nombreNegocio" class="etiqueta-accesible">Nombre del Restaurante / Negocio: <span class="requerido" aria-hidden="true">*</span></label>
+      <input type="text" id="nombreNegocio" name="nombre_negocio" class="campo-input" required aria-required="true" placeholder="Ej: Pizzería La Piazza" />
+      <span class="pista-campo" id="pistaNombre">Tal como aparece en Google Maps o en tu fachada.</span>
+    </div>
+
+    <div class="campo-grupo">
+      <label for="telefonoWhatsapp" class="etiqueta-accesible">Número de WhatsApp para Pedidos: <span class="requerido" aria-hidden="true">*</span></label>
+      <input type="tel" id="telefonoWhatsapp" name="whatsapp_pedidos" class="campo-input" required aria-required="true" pattern="[0-9+ ]{10,15}" placeholder="+57 318 000 0000" aria-describedby="pistaWhatsapp" />
+      <span class="pista-campo" id="pistaWhatsapp">Aquí es donde los clientes enviarán el pedido final generado por el catálogo.</span>
+    </div>
+
+    <div class="campo-grupo">
+      <label for="ciudadZona" class="etiqueta-accesible">Ciudad y Sector / Barrio: <span class="requerido" aria-hidden="true">*</span></label>
+      <input type="text" id="ciudadZona" name="ciudad_zona" class="campo-input" required aria-required="true" placeholder="Ej: Bogotá — Chapinero Alto / Cedritos" />
+    </div>
+  </fieldset>
+
+  <!-- Paso 2: Menú y Productos -->
+  <fieldset class="bloque-paso" id="paso-2">
+    <legend class="paso-titulo">2. Menú & Carta Actual</legend>
+
+    <div class="campo-grupo">
+      <label for="tipoComida" class="etiqueta-accesible">Tipo de Gastronomía / Rubro:</label>
+      <select id="tipoComida" name="tipo_comida" class="campo-select">
+        <option value="hamburguesas_comidas_rapidas">Hamburguesas y Comidas Rápidas</option>
+        <option value="pizzas_pastas">Pizzas, Pastas e Italiana</option>
+        <option value="carnes_parrilla">Carnes y Parrilla / Asaderos</option>
+        <option value="pescados_mariscos">Pescados y Mariscos</option>
+        <option value="comida_tradicional_casera">Comida Tradicional / Corrientazos VIP</option>
+        <option value="cafeteria_reposteria">Cafetería, Postres y Repostería</option>
+        <option value="otro">Otro</option>
+      </select>
+    </div>
+
+    <div class="campo-grupo">
+      <label for="enlaceMenuActual" class="etiqueta-accesible">Enlace o Archivo de Menú Actual (PDF, Instagram o Drive):</label>
+      <input type="url" id="enlaceMenuActual" name="enlace_menu" class="campo-input" placeholder="https://instagram.com/tu_restaurante o link de Drive" />
+      <span class="pista-campo">Si tienes fotos del menú impreso o PDF, puedes pegarnos el enlace o enviarlo directamente a nuestro WhatsApp oficial: <strong>+57 318 941 1010</strong>.</span>
+    </div>
+  </fieldset>
+
+  <!-- Estado del Envío (Accesible via ARIA Live) -->
+  <div id="envioEstado" role="alert" aria-live="polite" class="alerta-estado"></div>
+
+  <!-- Botones de Acción -->
+  <div class="formulario-acciones">
+    <button type="submit" class="boton-primario" id="btnEnviarBriefing">
+      Mándalo a Revisión Técnica ➔
+    </button>
+  </div>
+</form>
+
+<script>
+// Script de envío AJAX blindado para Netlify Forms
+document.getElementById('briefingForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const form = e.target;
+  const btn = document.getElementById('btnEnviarBriefing');
+  const estado = document.getElementById('envioEstado');
+  
+  btn.disabled = true;
+  btn.textContent = 'Enviando información...';
+  estado.textContent = '';
+  estado.className = 'alerta-estado';
+
+  const formData = new FormData(form);
+  const searchParams = new URLSearchParams();
+  for (const [key, val] of formData.entries()) {
+    searchParams.append(key, val);
+  }
+
+  fetch('/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: searchParams.toString()
+  })
+  .then(function(res) {
+    if (res.ok) {
+      estado.textContent = '¡Briefing recibido con éxito! Un especialista de Criterio AI revisará tu menú y te contactará por WhatsApp (+57 318 941 1010).';
+      estado.className = 'alerta-estado exito';
+      form.reset();
+      btn.textContent = '✔ Enviado Correctamente';
+    } else {
+      throw new Error('El servidor respondió con código ' + res.status);
+    }
+  })
+  .catch(function(err) {
+    estado.textContent = 'Hubo un error al procesar el envío. Por favor escríbenos directamente a nuestro WhatsApp oficial: wa.me/573189411010';
+    estado.className = 'alerta-estado error';
+    btn.disabled = false;
+    btn.textContent = 'Reintentar Envío ➔';
+  });
+});
+</script>

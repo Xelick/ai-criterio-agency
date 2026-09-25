@@ -1,0 +1,135 @@
+/**
+ * CRITERIO AI — SISTEMA DE TOKENS & DISEÑO (criterio.css)
+ * Directrices validadas por UI Finish-Gate Reviewer & Accessibility Auditor
+ * Auditoría: 25-sep-2026 | Cumplimiento WCAG 2.1 AA
+ */
+
+:root {
+  /* Paleta Sobria Principal */
+  --fondo: #050811;
+  --fondo-tarjeta: #0d1527;
+  --fondo-elevado: #1e293b;
+  --texto: #f8fafc;
+  --texto-secundario: #cbd5e1;
+  --texto-atenuado: #94a3b8;
+  --linea: #334155;
+  
+  /* Acentos de Marca (Máximo 2 simultáneos) */
+  --oro: #f59e0b;
+  --oro-brillante: #fde047;
+  --cian: #06b6d4;
+  --cian-brillante: #38bdf8;
+  --acento: var(--cian);
+  
+  /* Sombras Duras (Prohibido sombras difusas) */
+  --sombra: #000000;
+  --sombra-tarjeta: 0 2px 0 0 #000000;
+  --sombra-boton: 0 2px 0 0 #000000;
+  
+  /* Geometría y Radios Unificados */
+  --radio-tarjeta: 24px;
+  --radio-control: 8px;
+  --radio-pildora: 9999px;
+  
+  /* Tipografía Estricta: Solo 400 y 700 */
+  --fuente-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --fuente-mono: "SF Mono", Monaco, Consolas, "Liberation Mono", monospace;
+  --peso-regular: 400;
+  --peso-bold: 700;
+  
+  /* Accesibilidad Táctil */
+  --alto-minimo-tactil: 44px;
+}
+
+/* Modo Oscuro / Contraste Ajustado */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --sombra-tarjeta: 0 2px 0 0 #334155;
+    --linea: #475569;
+  }
+}
+
+/* Reset y Accesibilidad Universal */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--fuente-base);
+  font-weight: var(--peso-regular);
+  background-color: var(--fondo);
+  color: var(--texto);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Foco Visible Universal (WCAG 2.1 AA) */
+:focus-visible {
+  outline: 3px solid var(--acento) !important;
+  outline-offset: 4px !important;
+}
+
+/* Botones Accesibles con Área Táctil */
+.boton-primario {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--alto-minimo-tactil);
+  padding: 8px 18px;
+  background-color: var(--oro);
+  color: #000000;
+  font-weight: var(--peso-bold);
+  font-size: 14px;
+  border: 1px solid #000000;
+  border-radius: var(--radio-control);
+  box-shadow: var(--sombra-boton);
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.1s ease;
+}
+
+.boton-primario:hover {
+  transform: translateY(-1px);
+  background-color: var(--oro-brillante);
+}
+
+.boton-primario:active {
+  transform: translateY(1px);
+}
+
+/* Tarjetas con Radio 24px y Sombra Dura */
+.tarjeta-criterio {
+  background-color: var(--fondo-tarjeta);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+  box-shadow: var(--sombra-tarjeta);
+  padding: 24px;
+}
+
+/* Campos de Formulario Accesibles */
+.campo-input, .campo-select {
+  width: 100%;
+  min-height: var(--alto-minimo-tactil);
+  padding: 10px 14px;
+  background-color: #060a14;
+  color: #ffffff;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-control);
+  font-size: 15px;
+  font-family: var(--fuente-base);
+}
+
+.etiqueta-accesible {
+  display: block;
+  font-size: 14px;
+  font-weight: var(--peso-bold);
+  color: var(--texto);
+  margin-bottom: 6px;
+}
+
+.pista-campo {
+  display: block;
+  font-size: 12px;
+  color: var(--texto-atenuado);
+  margin-top: 4px;
+}
