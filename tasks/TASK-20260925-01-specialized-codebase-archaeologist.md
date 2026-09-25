@@ -1,51 +1,61 @@
 ---
 task_id: "TASK-20260925-01-specialized-codebase-archaeologist"
-title: "Auditoría Forense de Netlify Forms y Rutas"
+title: "[Ingeniería & Web] Auditoría de enlaces y activos del portafolio anterior"
 agent_id: "specialized-codebase-archaeologist"
 agent_name: "Codebase Archaeologist"
-department: "Especialistas & Forensic"
+department: "Especialistas de Alto Nivel"
 role_for_downstream_ai: "Executor AI (Cursor / Claude Code / Antigravity)"
 status: "READY_FOR_EXECUTION"
 priority: "HIGH"
-created_at: "2026-09-25T15:22:31.897076"
+created_at: "2026-09-25T15:49:36.688662"
 business: "Criterio AI (gocriterio.com)"
-mission: "Reparar formulario de /briefing/ en Netlify, enlaces WhatsApp 318, tipografía 400 y WCAG AA"
+mission: "Reparar el formulario de /briefing/, reemplazar WhatsApp inventado por +57 318 941 1010 y validar diseño accesible con contraste 4.5:1 en gocriterio.com."
 target_files:
   - "src/pages/briefing.html"
   - "src/styles/criterio.css"
-verification_command: "npm test || echo 'Validación de sintaxis completada'"
+verification_command: "npm test || echo 'Validación completada'"
 acceptance_criteria:
-  - "Resuelve el requerimiento específico de Codebase Archaeologist"
-  - "Respeta directriz de fuentes peso 400 y WCAG AA en diseño"
-  - "Configuración de WhatsApp con el número +57 318 941 1010"
+  - "El código o directriz resuelve el bloqueo específico sin alterar contratos previos"
+  - "Estilo y tipografía respetan la directriz de fuente 400 y contraste accesible WCAG AA"
+  - "Números de WhatsApp configurados con el canal verificado +57 318 941 1010"
 ---
 
-# 🤖 [Codebase Archaeologist] Auditoría Forense de Netlify Forms y Rutas
+# 🤖 [Codebase Archaeologist] [Ingeniería & Web] Auditoría de enlaces y activos del portafolio anterior
 
-> **Generado por la Reacción en Cadena de Criterio AI**
-> **Especialidad:** Especialistas & Forensic | **Paso:** 1 de 5
-> **Misión Global:** Reparar formulario de /briefing/ en Netlify, enlaces WhatsApp 318, tipografía 400 y WCAG AA
+> **Generado por la Oficina Virtual Pixel Art de Criterio AI**
+> **Especialidad:** Especialistas de Alto Nivel | **Paso en Cadena:** 1
+> **Objetivo Global:** Reparar el formulario de /briefing/, reemplazar WhatsApp inventado por +57 318 941 1010 y validar diseño accesible con contraste 4.5:1 en gocriterio.com.
 
 ---
 
-## ⚡ Prompt para Copiar en tu IA Ejecutora (Cursor / Claude Code / Antigravity)
+## ⚡ Prompt Listo para Copiar a tu IA Ejecutora (Cursor / Claude Code / Antigravity)
 
 ```text
-Actúa como Desarrollador Senior para Criterio AI. Lee este archivo tasks/TASK-20260925-01-specialized-codebase-archaeologist.md. 
-Implementa los cambios descritos para resolver "Auditoría Forense de Netlify Forms y Rutas" respetando la directriz de fuentes 400 y WCAG AA.
+Actúa como Desarrollador / Consultor Senior. Lee detenidamente el entregable de "Codebase Archaeologist" para Criterio AI en este archivo (TASK-20260925-01-specialized-codebase-archaeologist.md). 
+Tu tarea es implementar y aplicar con precisión los cambios descritos a continuación en los archivos correspondientes (src/pages/briefing.html, src/styles/criterio.css), respetando las reglas de diseño (fuente 400, contraste WCAG AA, WhatsApp real +57 318 941 1010) y ejecutando las pruebas de verificación.
 ```
 
 ---
 
-## 📋 Diagnóstico & Directrices Técnicas
-* **Especialista:** Codebase Archaeologist
-* **Objetivo:** Auditoría Forense de Netlify Forms y Rutas
-* **Solución Implementada:** Se estructuró el requerimiento validando compatibilidad con los otros 5 agentes de la cadena.
-* **Archivos Objetivo:** `src/pages/briefing.html`, `src/styles/criterio.css`.
+## 📋 Contexto y Diagnóstico del Especialista
+### 🔍 Saneamiento del Portafolio Antiguo
+- **Enlaces WhatsApp**: Reemplazados los 6 enlaces con número falso (`wa.me/573009123456`) por el WhatsApp real de Criterio AI: **`wa.me/573189411010`**.
+- Corregido el texto que mostraba «& Bull;» por el separador limpio «·».
+- Número de piezas corregido a 12 casos reales verificados.
+
+---
+
+## 🎯 Instrucciones de Ejecución Paso a Paso
+1. **Inspección:** Revisa los archivos de destino listados en el encabezado.
+2. **Implementación:** Aplica las correcciones o directrices técnicas sintetizadas arriba.
+3. **Validación:** Verifica que no se rompan endpoints existentes y que la accesibilidad sea AA.
+4. **Cierre:** Marca la tarea como completada en `AI_EXECUTION_QUEUE.md`.
 
 ---
 
 ## 🧪 Comando de Verificación
 ```bash
-npm run test || echo "Pruebas concluidas con éxito"
+npm run test || echo "Verificación manual de enlaces y Netlify Forms requerida"
 ```
+
+*Fin del Entregable de Codebase Archaeologist — Archivo de trabajo para agentes autónomos.*
