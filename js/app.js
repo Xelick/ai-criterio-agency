@@ -81,6 +81,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.disciplinesPanel.init();
     }
 
+    if (window.gitConnector) {
+        window.gitConnector.init();
+    }
+
     const openDisciplinesTopBtn = document.getElementById('openDisciplinesTopBtn');
     if (openDisciplinesTopBtn) {
         openDisciplinesTopBtn.addEventListener('click', () => {
@@ -323,6 +327,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         const isFav = window.agentsManager.isFavorite(agentId);
         favoriteBtn.textContent = isFav ? '⭐ Favorito' : '☆ Marcar Favorito';
         favoriteBtn.style.color = isFav ? '#f59e0b' : '#ffffff';
+    }
+
+    // Export single agent task to Git
+    const exportAgentToGitBtn = document.getElementById('exportAgentToGitBtn');
+    if (exportAgentToGitBtn) {
+        exportAgentToGitBtn.addEventListener('click', () => {
+            const agent = window.agentsManager.selectedAgent;
+            if (!agent) return;
+            if (window.gitConnector) {
+                window.gitConnector.createSingleAgentTask(agent);
+            }
+        });
     }
 
     // 6. Directory / Roster Grid

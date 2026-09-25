@@ -503,11 +503,18 @@ class DisciplinesPanel {
         const progressPct = document.getElementById('execProgressPct');
         const statusText = document.getElementById('execStatusText');
         const copyBtn = document.getElementById('copyExecReportBtn');
+        const syncGitBtn = document.getElementById('syncGitExecBtn');
 
         if (progressBar) progressBar.style.width = '100%';
         if (progressPct) progressPct.textContent = '100%';
         if (statusText) statusText.textContent = '✅ Reacción en Cadena Completada!';
         if (copyBtn) copyBtn.style.display = 'inline-flex';
+        if (syncGitBtn) syncGitBtn.style.display = 'inline-flex';
+
+        // If Git connector is active and auto_commit is enabled, auto-sync deliverables!
+        if (window.gitConnector && window.gitConnector.config.auto_commit) {
+            window.gitConnector.syncDeliverables(deliverables, window.chainReactionEngine.missionGoal);
+        }
     }
 
     copyExecutionReport() {

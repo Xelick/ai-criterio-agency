@@ -52,6 +52,11 @@
             <button id="openBusinessBtn" class="action-btn btn-gold" title="Ver y editar el contexto de Criterio AI">
                 <span>💼</span> Criterio AI Hub
             </button>
+            <button id="openGitRepoBtn" class="action-btn btn-git" title="Conectar Repositorio Git y Cola de IAs Ejecutoras">
+                <span class="git-status-dot">🟢</span>
+                <span>🐙 Git Repo</span>
+                <span id="gitBranchBadge" class="git-badge">main</span>
+            </button>
             <button id="soundToggleBtn" class="action-btn" title="Activar/Desactivar sonido retro">
                 🔊 Audio: ON
             </button>
@@ -186,12 +191,15 @@
                 <button id="closeDrawerBtn" class="close-drawer-btn" title="Cerrar panel">✕</button>
             </div>
 
-            <div style="display: flex; gap: 8px; padding: 6px 16px; background: #0f172a; border-bottom: 1px solid #374151;">
+            <div style="display: flex; gap: 6px; padding: 6px 16px; background: #0f172a; border-bottom: 1px solid #374151;">
                 <button id="teleportBtn" class="action-btn" style="flex:1; font-size:10px; padding:4px 6px;">
                     🎯 Ir a su Escritorio
                 </button>
                 <button id="favoriteBtn" class="action-btn" style="flex:1; font-size:10px; padding:4px 6px;">
-                    ☆ Marcar Favorito
+                    ☆ Favorito
+                </button>
+                <button id="exportAgentToGitBtn" class="action-btn btn-git" style="flex:1.2; font-size:10px; padding:4px 6px;" title="Generar archivo .md en tasks/ y commitear en Git">
+                    🐙 Exportar .MD a Git
                 </button>
             </div>
 
@@ -427,13 +435,148 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer" style="display:flex; justify-content:space-between;">
+            <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
                 <button id="cancelExecBtn" class="action-btn" style="background:#451a03; border-color:#f97316; color:#fdba74;">
                     ⏹ Detener Secuencia
                 </button>
-                <button id="copyExecReportBtn" class="action-btn btn-gold" style="display:none;">
-                    📋 Copiar Informe Consolidado (.md)
+                <div style="display:flex; gap:8px;">
+                    <button id="copyExecReportBtn" class="action-btn btn-gold" style="display:none;">
+                        📋 Copiar Informe Consolidado (.md)
+                    </button>
+                    <button id="syncGitExecBtn" class="action-btn btn-git" style="display:none;" title="Subir entregables a tasks/ y commitear en Git">
+                        🐙 Guardar y Commitear en Git
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 5: Git Repository & AI Execution Queue Modal -->
+    <div id="gitRepoModal" class="modal-overlay hidden">
+        <div class="modal-box git-modal-box">
+            <div class="modal-header">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:20px;">🐙</span>
+                    <div>
+                        <h2>CONECTOR DE REPOSITORIO GIT & COLA DE IAs</h2>
+                        <div style="font-size:9px; color:#38bdf8;">Entregables estructurados (.md) para Cursor, Claude Code, Antigravity y CI/CD</div>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <button id="refreshGitStatusBtn" class="action-btn icon-btn" title="Actualizar estado de Git">🔄</button>
+                    <button id="closeGitRepoModal" class="modal-close-btn">&times;</button>
+                </div>
+            </div>
+
+            <!-- Tab bar -->
+            <div class="git-modal-tabs">
+                <button class="git-tab-btn active" data-tab="queue">
+                    📋 Cola de IAs (AI_EXECUTION_QUEUE.md)
                 </button>
+                <button class="git-tab-btn" data-tab="files">
+                    📁 Archivos Entregables (tasks/)
+                </button>
+                <button class="git-tab-btn" data-tab="config">
+                    ⚙️ Configuración del Repositorio
+                </button>
+                <button class="git-tab-btn" data-tab="terminal">
+                    💻 Consola Git & Commits
+                </button>
+            </div>
+
+            <div class="modal-body git-modal-body">
+                <!-- Tab 1: Queue -->
+                <div id="gitTab_queue" class="git-tab-content">
+                    <div id="gitQueueListContainer"></div>
+                </div>
+
+                <!-- Tab 2: Files Explorer & Markdown Preview -->
+                <div id="gitTab_files" class="git-tab-content" style="display:none;">
+                    <div class="git-files-layout">
+                        <div class="git-files-sidebar" id="gitFilesList"></div>
+                        <div class="git-files-viewer">
+                            <div class="git-viewer-header" id="gitFileViewerTitle">Selecciona un archivo</div>
+                            <pre class="git-viewer-code" id="gitFileViewerContent">Selecciona un entregable de la lista para ver su especificación en Markdown.</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Configuration -->
+                <div id="gitTab_config" class="git-tab-content" style="display:none;">
+                    <div id="gitRepoStatusBanner" class="git-banner"></div>
+                    <div class="git-form-group">
+                        <label>Ruta Local del Repositorio Git:</label>
+                        <input type="text" id="gitRepoPathInput" class="filter-input" placeholder="C:\...\tu-proyecto o ruta de gocriterio.com">
+                        <span class="git-hint">Carpeta donde se guardan <code>tasks/</code> y <code>AI_EXECUTION_QUEUE.md</code>.</span>
+                    </div>
+                    <div class="git-form-group">
+                        <label>URL Remoto de GitHub / GitLab (Opcional):</label>
+                        <input type="text" id="gitRemoteUrlInput" class="filter-input" placeholder="https://github.com/usuario/criterio-ai-sprint.git">
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                        <div class="git-form-group">
+                            <label>Rama Activa (Branch):</label>
+                            <input type="text" id="gitBranchInput" class="filter-input" value="main">
+                        </div>
+                        <div class="git-form-group">
+                            <label>IA Ejecutora Destino:</label>
+                            <select id="gitDownstreamAiSelect" class="filter-input" style="background:#1e293b; color:#fff;">
+                                <option value="Cursor / Claude Code / Antigravity">Cursor / Claude Code / Antigravity</option>
+                                <option value="Cursor IDE (Composer)">Cursor IDE (Composer)</option>
+                                <option value="Claude Code (CLI)">Claude Code (CLI)</option>
+                                <option value="Antigravity Agentic Assistant">Antigravity Agentic Assistant</option>
+                                <option value="GitHub Copilot CLI">GitHub Copilot CLI</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="git-checkbox-row">
+                        <input type="checkbox" id="gitAutoCommitCheck" checked>
+                        <label for="gitAutoCommitCheck">
+                            <strong>Auto-Commit Automático:</strong> Crear un commit en Git con el nombre del agente especialista cada vez que finalice una tarea o Reacción en Cadena.
+                        </label>
+                    </div>
+                    <div style="margin-top:16px; display:flex; gap:10px;">
+                        <button id="saveGitConfigBtn" class="action-btn btn-gold">
+                            💾 Guardar Configuración
+                        </button>
+                        <button id="initGitRepoBtn" class="action-btn">
+                            ⚡ Inicializar Git en esta carpeta
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tab 4: Terminal & Commits -->
+                <div id="gitTab_terminal" class="git-tab-content" style="display:none;">
+                    <div style="margin-bottom:12px;">
+                        <div style="font-size:10px; font-weight:bold; color:#38bdf8; margin-bottom:4px;">
+                            RAMA ACTIVA: <span id="gitTermBranch" style="color:#fde047;">main</span>
+                        </div>
+                        <div style="font-size:10px; font-weight:bold; color:#94a3b8; margin-bottom:4px;">
+                            ESTADO DE ARCHIVOS (git status):
+                        </div>
+                        <div id="gitTermDirty" class="git-term-box"></div>
+                    </div>
+                    <div>
+                        <div style="font-size:10px; font-weight:bold; color:#94a3b8; margin-bottom:4px;">
+                            HISTORIAL RECIENTE DE COMMITS (git log):
+                        </div>
+                        <div id="gitTermLog" class="git-term-box"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; gap:8px;">
+                    <button id="directGitCommitBtn" class="action-btn" title="Hacer commit de todos los cambios pendientes">
+                        🐙 Commitear Cambios Ahora
+                    </button>
+                    <button id="pushGitRemoteBtn" class="action-btn btn-primary" title="Subir cambios a GitHub/GitLab">
+                        🚀 Push a Repositorio Remoto
+                    </button>
+                </div>
+                <div style="font-size:10px; color:#64748b;">
+                    Las otras IAs leen <code>AI_EXECUTION_QUEUE.md</code> para ejecutar el sprint.
+                </div>
             </div>
         </div>
     </div>
@@ -449,6 +592,7 @@
     <script src="js/pixel_engine.js"></script>
     <script src="js/chain_reaction.js"></script>
     <script src="js/disciplines_panel.js"></script>
+    <script src="js/git_connector.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
