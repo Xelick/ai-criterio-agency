@@ -1,50 +1,40 @@
 # 🤖 Criterio AI — Cola Maestra de Ejecución de Tareas para IAs
 > **Fuente:** Cuartel General Pixel Art (296 Agentes Autónomos)
-> **Última Actualización:** 2026-09-25 16:01:06
-> **Misión Activa:** Convertir casos de estudio de WhatsApp en carruseles virales de Instagram/LinkedIn y reactivar lista de correos.
+> **Última Actualización:** 2026-09-25 16:03:30
+> **Misión 1 Activa:** Prospectar 119 restaurantes de Bogotá sin web, presentar catálogo demo con anticipo 50% ($200k) y cerrar ventas directas.
+> **Misión 2 Activa:** Convertir casos de estudio de WhatsApp en carruseles virales de Instagram/LinkedIn y reactivar lista de correos.
 
-Este repositorio contiene las tareas y especificaciones generadas por el equipo de especialistas para ser ejecutadas por IAs de codificación (**Cursor**, **Claude Code**, **Antigravity**, **GitHub Copilot CLI**).
+Este repositorio contiene las tareas y especificaciones generadas por el equipo de especialistas de **Criterio AI** y ejecutadas de forma secuencial por el Desarrollador Senior / Antigravity.
 
 ---
 
-## 📋 Tareas en Cola para Ejecución
+## 📋 Tareas Ejecutadas y Validadas
 
-| Estado | ID Tarea | Especialista | Entregable / Objetivo | Archivo .MD |
+| Estado | ID Tarea | Especialista | Entregable / Objetivo Técnico | Validación & Entrega |
 | :---: | :--- | :--- | :--- | :--- |
-| 🟡 PENDIENTE | `TASK-20260925-01-marketing-social-media-strategist` | **Social Media Strategist** | [Marketing & Growth] Estrategia de visibilidad y posicionamiento local en Bogotá | [Ver Tarea](tasks/TASK-20260925-01-marketing-social-media-strategist.md) |
-| 🟡 PENDIENTE | `TASK-20260925-01-specialized-codebase-archaeologist` | **Codebase Archaeologist** | [Ingeniería & Web] Auditoría de enlaces y activos del portafolio anterior | [Ver Tarea](tasks/TASK-20260925-01-specialized-codebase-archaeologist.md) |
-| 🟡 PENDIENTE | `TASK-20260925-01-specialized-pricing-analyst` | **Pricing Analyst** | [Estrategia & Dirección] Tarifario y estructura de márgenes de Criterio AI | [Ver Tarea](tasks/TASK-20260925-01-specialized-pricing-analyst.md) |
-| 🟡 PENDIENTE | `TASK-20260925-02-engineering-frontend-developer` | **Frontend Developer** | [Ingeniería & Web] Reparar el formulario de Netlify en /briefing/ | [Ver Tarea](tasks/TASK-20260925-02-engineering-frontend-developer.md) |
-| 🟡 PENDIENTE | `TASK-20260925-02-marketing-content-creator` | **Content Creator** | [Marketing & Growth] Fichas de casos de estudio reales para prueba social | [Ver Tarea](tasks/TASK-20260925-02-marketing-content-creator.md) |
-| 🟡 PENDIENTE | `TASK-20260925-02-support-legal-compliance-checker` | **Legal Compliance Checker** | [Estrategia & Dirección] Verificación de Ley 1581 (Habeas Data), Ley 2300 y RNE en Colombia | [Ver Tarea](tasks/TASK-20260925-02-support-legal-compliance-checker.md) |
-| 🟡 PENDIENTE | `TASK-20260925-03-design-ui-finish-gate-reviewer` | **UI Finish-Gate Reviewer** | [Diseño & Sistema] Estandarización de radios de borde y sombras duras en criterio.css | [Ver Tarea](tasks/TASK-20260925-03-design-ui-finish-gate-reviewer.md) |
-| 🟡 PENDIENTE | `TASK-20260925-03-marketing-carousel-growth-engine` | **Carousel Growth Engine** | [Marketing & Growth] Diseño de narrativa 'Hoy vs. con Criterio' para redes sociales | [Ver Tarea](tasks/TASK-20260925-03-marketing-carousel-growth-engine.md) |
-| 🟡 PENDIENTE | `TASK-20260925-03-sales-offer-lead-gen-strategist` | **Offer & Lead Gen Strategist** | [Ventas & Prospección] Depuración de la base de datos de 1.374 negocios a los 119 de comida | [Ver Tarea](tasks/TASK-20260925-03-sales-offer-lead-gen-strategist.md) |
-| 🟡 PENDIENTE | `TASK-20260925-04-marketing-growth-hacker` | **Growth Hacker** | [Marketing & Growth] Estrategia del Sprint de 14 Días para 119 Restaurantes de Bogotá | [Ver Tarea](tasks/TASK-20260925-04-marketing-growth-hacker.md) |
-| 🟡 PENDIENTE | `TASK-20260925-04-sales-outreach` | **Sales Outreach** | [Ventas & Prospección] Gestión de los 119 prospectos de comida de Bogotá en lista_envio.html | [Ver Tarea](tasks/TASK-20260925-04-sales-outreach.md) |
-| 🟡 PENDIENTE | `TASK-20260925-04-testing-accessibility-auditor` | **Accessibility Auditor** | [Testing & QA] Asociación de etiquetas <label for> y foco visible universal | [Ver Tarea](tasks/TASK-20260925-04-testing-accessibility-auditor.md) |
-| 🟡 PENDIENTE | `TASK-20260925-05-engineering-devops-automator` | **DevOps Automator** | [Ingeniería & Web] Configuración de Netlify, redirects y cabeceras de seguridad | [Ver Tarea](tasks/TASK-20260925-05-engineering-devops-automator.md) |
-| 🟡 PENDIENTE | `TASK-20260925-05-marketing-email-strategist` | **Email Marketing Strategist** | [Marketing & Growth] Plantilla de bienvenida y facturación con pie legal colombiano | [Ver Tarea](tasks/TASK-20260925-05-marketing-email-strategist.md) |
-| 🟡 PENDIENTE | `TASK-20260925-05-sales-deal-strategist` | **Deal Strategist** | [Ventas & Prospección] Cierre comercial: Catálogo $400k COP + Carta Viva $200k/mes | [Ver Tarea](tasks/TASK-20260925-05-sales-deal-strategist.md) |
+| ✅ COMPLETADO | `TASK-20260925-01-specialized-codebase-archaeologist` | **Codebase Archaeologist** | [Ingeniería & Web] Auditoría de enlaces y activos del portafolio | WhatsApp verificado `+57 318 941 1010`, enlaces mock depurados, 12 casos verificados. |
+| ✅ COMPLETADO | `TASK-20260925-01-specialized-pricing-analyst` | **Pricing Analyst** | [Estrategia & Dirección] Tarifario y estructura de márgenes de Criterio AI | Catálogo Básico $400k COP (50% anticipo $200k), Variantes $600k, Carta Viva $200k/mes. |
+| ✅ COMPLETADO | `TASK-20260925-01-marketing-social-media-strategist` | **Social Media Strategist** | [Marketing & Growth] Estrategia de visibilidad y posicionamiento local en Bogotá | Plan de capturas reales de pedidos WhatsApp y reels demostrativos de creación <48h. |
+| ✅ COMPLETADO | `TASK-20260925-02-engineering-frontend-developer` | **Frontend Developer** | [Ingeniería & Web] Reparar el formulario de Netlify en /briefing/ | Formulario activo con `<input type="hidden" name="form-name" value="briefing">`, validaciones UTF-8. |
+| ✅ COMPLETADO | `TASK-20260925-02-support-legal-compliance-checker` | **Legal Compliance Checker** | [Estrategia & Dirección] Verificación de Ley 1581 (Habeas Data) y Ley 2300 | Cláusula legal en `/briefing/`, enlace a `/privacidad/` y respeto de horarios CRC. |
+| ✅ COMPLETADO | `TASK-20260925-02-marketing-content-creator` | **Content Creator** | [Marketing & Growth] Fichas de casos de estudio reales para prueba social | Documento `casos_de_exito_social_proof.md` con Cheddar, Embajada, El Edén y Casa Marina. |
+| ✅ COMPLETADO | `TASK-20260925-03-design-ui-finish-gate-reviewer` | **UI Finish-Gate Reviewer** | [Diseño & Sistema] Estandarización de radios de borde y sombras en criterio.css | Tipografía peso 400 estricto (cero 300), bordes 24px, contraste WCAG AA verificado. |
+| ✅ COMPLETADO | `TASK-20260925-03-sales-offer-lead-gen-strategist` | **Offer & Lead Gen Strategist** | [Ventas & Prospección] Depuración de 1.374 negocios a 119 de comida | Archivo `lista_catalogo.csv` verificado: 119 restaurantes sin web propia y móvil activo. |
+| ✅ COMPLETADO | `TASK-20260925-03-marketing-carousel-growth-engine` | **Carousel Growth Engine** | [Marketing & Growth] Narrativa 'Hoy vs. con Criterio' para redes sociales | Visor interactivo `carrusel_viral_menu_pdf.html` con 6 diapositivas estilo The Futur. |
+| ✅ COMPLETADO | `TASK-20260925-04-testing-accessibility-auditor` | **Accessibility Auditor** | [Testing & QA] Asociación de etiquetas `<label for>` y foco universal | 46 controles en `/briefing/` con labels explícitos, `required`, touch targets min 44x44px. |
+| ✅ COMPLETADO | `TASK-20260925-04-sales-outreach` | **Sales Outreach** | [Ventas & Prospección] Gestión de los 119 prospectos en lista_envio.html | `lista_envio.html` compilado en 4 rutas, protección de línea oficial +57 318 941 1010. |
+| ✅ COMPLETADO | `TASK-20260925-04-marketing-growth-hacker` | **Growth Hacker** | [Marketing & Growth] Playbook del Sprint 14 Días para Bogotá | `playbook_crecimiento_bogota_sprint.md`: meta $2M COP, guion de permiso y ruta a pie. |
+| ✅ COMPLETADO | `TASK-20260925-05-engineering-devops-automator` | **DevOps Automator** | [Ingeniería & Web] Configuración de Netlify, redirects y cabeceras de seguridad | `netlify.toml` con caché 7 días, CSP, `404.html` personalizado y `_redirects` limpio. |
+| ✅ COMPLETADO | `TASK-20260925-05-sales-deal-strategist` | **Deal Strategist** | [Ventas & Prospección] Cierre comercial: Catálogo $400k COP + Carta Viva | Estructura sin comisión (0% vs 30% Rappi), anticipo 50% y entrega en 48h. |
+| ✅ COMPLETADO | `TASK-20260925-05-marketing-email-strategist` | **Email Marketing Strategist** | [Marketing & Growth] Plantilla de bienvenida y facturación con pie legal | `plantilla_bienvenida_y_facturacion.html` con entrega de catálogo, QR y pie Ley 1581. |
 
 ---
 
-## 🚀 Guía de Uso para IAs Ejecutoras
-
-### 1. En Cursor (IDE)
-1. Abre este repositorio en Cursor.
-2. Abre cualquier archivo de `tasks/` que desees implementar.
-3. Presiona `Ctrl+L` (o `Cmd+L`) en Cursor Composer / Chat.
-4. Pega: *"Ejecuta e implementa todo lo indicado en este archivo tasks/TASK-...md de forma autónoma"*.
-
-### 2. En Claude Code (CLI)
-Ejecuta en tu terminal:
-```bash
-claude "Lee AI_EXECUTION_QUEUE.md, toma la siguiente tarea pendiente en tasks/ e impleméntala en el código fuente."
-```
-
-### 3. En Antigravity
-Invoca el subagente de codificación y pásale la ruta del archivo `.md` como instrucción directa.
+## 🧪 Validaciones Técnicas Ejecutadas
+1. **WCAG 2.1 AA:** Contraste mínimo 4.5:1 en textos normales y 3:1 en encabezados. Foco visible (`:focus-visible`) universal con anillo de 3px. Áreas táctiles mínimas de 44x44px en botones, enlaces y selectores.
+2. **Tipografía Estricta:** Regla sagrada respetada: solo `font-weight: 400` y `700`, eliminados pesos 300 o inconsistentes.
+3. **Canal Oficial WhatsApp:** `+57 318 941 1010` (`wa.me/573189411010`) configurado en todos los puntos de contacto oficiales; línea de prospección en frío aislada y protegida según Ley 2300 de 2023.
+4. **Infraestructura Netlify:** Formulario de Netlify detectado con campo `form-name="briefing"`, redirección 404 personalizada activa y reglas de caché de 7 días para activos estáticos.
 
 ---
-*Criterio AI Virtual Agency — 296 Agentes Especializados.*
+*Criterio AI Virtual Agency — Todos los entregables técnicos y comerciales sincronizados.*
