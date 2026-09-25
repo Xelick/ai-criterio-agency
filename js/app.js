@@ -85,6 +85,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.gitConnector.init();
     }
 
+    // Initialize Commander & Rally Controls
+    initCommanderControls();
+
     const openDisciplinesTopBtn = document.getElementById('openDisciplinesTopBtn');
     if (openDisciplinesTopBtn) {
         openDisciplinesTopBtn.addEventListener('click', () => {
@@ -750,6 +753,129 @@ document.addEventListener('DOMContentLoaded', async () => {
             opsGuideModal.classList.add('hidden');
             if (window.pixelAudio) window.pixelAudio.playSuccess();
         });
+    }
+
+    // -------------------------------------------------------------
+    // COMMANDER & RALLY CONTROLS (Department & Coalition Management)
+    // -------------------------------------------------------------
+    function initCommanderControls() {
+        const deptSelect = document.getElementById('commanderDeptSelect');
+        const rallyBtn = document.getElementById('cmdRallyBtn');
+        const sprintBtn = document.getElementById('cmdSprintBtn');
+        const meetingBtn = document.getElementById('cmdMeetingBtn');
+        const coffeeBtn = document.getElementById('cmdCoffeeBtn');
+        const returnBtn = document.getElementById('cmdReturnBtn');
+        const executeChainBtn = document.getElementById('cmdExecuteChainBtn');
+
+        if (!deptSelect) return;
+
+        // Auto-switch to floor if selecting a single department that lives elsewhere
+        const deptFloorMap = {
+            'dept_engineering': 2,
+            'dept_design': 3,
+            'dept_sales': 1,
+            'dept_marketing': 1,
+            'dept_testing': 2,
+            'dept_security': 2,
+            'dept_product': 3,
+            'dept_finance': 5,
+            'dept_strategy': 5,
+            'dept_gis': 4,
+            'dept_game-development': 3,
+            'dept_academic': 4,
+            'dept_support': 1,
+            'dept_paid-media': 1,
+            'dept_specialized': 5
+        };
+
+        function ensureFloorForSelection(key) {
+            const targetFloor = deptFloorMap[key];
+            if (targetFloor && targetFloor !== window.agentsManager.currentFloor) {
+                const targetFloorBtn = document.querySelector(`.floor-btn[data-floor="${targetFloor}"]`);
+                if (targetFloorBtn) {
+                    targetFloorBtn.click();
+                }
+            }
+        }
+
+        if (rallyBtn) {
+            rallyBtn.addEventListener('click', () => {
+                const key = deptSelect.value;
+                ensureFloorForSelection(key);
+                setTimeout(() => {
+                    engine.rallySquad(key);
+                }, 120);
+            });
+        }
+
+        if (sprintBtn) {
+            sprintBtn.addEventListener('click', () => {
+                const key = deptSelect.value;
+                ensureFloorForSelection(key);
+                setTimeout(() => {
+                    engine.commandSprint(key);
+                }, 120);
+            });
+        }
+
+        if (meetingBtn) {
+            meetingBtn.addEventListener('click', () => {
+                const key = deptSelect.value;
+                ensureFloorForSelection(key);
+                setTimeout(() => {
+                    engine.commandWarRoom(key);
+                }, 120);
+            });
+        }
+
+        if (coffeeBtn) {
+            coffeeBtn.addEventListener('click', () => {
+                const key = deptSelect.value;
+                ensureFloorForSelection(key);
+                setTimeout(() => {
+                    engine.commandCoffeeBreak(key);
+                }, 120);
+            });
+        }
+
+        if (returnBtn) {
+            returnBtn.addEventListener('click', () => {
+                const key = deptSelect.value;
+                engine.commandReturnToDesks(key);
+            });
+        }
+
+        if (executeChainBtn) {
+            executeChainBtn.addEventListener('click', () => {
+                const key = deptSelect.value;
+                const squad = engine.getAgentsForSelection(key);
+                if (!squad || squad.length === 0) return;
+
+                // Open disciplines panel & switch to chain tab
+                const panel = document.getElementById('disciplinesPanel');
+                if (panel && panel.classList.contains('collapsed')) {
+                    panel.classList.remove('collapsed');
+                    window.disciplinesPanel.isOpen = true;
+                    const toggleBtn = document.getElementById('toggleDisciplinesBtn');
+                    if (toggleBtn) toggleBtn.innerHTML = '◀';
+                }
+
+                if (window.disciplinesPanel) {
+                    window.disciplinesPanel.switchTab('chain');
+                    // Add squad agents to chain pipeline
+                    squad.slice(0, 5).forEach((agent, idx) => {
+                        window.disciplinesPanel.addAgentToChain(agent.id, `Fase ${idx + 1}: ${agent.name} liderando entregable en ${agent.department_name}`);
+                    });
+                    const goalInput = document.getElementById('chainMissionGoalInput');
+                    if (goalInput) {
+                        const optText = deptSelect.options[deptSelect.selectedIndex].text;
+                        goalInput.value = `Misión Conjunta: [${optText}] ejecutando entregables de alta prioridad para Criterio AI`;
+                    }
+                }
+                engine.showToast(`⚡ Escuadrón cargado en la Cadena de Ejecución`, '#059669');
+                if (window.pixelAudio) window.pixelAudio.playSuccess();
+            });
+        }
     }
 
     // Markdown Parser Helper for Chat Messages

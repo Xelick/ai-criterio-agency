@@ -46,6 +46,21 @@ class PixelOfficeEngine {
         this.chainBeamSource = null;
         this.chainBeamTarget = null;
 
+        // Drag & Drop Agent State
+        this.draggedAgent = null;
+        this.agentDragCandidate = null;
+        this.dragStartTime = 0;
+        this.dragStartClientX = 0;
+        this.dragStartClientY = 0;
+        this.isDraggingAgent = false;
+        this.didDragMove = false;
+
+        // Squad Modes, Active Speech Bubbles & Floating Particles
+        this.squadActiveMode = 'normal'; // 'normal', 'sprint', 'break', 'meeting', 'rally'
+        this.assembledSquad = null;
+        this.activeSpeechBubbles = new Map();
+        this.particles = [];
+
         this.initEventListeners();
         this.resize();
         window.addEventListener('resize', () => this.resize());
@@ -89,19 +104,56 @@ class PixelOfficeEngine {
     }
 
     initEventListeners() {
-        // Pan with mouse drag
+        // Pan or Drag Agent with mouse
         this.canvas.addEventListener('mousedown', (e) => {
             if (e.button === 0) { // Left click
-                this.camera.isDragging = true;
-                this.camera.dragStartX = e.clientX;
-                this.camera.dragStartY = e.clientY;
+                const canvasPoint = this.getCanvasPoint(e.clientX, e.clientY);
+                const worldPos = this.screenToWorld(canvasPoint.x, canvasPoint.y);
+                const clicked = this.getAgentAt(worldPos.x, worldPos.y);
+
+                if (clicked) {
+                    // Prepare potential agent drag
+                    this.agentDragCandidate = clicked;
+                    this.dragStartTime = Date.now();
+                    this.dragStartClientX = e.clientX;
+                    this.dragStartClientY = e.clientY;
+                    this.didDragMove = false;
+                } else {
+                    // Pan camera
+                    this.camera.isDragging = true;
+                    this.camera.dragStartX = e.clientX;
+                    this.camera.dragStartY = e.clientY;
+                }
             }
         });
 
         window.addEventListener('mousemove', (e) => {
             const canvasPoint = this.getCanvasPoint(e.clientX, e.clientY);
+            const worldPos = this.screenToWorld(canvasPoint.x, canvasPoint.y);
 
-            if (this.camera.isDragging) {
+            // Check if dragging agent
+            if (this.agentDragCandidate && !this.isDraggingAgent) {
+                const dist = Math.hypot(e.clientX - this.dragStartClientX, e.clientY - this.dragStartClientY);
+                const elapsed = Date.now() - this.dragStartTime;
+                if (dist > 4 || elapsed > 130) {
+                    this.isDraggingAgent = true;
+                    this.didDragMove = true;
+                    this.draggedAgent = this.agentDragCandidate;
+                    this.draggedAgent.isBeingDragged = true;
+                    this.draggedAgent.state = 'held';
+                    this.canvas.style.cursor = 'grabbing';
+                }
+            }
+
+            if (this.isDraggingAgent && this.draggedAgent) {
+                this.draggedAgent.currentX = Math.max(30, Math.min(this.worldWidth - 30, Math.round(worldPos.x)));
+                this.draggedAgent.currentY = Math.max(120, Math.min(this.worldHeight - 30, Math.round(worldPos.y)));
+                this.draggedAgent.wanderTarget = null;
+
+                if (Math.random() < 0.2) {
+                    this.addParticle(this.draggedAgent.currentX, this.draggedAgent.currentY - 14, '✨', '#38bdf8');
+                }
+            } else if (this.camera.isDragging) {
                 const dx = (e.clientX - this.camera.dragStartX) / this.camera.zoom;
                 const dy = (e.clientY - this.camera.dragStartY) / this.camera.zoom;
                 this.camera.x -= dx;
@@ -110,13 +162,44 @@ class PixelOfficeEngine {
                 this.camera.dragStartY = e.clientY;
                 this.clampCamera();
             } else {
-                // Raycast mouse to world coordinates to find hovered agent
-                const worldPos = this.screenToWorld(canvasPoint.x, canvasPoint.y);
                 this.checkHover(worldPos.x, worldPos.y);
             }
         });
 
         window.addEventListener('mouseup', () => {
+            if (this.isDraggingAgent && this.draggedAgent) {
+                const agent = this.draggedAgent;
+                agent.isBeingDragged = false;
+                agent.state = 'working';
+                agent.deskX = Math.round(agent.currentX);
+                agent.deskY = Math.round(agent.currentY);
+                agent.wanderTarget = { x: agent.deskX, y: agent.deskY };
+
+                this.isDraggingAgent = false;
+                this.draggedAgent = null;
+                this.agentDragCandidate = null;
+                this.canvas.style.cursor = 'default';
+
+                if (window.pixelAudio && window.pixelAudio.playAgentDrop) {
+                    window.pixelAudio.playAgentDrop();
+                } else if (window.pixelAudio) {
+                    window.pixelAudio.playClick();
+                }
+
+                for (let p = 0; p < 6; p++) {
+                    this.addParticle(agent.currentX, agent.currentY - 10, ['✨', '⭐', '💫'][p % 3], '#f59e0b');
+                }
+                this.showSpeechBubble(agent.id, "¡A sus órdenes!", 2200, '#38bdf8');
+            } else if (this.agentDragCandidate) {
+                // Click without drag
+                const clicked = this.agentDragCandidate;
+                this.agentDragCandidate = null;
+                this.selectedAgent = clicked;
+                if (window.pixelAudio) window.pixelAudio.playAgentSelect();
+                if (this.onAgentSelected) {
+                    this.onAgentSelected(clicked);
+                }
+            }
             this.camera.isDragging = false;
         });
 
@@ -138,6 +221,10 @@ class PixelOfficeEngine {
 
         // Click on agent to select or interact with props
         this.canvas.addEventListener('click', (e) => {
+            if (this.didDragMove) {
+                this.didDragMove = false;
+                return;
+            }
             const canvasPoint = this.getCanvasPoint(e.clientX, e.clientY);
             const worldPos = this.screenToWorld(canvasPoint.x, canvasPoint.y);
             const clicked = this.getAgentAt(worldPos.x, worldPos.y);
@@ -285,37 +372,59 @@ class PixelOfficeEngine {
 
     updateAgents(dt) {
         const t = this.timeTick;
-        this.agents.forEach((a, idx) => {
-            // Autonomous behaviors: working, coffee break, stretching
-            if (!a.wanderWait) a.wanderWait = 100 + (idx * 27) % 300;
-            a.wanderWait -= 0.2;
 
-            if (a.wanderWait <= 0) {
-                if (a.state === 'working') {
-                    // Decide next action: 70% keep working, 20% go to coffee/water, 10% chat
-                    const dice = Math.random();
-                    if (dice < 0.25) {
+        // 1. Update floating particles
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+            const p = this.particles[i];
+            p.x += p.vx * dt;
+            p.y += p.vy * dt;
+            p.life -= p.decay * dt;
+            if (p.life <= 0) {
+                this.particles.splice(i, 1);
+            }
+        }
+
+        // 2. Update agent behaviors
+        this.agents.forEach((a, idx) => {
+            if (a.isBeingDragged) return; // Suspended in air by user!
+
+            // Periodically emit work spark if sprinting
+            if (a.isSprinting && Math.random() < 0.05) {
+                this.addParticle(a.currentX, a.currentY - 10, ['⚡', '💻', '💡'][Math.floor(Math.random() * 3)], '#fde047');
+            }
+
+            // Autonomous wander decisions (suppressed if assembled in formation or sprinting at desk)
+            if (!a.isAssembled && !a.isSprinting) {
+                if (!a.wanderWait) a.wanderWait = 100 + (idx * 27) % 300;
+                a.wanderWait -= 0.2;
+
+                if (a.wanderWait <= 0) {
+                    if (a.state === 'working') {
+                        // Decide next action: 70% keep working, 20% go to coffee/water, 10% chat
+                        const dice = Math.random();
+                        if (dice < 0.25) {
+                            a.state = 'walking';
+                            // Walk to coffee machine or water cooler
+                            const dest = Math.random() < 0.5 ? this.coffeeStation : this.waterCooler;
+                            a.wanderTarget = {
+                                x: dest.x + 30 + (Math.random() * 40 - 20),
+                                y: dest.y + (Math.random() * 30 - 15)
+                            };
+                        } else if (dice < 0.45) {
+                            // Short stretch
+                            a.state = 'walking';
+                            a.wanderTarget = {
+                                x: a.deskX + (Math.random() * 60 - 30),
+                                y: a.deskY + (Math.random() * 40 - 20)
+                            };
+                        }
+                        a.wanderWait = 200 + Math.random() * 400;
+                    } else {
+                        // Walk back to desk
                         a.state = 'walking';
-                        // Walk to coffee machine or water cooler or meeting table
-                        const dest = Math.random() < 0.5 ? this.coffeeStation : this.waterCooler;
-                        a.wanderTarget = {
-                            x: dest.x + 30 + (Math.random() * 40 - 20),
-                            y: dest.y + (Math.random() * 30 - 15)
-                        };
-                    } else if (dice < 0.45) {
-                        // Short stretch
-                        a.state = 'walking';
-                        a.wanderTarget = {
-                            x: a.deskX + (Math.random() * 60 - 30),
-                            y: a.deskY + (Math.random() * 40 - 20)
-                        };
+                        a.wanderTarget = { x: a.deskX, y: a.deskY };
+                        a.wanderWait = 250 + Math.random() * 500;
                     }
-                    a.wanderWait = 200 + Math.random() * 400;
-                } else {
-                    // Walk back to desk
-                    a.state = 'walking';
-                    a.wanderTarget = { x: a.deskX, y: a.deskY };
-                    a.wanderWait = 250 + Math.random() * 500;
                 }
             }
 
@@ -326,7 +435,8 @@ class PixelOfficeEngine {
                 const dist = Math.hypot(dx, dy);
 
                 if (dist > 3) {
-                    const speed = 40 * dt;
+                    const walkSpeed = a.isAssembled ? 55 : 40;
+                    const speed = walkSpeed * dt;
                     a.currentX += (dx / dist) * Math.min(speed, dist);
                     a.currentY += (dy / dist) * Math.min(speed, dist);
                     a.facing = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
@@ -335,7 +445,10 @@ class PixelOfficeEngine {
                     a.currentX = a.wanderTarget.x;
                     a.currentY = a.wanderTarget.y;
                     a.isWalking = false;
-                    if (Math.hypot(a.currentX - a.deskX, a.currentY - a.deskY) < 5) {
+                    if (a.isAssembled) {
+                        a.facing = 'down';
+                        a.state = 'idle';
+                    } else if (Math.hypot(a.currentX - a.deskX, a.currentY - a.deskY) < 5) {
                         a.state = 'working';
                     }
                 }
@@ -999,19 +1112,36 @@ class PixelOfficeEngine {
             ctx.strokeRect(x - 18, y - 26, 36, 42);
         }
 
-        // Bobbing animation
-        const bob = a.isWalking ? Math.sin(this.timeTick * 12) * 2 : Math.sin(this.timeTick * 2 + (x % 10)) * 1;
-        const charY = y + bob;
+        // Bobbing & Floating animation
+        let bob = a.isWalking ? Math.sin(this.timeTick * 12) * 2 : Math.sin(this.timeTick * 2 + (x % 10)) * 1;
+        let charY = y + bob;
+
+        if (a.isBeingDragged) {
+            // Suspended in air by user mouse cursor!
+            bob = Math.sin(this.timeTick * 22) * 3;
+            charY = y - 12 + bob;
+        }
 
         // Shadow under character
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+        ctx.fillStyle = a.isBeingDragged ? 'rgba(0, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0.35)';
         ctx.beginPath();
-        ctx.ellipse(x, y + 12, 12, 5, 0, 0, Math.PI * 2);
+        if (a.isBeingDragged) {
+            // Smaller floating shadow beneath suspended agent
+            ctx.ellipse(x, y + 16, 9, 3.5, 0, 0, Math.PI * 2);
+        } else {
+            ctx.ellipse(x, y + 12, 12, 5, 0, 0, Math.PI * 2);
+        }
         ctx.fill();
 
         // Legs / Pants
         ctx.fillStyle = '#1e293b';
-        if (a.isWalking) {
+        if (a.isBeingDragged) {
+            // Cute frantic kicking little legs in the air!
+            const kickL = Math.sin(this.timeTick * 28) * 5;
+            const kickR = -Math.sin(this.timeTick * 28) * 5;
+            ctx.fillRect(x - 5, charY + 5 + kickL, 4, 7);
+            ctx.fillRect(x + 1, charY + 5 + kickR, 4, 7);
+        } else if (a.isWalking) {
             const stride = Math.sin(this.timeTick * 12) * 4;
             ctx.fillRect(x - 5 + stride, charY + 5, 4, 7);
             ctx.fillRect(x + 1 - stride, charY + 5, 4, 7);
@@ -1024,9 +1154,28 @@ class PixelOfficeEngine {
         ctx.fillStyle = sp.shirt_color || a.color || '#3b82f6';
         ctx.fillRect(x - 7, charY - 6, 14, 12);
 
-        // Arms (typing if at desk, swinging if walking)
+        // Arms (Flailing when dragged, turbo typing when sprinting, swinging when walking)
         ctx.fillStyle = sp.skin_color || '#ffd7ba';
-        if (a.state === 'working' && !a.isWalking) {
+        if (a.isBeingDragged) {
+            // Flailing little arms waving frantically in the air!
+            const flailL = Math.sin(this.timeTick * 32) * 8;
+            const flailR = -Math.cos(this.timeTick * 32) * 8;
+            // Raised arms with frantic up/down motion
+            ctx.fillRect(x - 10, charY - 10 + flailL, 3, 9);
+            ctx.fillRect(x + 7, charY - 10 + flailR, 3, 9);
+        } else if (a.isSprinting || (this.squadActiveMode === 'sprint' && a.state === 'working')) {
+            // Turbo typing at 200 WPM!
+            const turboL = Math.sin(this.timeTick * 45) * 3;
+            const turboR = Math.cos(this.timeTick * 45) * 3;
+            ctx.fillRect(x - 9, charY - 3 + turboL, 3, 7);
+            ctx.fillRect(x + 6, charY - 3 + turboR, 3, 7);
+        } else if (a.isCelebrating) {
+            // Both arms in the air in victory 'V'
+            const waveL = Math.sin(this.timeTick * 16) * 3;
+            const waveR = Math.cos(this.timeTick * 16) * 3;
+            ctx.fillRect(x - 9, charY - 14 + waveL, 3, 8);
+            ctx.fillRect(x + 6, charY - 14 + waveR, 3, 8);
+        } else if (a.state === 'working' && !a.isWalking) {
             // Hands reaching to keyboard
             ctx.fillRect(x - 9, charY - 2, 3, 8);
             ctx.fillRect(x + 6, charY - 2, 3, 8);
@@ -1043,10 +1192,23 @@ class PixelOfficeEngine {
         ctx.fillStyle = sp.skin_color || '#ffd7ba';
         ctx.fillRect(x - 6, charY - 18, 12, 12);
 
-        // Face features (Eyes)
-        ctx.fillStyle = '#0f172a';
-        ctx.fillRect(x - 4, charY - 14, 2, 3);
-        ctx.fillRect(x + 2, charY - 14, 2, 3);
+        // Face features (Eyes & Expressions)
+        if (a.isBeingDragged) {
+            // Surprised / excited open eyes & mouth
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(x - 4, charY - 15, 2, 2);
+            ctx.fillRect(x + 2, charY - 15, 2, 2);
+            // Open mouth "o"
+            ctx.fillRect(x - 1, charY - 10, 2, 2);
+            // Cute sweat drop
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = '9px monospace';
+            ctx.fillText('💧', x + 9, charY - 16);
+        } else {
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(x - 4, charY - 14, 2, 3);
+            ctx.fillRect(x + 2, charY - 14, 2, 3);
+        }
 
         // Hair
         ctx.fillStyle = sp.hair_color || '#2d1b00';
@@ -1204,6 +1366,334 @@ class PixelOfficeEngine {
             ctx.restore();
             toast.time--;
         }
+
+        // 5. Floating Action & Ambient Particles
+        this.particles.forEach(p => {
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, Math.min(1, p.life));
+            ctx.font = '13px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillStyle = p.color || '#fde047';
+            ctx.fillText(p.char, p.x, p.y);
+            ctx.restore();
+        });
+
+        // 6. Squad & Dynamic Speech Bubbles
+        const nowMs = performance.now();
+        this.agents.forEach(a => {
+            const bubble = this.activeSpeechBubbles.get(a.id);
+            if (bubble && bubble.expiresAt > nowMs) {
+                const bx = a.currentX;
+                const by = a.currentY - 36;
+                ctx.save();
+                ctx.font = 'bold 10px monospace';
+                const tw = ctx.measureText(bubble.text).width;
+                const bW = Math.max(60, tw + 18);
+                const bH = 22;
+                const startX = bx - bW / 2;
+                const startY = by - bH;
+
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.95)';
+                ctx.fillRect(startX, startY, bW, bH);
+                ctx.strokeStyle = bubble.color || '#38bdf8';
+                ctx.lineWidth = 1.5;
+                ctx.strokeRect(startX, startY, bW, bH);
+
+                // Small connector arrow down
+                ctx.fillStyle = bubble.color || '#38bdf8';
+                ctx.beginPath();
+                ctx.moveTo(bx - 4, startY + bH);
+                ctx.lineTo(bx + 4, startY + bH);
+                ctx.lineTo(bx, startY + bH + 4);
+                ctx.fill();
+
+                ctx.fillStyle = '#ffffff';
+                ctx.textAlign = 'center';
+                ctx.fillText(bubble.text, bx, startY + 14);
+                ctx.restore();
+            } else if (bubble && bubble.expiresAt <= nowMs) {
+                this.activeSpeechBubbles.delete(a.id);
+            }
+        });
+    }
+
+    addParticle(x, y, char = '✨', color = '#38bdf8') {
+        if (this.particles.length > 70) this.particles.shift();
+        this.particles.push({
+            x: x + (Math.random() * 16 - 8),
+            y: y + (Math.random() * 10 - 5),
+            vx: (Math.random() - 0.5) * 30,
+            vy: -25 - Math.random() * 35,
+            char: char,
+            color: color,
+            life: 1.0,
+            decay: 0.9 + Math.random() * 0.5
+        });
+    }
+
+    showSpeechBubble(agentId, text, durationMs = 3000, color = '#38bdf8') {
+        this.activeSpeechBubbles.set(agentId, {
+            text: text,
+            expiresAt: performance.now() + durationMs,
+            color: color
+        });
+    }
+
+    showToast(message, color = '#f59e0b', durationTicks = 150) {
+        this.activeToast = {
+            message: message,
+            color: color,
+            time: durationTicks
+        };
+    }
+
+    getAgentsForSelection(selectionKey) {
+        if (!selectionKey || selectionKey === 'all' || selectionKey === 'alliance_all') {
+            return this.agents;
+        }
+
+        if (selectionKey === 'alliance_sprint_38') {
+            const squad = this.agents.filter(a => a.isTaskforce);
+            return squad.length > 0 ? squad : this.agents.slice(0, 10);
+        }
+
+        // Synergistic coalitions
+        if (selectionKey === 'alliance_tech_qa') {
+            const depts = ['engineering', 'testing', 'security', 'integrations'];
+            const squad = this.agents.filter(a => depts.includes(a.department));
+            return squad.length > 0 ? squad : this.agents.slice(0, 8);
+        }
+
+        if (selectionKey === 'alliance_creative_growth') {
+            const depts = ['design', 'marketing', 'paid-media', 'game-development'];
+            const squad = this.agents.filter(a => depts.includes(a.department));
+            return squad.length > 0 ? squad : this.agents.slice(0, 8);
+        }
+
+        if (selectionKey === 'alliance_sales_legal') {
+            const depts = ['sales', 'finance', 'strategy', 'support'];
+            const squad = this.agents.filter(a => depts.includes(a.department));
+            return squad.length > 0 ? squad : this.agents.slice(0, 8);
+        }
+
+        if (selectionKey === 'alliance_strategy_nexus') {
+            const depts = ['strategy', 'research', 'academic', 'gis', 'product', 'project-management'];
+            const squad = this.agents.filter(a => depts.includes(a.department));
+            return squad.length > 0 ? squad : this.agents.slice(0, 8);
+        }
+
+        // Individual department (e.g. 'dept_engineering' or 'engineering')
+        const deptClean = selectionKey.replace(/^dept_/, '');
+        const squad = this.agents.filter(a => a.department === deptClean);
+        return squad.length > 0 ? squad : this.agents;
+    }
+
+    rallySquad(selectionKey) {
+        const squad = this.getAgentsForSelection(selectionKey);
+        if (!squad || squad.length === 0) return;
+
+        this.squadActiveMode = 'rally';
+        this.assembledSquad = squad;
+
+        // Assembly coordinates near central Whiteboard & Meeting Zone
+        const centerX = 1000;
+        const centerY = 960;
+        const count = squad.length;
+        const cols = Math.min(8, Math.max(3, Math.ceil(Math.sqrt(count * 1.5))));
+
+        squad.forEach((agent, i) => {
+            const col = i % cols;
+            const row = Math.floor(i / cols);
+            const targetX = Math.round(centerX - ((cols - 1) * 60) / 2 + col * 60);
+            const targetY = Math.round(centerY + row * 45);
+
+            agent.state = 'walking';
+            agent.wanderTarget = { x: targetX, y: targetY };
+            agent.wanderWait = 99999; // Prevent autonomous random wandering while assembled
+            agent.isAssembled = true;
+            agent.facing = 'down';
+
+            // Particles
+            this.addParticle(agent.currentX, agent.currentY - 12, '🎯', '#38bdf8');
+        });
+
+        // Team leader speech bubble
+        const leader = squad[0];
+        if (leader) {
+            this.showSpeechBubble(leader.id, `¡${squad.length} agentes listos a la orden!`, 4000, '#38bdf8');
+        }
+
+        // Camera pan smoothly to assembly point
+        const targetViewX = centerX - (this.canvas.width / 1.25) / 2;
+        const targetViewY = centerY - (this.canvas.height / 1.25) / 2;
+        this.smoothPanTo(targetViewX, targetViewY, 1.25, 700);
+
+        if (window.pixelAudio && window.pixelAudio.playRallyMarch) {
+            window.pixelAudio.playRallyMarch();
+        }
+
+        this.showToast(`🎯 Escuadrón de ${squad.length} agentes reunido en formación de combate`, '#38bdf8');
+
+        const moodEl = document.getElementById('statOfficeMood');
+        if (moodEl) moodEl.textContent = `🎯 Escuadrón Formado (${squad.length} NPCs)`;
+    }
+
+    commandSprint(selectionKey) {
+        const squad = this.getAgentsForSelection(selectionKey);
+        this.squadActiveMode = 'sprint';
+
+        if (window.pixelAudio && window.pixelAudio.playSprintType) {
+            window.pixelAudio.playSprintType();
+        }
+
+        const phrases = [
+            "¡Compilando Netlify Forms!",
+            "¡Cerrando restaurante Chapinero!",
+            "¡Auditando WCAG AA!",
+            "¡Diseñando carrusel Instagram!",
+            "¡Optimizando LCP a 0.8s!",
+            "¡Redactando guiones WhatsApp!",
+            "¡Generando demo interactiva!",
+            "¡Cobrando cartera Cheddar 1997!"
+        ];
+
+        squad.forEach((agent, i) => {
+            agent.isSprinting = true;
+            agent.state = 'working';
+            for (let k = 0; k < 3; k++) {
+                this.addParticle(agent.currentX, agent.currentY - 10, ['⚡', '🔥', '💻'][k % 3], '#fde047');
+            }
+
+            if (i < 4 || Math.random() < 0.25) {
+                const phrase = phrases[(i + Math.floor(Math.random() * phrases.length)) % phrases.length];
+                this.showSpeechBubble(agent.id, phrase, 3000 + i * 400, '#ef4444');
+            }
+        });
+
+        this.showToast(`🔥 ¡SPRINT FURIA ACTIVADO! ${squad.length} agentes trabajando a máxima velocidad`, '#ef4444');
+
+        const moodEl = document.getElementById('statOfficeMood');
+        if (moodEl) moodEl.textContent = `🔥 SPRINT FURIA ACTIVO (120% Eficiencia)`;
+    }
+
+    commandCoffeeBreak(selectionKey) {
+        const squad = this.getAgentsForSelection(selectionKey);
+        this.squadActiveMode = 'break';
+
+        if (window.pixelAudio && window.pixelAudio.playCoffeeBrew) {
+            window.pixelAudio.playCoffeeBrew();
+        }
+
+        const breakQuotes = [
+            "¡Un espresso y seguimos!",
+            "¡Pausa café bien merecida!",
+            "¿Quién para una partida de Arcade?",
+            "¡Recargando cafeína y azúcar!",
+            "¡Hidratación de código!",
+            "Hablando del Sprint en la cafetería..."
+        ];
+
+        squad.forEach((agent, i) => {
+            agent.isSprinting = false;
+            agent.state = 'walking';
+            agent.isAssembled = false;
+
+            // Target either Coffee Station, Water Cooler, or Arcade
+            let dest = this.coffeeStation;
+            if (i % 3 === 1) dest = this.waterCooler;
+            else if (i % 3 === 2) dest = this.arcadeMachine;
+
+            agent.wanderTarget = {
+                x: dest.x + 35 + (Math.random() * 60 - 30),
+                y: dest.y + (Math.random() * 40 - 20)
+            };
+            agent.wanderWait = 600 + Math.random() * 400;
+
+            this.addParticle(agent.currentX, agent.currentY - 10, ['☕', '🍩', '🕹️', '🥤'][i % 4], '#f59e0b');
+
+            if (i < 4 || Math.random() < 0.3) {
+                this.showSpeechBubble(agent.id, breakQuotes[i % breakQuotes.length], 3500, '#f59e0b');
+            }
+        });
+
+        this.showToast(`☕ Pausa Café: ${squad.length} agentes dirigiéndose al Coffee Bar y Arcade`, '#f59e0b');
+
+        const moodEl = document.getElementById('statOfficeMood');
+        if (moodEl) moodEl.textContent = `☕ Pausa Café & Socialización`;
+    }
+
+    commandWarRoom(selectionKey) {
+        const squad = this.getAgentsForSelection(selectionKey);
+        this.squadActiveMode = 'meeting';
+
+        if (window.pixelAudio && window.pixelAudio.playMeetingStart) {
+            window.pixelAudio.playMeetingStart();
+        }
+
+        const meetingQuotes = [
+            "Alineando KPIs del Sprint de 14d",
+            "Mapeando los 119 restaurantes de Bogotá",
+            "Estructurando margen del 80%",
+            "Plan de Carta Viva ($200k/mes)",
+            "Gobernanza y revisión de entregables"
+        ];
+
+        // Gather around whiteboard & table
+        const centerX = this.sprintWhiteboard.x;
+        const centerY = this.sprintWhiteboard.y + 60;
+
+        squad.forEach((agent, i) => {
+            agent.isSprinting = false;
+            agent.state = 'walking';
+            agent.isAssembled = true;
+
+            const angle = (i / Math.max(1, squad.length)) * Math.PI * 2;
+            const rx = 140 + (Math.random() * 40 - 20);
+            const ry = 80 + (Math.random() * 30 - 15);
+
+            agent.wanderTarget = {
+                x: Math.round(centerX + Math.cos(angle) * rx),
+                y: Math.round(centerY + Math.sin(angle) * ry)
+            };
+            agent.wanderWait = 99999;
+
+            this.addParticle(agent.currentX, agent.currentY - 10, ['🧠', '📊', '💡', '🎯'][i % 4], '#a855f7');
+
+            if (i < 4 || Math.random() < 0.3) {
+                this.showSpeechBubble(agent.id, meetingQuotes[i % meetingQuotes.length], 3500, '#a855f7');
+            }
+        });
+
+        // Pan to meeting whiteboard
+        this.smoothPanTo(centerX - (this.canvas.width / 1.3) / 2, centerY - (this.canvas.height / 1.3) / 2, 1.3, 700);
+
+        this.showToast(`🧠 Sala de Crisis convocada con ${squad.length} agentes en la Pizarra Central`, '#a855f7');
+
+        const moodEl = document.getElementById('statOfficeMood');
+        if (moodEl) moodEl.textContent = `🧠 Sesión de Estrategia War Room`;
+    }
+
+    commandReturnToDesks(selectionKey) {
+        const squad = this.getAgentsForSelection(selectionKey);
+        this.squadActiveMode = 'normal';
+
+        if (window.pixelAudio && window.pixelAudio.playWhistle) {
+            window.pixelAudio.playWhistle();
+        }
+
+        squad.forEach((agent) => {
+            agent.isSprinting = false;
+            agent.isAssembled = false;
+            agent.state = 'walking';
+            agent.wanderTarget = { x: agent.deskX, y: agent.deskY };
+            agent.wanderWait = 200 + Math.random() * 300;
+            this.addParticle(agent.currentX, agent.currentY - 10, '🏠', '#64748b');
+        });
+
+        this.showToast(`🔄 Regresando a sus puestos: ${squad.length} agentes volviendo a sus escritorios`, '#94a3b8');
+
+        const moodEl = document.getElementById('statOfficeMood');
+        if (moodEl) moodEl.textContent = `⚡ Productividad Equilibrada`;
     }
 
     renderMinimap() {

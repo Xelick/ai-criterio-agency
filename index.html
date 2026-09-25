@@ -184,6 +184,67 @@
                 </div>
             </div>
 
+            <!-- Floating Commander & Rally HUD Bar -->
+            <div class="canvas-commander-bar" id="canvasCommanderBar">
+                <div class="commander-label">
+                    <span class="cmd-icon">🕹️</span>
+                    <span class="cmd-title">MANDO</span>
+                </div>
+                <div class="commander-group-selector">
+                    <select id="commanderDeptSelect" class="cmd-select" title="Seleccionar Departamento o Alianza para organizar y comandar">
+                        <optgroup label="💥 Super-Alianzas Estratégicas">
+                            <option value="alliance_tech_qa" selected>💻 Tech Core & QA (Dev+QA+Cyber)</option>
+                            <option value="alliance_creative_growth">🎨 Creative & Growth (UI+Mktg+Ads)</option>
+                            <option value="alliance_sales_legal">💼 Commercial & Legal (Ventas+Legal)</option>
+                            <option value="alliance_strategy_nexus">🧠 Strategy & Nexus (CEO+GIS+BI)</option>
+                            <option value="alliance_sprint_38">🔥 Escuadrón Sprint 14d (38 NPCs)</option>
+                            <option value="alliance_all">🏢 Todos los NPCs del Piso</option>
+                        </optgroup>
+                        <optgroup label="📂 Departamentos">
+                            <option value="dept_engineering">💻 Dev & Software</option>
+                            <option value="dept_design">🎨 Diseño & Creatividad</option>
+                            <option value="dept_sales">🤝 Ventas & Negocios</option>
+                            <option value="dept_marketing">🚀 Marketing & Growth</option>
+                            <option value="dept_testing">🧪 QA & Testing</option>
+                            <option value="dept_security">🛡️ Ciberseguridad</option>
+                            <option value="dept_product">💡 Producto & PM</option>
+                            <option value="dept_finance">💰 Finanzas & Legal</option>
+                            <option value="dept_strategy">♟️ Estrategia & CEO</option>
+                            <option value="dept_gis">🗺️ Geoespaciales GIS</option>
+                            <option value="dept_game-development">🎮 Game Development</option>
+                            <option value="dept_academic">🎓 Investigación</option>
+                            <option value="dept_support">🎧 Soporte & CX</option>
+                            <option value="dept_paid-media">📊 Paid Media & Ads</option>
+                            <option value="dept_specialized">⭐ Especialistas</option>
+                        </optgroup>
+                    </select>
+                    <button id="cmdRallyBtn" class="cmd-btn cmd-btn-rally" title="Hacer que los agentes se organicen y vengan en formación">
+                        <span>🎯</span> Agrupar
+                    </button>
+                </div>
+                <div class="commander-action-divider"></div>
+                <div class="commander-action-buttons">
+                    <button id="cmdSprintBtn" class="cmd-btn cmd-btn-work" title="¡A Trabajar! Los agentes tipean a toda velocidad con chispas de productividad">
+                        <span>🔥</span> ¡A Trabajar!
+                    </button>
+                    <button id="cmdMeetingBtn" class="cmd-btn cmd-btn-meeting" title="Reunión en la Pizarra Central / Sala de Crisis">
+                        <span>🧠</span> Reunión
+                    </button>
+                    <button id="cmdCoffeeBtn" class="cmd-btn cmd-btn-break" title="Pausa Café: van a la máquina de café y arcade">
+                        <span>☕</span> Café
+                    </button>
+                    <button id="cmdReturnBtn" class="cmd-btn cmd-btn-return" title="Volver ordenadamente a sus escritorios">
+                        <span>🏠</span> A Puestos
+                    </button>
+                    <button id="cmdExecuteChainBtn" class="cmd-btn cmd-btn-chain" title="Cargar este departamento a la Cadena de Ejecución Multidisciplinar">
+                        <span>⚡</span> Ejecutar Misión
+                    </button>
+                </div>
+                <div class="commander-hint" title="Tip: Mantén click izquierdo sostenido sobre cualquier agente para moverlo libremente por la oficina con bracitos animados">
+                    <span>🤏</span> Arrastra con click
+                </div>
+            </div>
+
             <!-- Canvas HUD Zoom Controls -->
             <div class="canvas-hud-controls">
                 <button id="zoomInBtn" class="hud-btn" title="Acercar Cámara">+</button>
