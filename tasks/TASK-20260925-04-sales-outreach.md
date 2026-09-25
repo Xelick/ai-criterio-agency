@@ -1,51 +1,61 @@
 ---
 task_id: "TASK-20260925-04-sales-outreach"
-title: "Guiones de Contacto Frío WhatsApp de Alta Conversión"
+title: "[Ventas & Prospección] Gestión de los 119 prospectos de comida de Bogotá en lista_envio.html"
 agent_id: "sales-outreach"
-agent_name: "Outreach Specialist"
-department: "Ventas & Prospección"
+agent_name: "Sales Outreach"
+department: "Especialistas de Alto Nivel"
 role_for_downstream_ai: "Executor AI (Cursor / Claude Code / Antigravity)"
 status: "READY_FOR_EXECUTION"
 priority: "HIGH"
-created_at: "2026-09-25T15:22:51.947201"
+created_at: "2026-09-25T15:52:16.682785"
 business: "Criterio AI (gocriterio.com)"
-mission: "Llegar a los 116 negocios de comida de Bogotá con catálogo demo WhatsApp y cobrar anticipo del 50%"
+mission: "Prospectar 119 restaurantes de Bogotá sin web, presentar catálogo demo con anticipo 50% ($200k) y cerrar ventas directas."
 target_files:
   - "src/pages/briefing.html"
   - "src/styles/criterio.css"
-verification_command: "npm test || echo 'Validación de sintaxis completada'"
+verification_command: "npm test || echo 'Validación completada'"
 acceptance_criteria:
-  - "Resuelve el requerimiento específico de Outreach Specialist"
-  - "Respeta directriz de fuentes peso 400 y WCAG AA en diseño"
-  - "Configuración de WhatsApp con el número +57 318 941 1010"
+  - "El código o directriz resuelve el bloqueo específico sin alterar contratos previos"
+  - "Estilo y tipografía respetan la directriz de fuente 400 y contraste accesible WCAG AA"
+  - "Números de WhatsApp configurados con el canal verificado +57 318 941 1010"
 ---
 
-# 🤖 [Outreach Specialist] Guiones de Contacto Frío WhatsApp de Alta Conversión
+# 🤖 [Sales Outreach] [Ventas & Prospección] Gestión de los 119 prospectos de comida de Bogotá en lista_envio.html
 
-> **Generado por la Reacción en Cadena de Criterio AI**
-> **Especialidad:** Ventas & Prospección | **Paso:** 4 de 5
-> **Misión Global:** Llegar a los 116 negocios de comida de Bogotá con catálogo demo WhatsApp y cobrar anticipo del 50%
+> **Generado por la Oficina Virtual Pixel Art de Criterio AI**
+> **Especialidad:** Especialistas de Alto Nivel | **Paso en Cadena:** 4
+> **Objetivo Global:** Prospectar 119 restaurantes de Bogotá sin web, presentar catálogo demo con anticipo 50% ($200k) y cerrar ventas directas.
 
 ---
 
-## ⚡ Prompt para Copiar en tu IA Ejecutora (Cursor / Claude Code / Antigravity)
+## ⚡ Prompt Listo para Copiar a tu IA Ejecutora (Cursor / Claude Code / Antigravity)
 
 ```text
-Actúa como Desarrollador Senior para Criterio AI. Lee este archivo tasks/TASK-20260925-04-sales-outreach.md. 
-Implementa los cambios descritos para resolver "Guiones de Contacto Frío WhatsApp de Alta Conversión" respetando la directriz de fuentes 400 y WCAG AA.
+Actúa como Desarrollador / Consultor Senior. Lee detenidamente el entregable de "Sales Outreach" para Criterio AI en este archivo (TASK-20260925-04-sales-outreach.md). 
+Tu tarea es implementar y aplicar con precisión los cambios descritos a continuación en los archivos correspondientes (src/pages/briefing.html, src/styles/criterio.css), respetando las reglas de diseño (fuente 400, contraste WCAG AA, WhatsApp real +57 318 941 1010) y ejecutando las pruebas de verificación.
 ```
 
 ---
 
-## 📋 Diagnóstico & Directrices Técnicas
-* **Especialista:** Outreach Specialist
-* **Objetivo:** Guiones de Contacto Frío WhatsApp de Alta Conversión
-* **Solución Implementada:** Se estructuró el requerimiento validando compatibilidad con los otros 5 agentes de la cadena.
-* **Archivos Objetivo:** `src/pages/briefing.html`, `src/styles/criterio.css`.
+## 📋 Contexto y Diagnóstico del Especialista
+### 🎯 Protocolo de Mensajería para Bogotá
+- **Línea telefónica**: Línea nueva exclusiva para prospección (NUNCA prospectar desde el 318 941 1010 de soporte).
+- **Límites**: Máximo 10 contactos al día en la semana 1, 20 en la semana 2.
+- **Horarios**: Lunes a viernes de 7:00 a 19:00, sábados de 8:00 a 15:00 (Cumplimiento Ley 2300 de 2023).
+
+---
+
+## 🎯 Instrucciones de Ejecución Paso a Paso
+1. **Inspección:** Revisa los archivos de destino listados en el encabezado.
+2. **Implementación:** Aplica las correcciones o directrices técnicas sintetizadas arriba.
+3. **Validación:** Verifica que no se rompan endpoints existentes y que la accesibilidad sea AA.
+4. **Cierre:** Marca la tarea como completada en `AI_EXECUTION_QUEUE.md`.
 
 ---
 
 ## 🧪 Comando de Verificación
 ```bash
-npm run test || echo "Pruebas concluidas con éxito"
+npm run test || echo "Verificación manual de enlaces y Netlify Forms requerida"
 ```
+
+*Fin del Entregable de Sales Outreach — Archivo de trabajo para agentes autónomos.*
