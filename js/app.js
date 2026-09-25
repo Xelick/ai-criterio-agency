@@ -725,6 +725,33 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // Agent Operations Guide Modal
+    const opsGuideModal = document.getElementById('agentOpsGuideModal');
+    const openOpsGuideBtn = document.getElementById('openOpsGuideBtn');
+    const closeOpsGuideModalBtn = document.getElementById('closeOpsGuideModalBtn');
+    const closeOpsGuideFooterBtn = document.getElementById('closeOpsGuideFooterBtn');
+
+    if (openOpsGuideBtn && opsGuideModal) {
+        openOpsGuideBtn.addEventListener('click', () => {
+            opsGuideModal.classList.remove('hidden');
+            if (window.pixelAudio) window.pixelAudio.playClick();
+        });
+    }
+
+    if (closeOpsGuideModalBtn && opsGuideModal) {
+        closeOpsGuideModalBtn.addEventListener('click', () => {
+            opsGuideModal.classList.add('hidden');
+            if (window.pixelAudio) window.pixelAudio.playClick();
+        });
+    }
+
+    if (closeOpsGuideFooterBtn && opsGuideModal) {
+        closeOpsGuideFooterBtn.addEventListener('click', () => {
+            opsGuideModal.classList.add('hidden');
+            if (window.pixelAudio) window.pixelAudio.playSuccess();
+        });
+    }
+
     // Markdown Parser Helper for Chat Messages
     function formatMarkdownBasic(md) {
         if (!md) return '';

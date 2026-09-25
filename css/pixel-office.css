@@ -1138,6 +1138,40 @@ main.app-workspace {
     border-color: var(--brand-gold);
 }
 
+/* Execution Modal View Tabs & Compressed Summary */
+.exec-view-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+    background: #0f172a;
+    padding: 4px;
+    border: 1px solid #334155;
+}
+
+.exec-view-tab-btn {
+    background: #1e293b;
+    border: 1px solid #475569;
+    color: #94a3b8;
+    padding: 6px 12px;
+    font-family: var(--pixel-font);
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.exec-view-tab-btn:hover {
+    background: #334155;
+    color: #ffffff;
+}
+
+.exec-view-tab-btn.active {
+    background: #7c3aed;
+    border-color: #a78bfa;
+    color: #ffffff;
+    box-shadow: 0 0 8px rgba(124, 58, 237, 0.4);
+}
+
 /* Execution Modal Lines */
 .exec-log-line {
     margin-bottom: 4px;

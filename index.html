@@ -57,6 +57,9 @@
                 <span>🐙 Git Repo</span>
                 <span id="gitBranchBadge" class="git-badge">main</span>
             </button>
+            <button id="openOpsGuideBtn" class="action-btn" style="background:#1e1b4b; border-color:#818cf8; color:#c7d2fe;" title="Aprende cómo poner a trabajar a los agentes y qué necesitan de ti">
+                <span>🚀</span> ¿Cómo Ponerlos a Trabajar?
+            </button>
             <button id="soundToggleBtn" class="action-btn" title="Activar/Desactivar sonido retro">
                 🔊 Audio: ON
             </button>
@@ -418,21 +421,52 @@
                     </div>
                 </div>
 
-                <!-- Split view: Live Log Terminal on Left, Cumulative Deliverables on Right -->
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; height:340px;">
-                    <div style="display:flex; flex-direction:column; background:#050811; border:2px solid #1e293b; padding:8px;">
-                        <div style="font-size:10px; font-weight:bold; color:#94a3b8; border-bottom:1px solid #1e293b; padding-bottom:4px; margin-bottom:6px;">
-                            📟 TELEMETRÍA DE PASOS & TELETRANSPORTE:
-                        </div>
-                        <div id="execLogsConsole" style="flex:1; overflow-y:auto; font-family:var(--pixel-font); font-size:10px; line-height:1.5; color:#34d399;"></div>
-                    </div>
+                <!-- View Mode Tabs for the Execution Console -->
+                <div class="exec-view-tabs" style="display:flex; gap:6px; margin-bottom:10px;">
+                    <button id="execTabBtnSummary" class="exec-view-tab-btn active" data-view="summary">
+                        📑 Resumen Comprimido Ejecutivo
+                    </button>
+                    <button id="execTabBtnSteps" class="exec-view-tab-btn" data-view="steps">
+                        🔍 Desglose Técnico por Agente
+                    </button>
+                    <button id="execTabBtnLogs" class="exec-view-tab-btn" data-view="logs">
+                        📟 Telemetría en Vivo & Pasos
+                    </button>
+                </div>
 
-                    <div style="display:flex; flex-direction:column; background:#0f172a; border:2px solid #1e293b; padding:8px;">
-                        <div style="font-size:10px; font-weight:bold; color:var(--brand-gold); border-bottom:1px solid #1e293b; padding-bottom:4px; margin-bottom:6px;">
-                            📦 ENTREGABLES Y CÓDIGO GENERADOS:
+                <!-- Pane 1: Compressed Executive Summary View -->
+                <div id="execViewSummary" class="exec-view-pane" style="height:340px; overflow-y:auto;">
+                    <div id="execSummaryContent">
+                        <div style="text-align:center; padding:55px 20px; color:#64748b;">
+                            <div style="font-size:28px; margin-bottom:8px;">⏳</div>
+                            <div style="font-size:11px; color:#cbd5e1; font-weight:bold;">Ejecutando secuencia multi-agente en tiempo real...</div>
+                            <div style="font-size:10px; margin-top:4px;">El resumen comprimido de toda la operación y los archivos para Cursor / Claude aparecerán aquí al finalizar.</div>
                         </div>
-                        <div id="execDeliverablesList" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px;"></div>
                     </div>
+                </div>
+
+                <!-- Pane 2: Split Detailed View (Logs on Left, Cumulative Deliverables on Right) -->
+                <div id="execViewSteps" class="exec-view-pane" style="display:none; height:340px;">
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; height:100%;">
+                        <div style="display:flex; flex-direction:column; background:#050811; border:2px solid #1e293b; padding:8px;">
+                            <div style="font-size:10px; font-weight:bold; color:#94a3b8; border-bottom:1px solid #1e293b; padding-bottom:4px; margin-bottom:6px;">
+                                📟 TELEMETRÍA DE PASOS & TELETRANSPORTE:
+                            </div>
+                            <div id="execLogsConsole" style="flex:1; overflow-y:auto; font-family:var(--pixel-font); font-size:10px; line-height:1.5; color:#34d399;"></div>
+                        </div>
+
+                        <div style="display:flex; flex-direction:column; background:#0f172a; border:2px solid #1e293b; padding:8px;">
+                            <div style="font-size:10px; font-weight:bold; color:var(--brand-gold); border-bottom:1px solid #1e293b; padding-bottom:4px; margin-bottom:6px;">
+                                📦 ENTREGABLES Y CÓDIGO GENERADOS:
+                            </div>
+                            <div id="execDeliverablesList" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pane 3: Full Terminal Log View -->
+                <div id="execViewLogs" class="exec-view-pane" style="display:none; height:340px;">
+                    <div id="execFullLogsConsole" style="height:100%; overflow-y:auto; background:#050811; border:2px solid #1e293b; padding:10px; font-family:var(--pixel-font); font-size:10.5px; line-height:1.6; color:#34d399;"></div>
                 </div>
             </div>
             <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
@@ -446,6 +480,119 @@
                     <button id="syncGitExecBtn" class="action-btn btn-git" style="display:none;" title="Subir entregables a tasks/ y commitear en Git">
                         🐙 Guardar y Commitear en Git
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 6: Agent Operations Guide & Workflow Hub -->
+    <div id="agentOpsGuideModal" class="modal-overlay hidden">
+        <div class="modal-box" style="width: 860px; max-height: 90vh;">
+            <div class="modal-header" style="background:#1e1b4b; border-bottom:2px solid #6366f1;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:22px;">🚀</span>
+                    <div>
+                        <h2>CENTRO DE OPERACIONES: ¿CÓMO PONER A TRABAJAR A LOS AGENTES?</h2>
+                        <div style="font-size:9px; color:#a5b4fc;">Guía práctica para delegar misiones, generar entregables y ejecutar código con IAs</div>
+                    </div>
+                </div>
+                <button id="closeOpsGuideModalBtn" class="modal-close-btn">&times;</button>
+            </div>
+
+            <div class="modal-body" style="padding:16px 20px; overflow-y:auto; font-size:11px; line-height:1.6; color:#e2e8f0;">
+                <!-- Section 1: The Concept -->
+                <div style="background:#0f172a; border:2px solid #334155; padding:12px; margin-bottom:14px;">
+                    <div style="font-size:12px; font-weight:bold; color:var(--brand-gold); margin-bottom:4px;">
+                        👑 1. TU ROL Y EL DE ELLOS (¿Qué necesitan de ti?)
+                    </div>
+                    <div style="color:#cbd5e1; font-size:11px;">
+                        • <strong>Tú eres el Director General / CEO:</strong> No tienes que programar ni saber diseño ni prospección avanzada. Tu única tarea es <em>definir la meta</em> (ej: <em>"conseguir 10 clientes de comida en Bogotá"</em>, <em>"reparar la landing gocriterio.com"</em> o <em>"lanzar Carta Viva a $200k/mes"</em>).<br>
+                        • <strong>Ellos son tus 296 Especialistas:</strong> Se dividen en 9 disciplinas (Forensic, Frontend, DevOps, UI/UX, Ventas, Legal, Growth, Finanzas, GIS). Toman tu meta, la desglosan en pasos técnicos y producen diagnósticos, planes, código y copys listos.<br>
+                        • <strong>¿Qué necesitan de ti para empezar?:</strong> Solo una orden clara o presionar uno de los <strong>4 Presets</strong> pre-cargados. No necesitas configurar nada más para verlos trabajar.
+                    </div>
+                </div>
+
+                <!-- Section 2: The 3 Execution Modes -->
+                <div style="margin-bottom:14px;">
+                    <div style="font-size:12px; font-weight:bold; color:var(--brand-cyan); margin-bottom:8px;">
+                        ⚡ 2. LAS 3 FORMAS DE EJECUTARLOS Y VER QUÉ HACEN
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;">
+                        <div style="background:#1e293b; border:1px solid #475569; padding:10px;">
+                            <div style="font-weight:bold; color:#fde047; font-size:11px; margin-bottom:4px;">
+                                A) Reacción en Cadena
+                            </div>
+                            <div style="font-size:10px; color:#94a3b8; margin-bottom:8px;">
+                                Modo recomendado para resolver misiones complejas multi-agente en piloto automático.
+                            </div>
+                            <div style="font-size:10px; color:#cbd5e1;">
+                                1. Abre el panel izquierdo <strong>⚡ DISCIPLINAS</strong>.<br>
+                                2. Ve a la pestaña <strong>⚡ Presets</strong>.<br>
+                                3. Elige uno (ej. <em>Desbloqueo Web</em>) y pulsa <strong>⚡ DISPARAR REACCIÓN</strong>.<br>
+                                4. La cámara vuela por la oficina y cada NPC toma la palabra con sonidos 8-bit.
+                            </div>
+                        </div>
+
+                        <div style="background:#1e293b; border:1px solid #475569; padding:10px;">
+                            <div style="font-weight:bold; color:#38bdf8; font-size:11px; margin-bottom:4px;">
+                                B) Consulta 1 a 1 (Chat)
+                            </div>
+                            <div style="font-size:10px; color:#94a3b8; margin-bottom:8px;">
+                                Para trabajar mano a mano con un especialista en particular.
+                            </div>
+                            <div style="font-size:10px; color:#cbd5e1;">
+                                1. Haz clic sobre cualquier NPC en su escritorio.<br>
+                                2. En el panel lateral, escríbele tu duda.<br>
+                                3. Responde con su contexto de Criterio AI.<br>
+                                4. Pulsa <strong>🐙 Exportar .MD a Git</strong> para guardar su recomendación como tarea ejecutable.
+                            </div>
+                        </div>
+
+                        <div style="background:#1e293b; border:1px solid #475569; padding:10px;">
+                            <div style="font-weight:bold; color:#34d399; font-size:11px; margin-bottom:4px;">
+                                C) Ejecución en Código (IAs)
+                            </div>
+                            <div style="font-size:10px; color:#94a3b8; margin-bottom:8px;">
+                                Para que los entregables se apliquen en los archivos reales de tu proyecto.
+                            </div>
+                            <div style="font-size:10px; color:#cbd5e1;">
+                                1. La oficina guarda las tareas en <code>tasks/</code> y actualiza <code>AI_EXECUTION_QUEUE.md</code>.<br>
+                                2. Abre <strong>Cursor</strong>, <strong>Claude Code</strong> o <strong>Antigravity</strong>.<br>
+                                3. Pulsa <code>[📋 Copiar Prompt]</code> y pégalo en tu IA de código para que modifique los archivos.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Terminal Runner -->
+                <div style="background:#050811; border:2px solid #1e293b; padding:12px; margin-bottom:12px;">
+                    <div style="font-size:11px; font-weight:bold; color:#a7f3d0; margin-bottom:4px;">
+                        💻 3. EJECUTOR DIRECTO POR TERMINAL (1 COMANDO)
+                    </div>
+                    <div style="color:#94a3b8; font-size:10px; margin-bottom:6px;">
+                        También puedes disparar pipelines directamente desde PowerShell o CMD sin tocar el navegador:
+                    </div>
+                    <pre style="background:#0b0f19; padding:8px; border:1px solid #334155; color:#fde047; font-size:10.5px; font-family:monospace; margin-bottom:6px;">python run_pipeline.py 1   # Ejecuta Desbloqueo Web gocriterio.com
+python run_pipeline.py 2   # Ejecuta Prospección Bogotá (116 Restaurantes)
+python run_pipeline.py 3   # Ejecuta Lanzamiento Carta Viva
+python run_pipeline.py 4   # Ejecuta Auditoría QA & Sistema de Diseño</pre>
+                    <div style="font-size:10px; color:#cbd5e1;">
+                        Genera los archivos <code>.md</code> en <code>tasks/</code>, actualiza la cola maestra y hace commit en Git al instante.
+                    </div>
+                </div>
+
+                <!-- Section 4: Pro Tips -->
+                <div style="background:#1e1b4b; border:1px solid #4338ca; padding:10px; font-size:10.5px; color:#e0e7ff;">
+                    💡 <strong>Tip Pro:</strong> Si quieres que los agentes razonen con IA conversacional ilimitada (Gemini 1.5/2.0 o GPT-4o), haz clic en el icono ⚙️ arriba a la derecha y pega tu API Key gratuita de Google AI Studio. Si no la tienes, ¡no te preocupes! El motor de razonamiento local de Criterio AI funciona 100% offline y gratis.
+                </div>
+            </div>
+
+            <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
+                <button id="closeOpsGuideFooterBtn" class="action-btn btn-primary">
+                    ¡Entendido! Vamos a la Oficina
+                </button>
+                <div style="font-size:10px; color:#94a3b8;">
+                    Criterio AI Agency • 296 Agentes Autónomos
                 </div>
             </div>
         </div>

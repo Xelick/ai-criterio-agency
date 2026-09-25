@@ -44,6 +44,8 @@ class DisciplinesPanel {
         window.chainReactionEngine.onLog = (entry) => {
             this.appendExecutionModalLog(entry);
         };
+
+        this.initExecutionModalTabs();
     }
 
     bindEvents() {
@@ -437,7 +439,9 @@ class DisciplinesPanel {
         const modal = document.getElementById('chainExecModal');
         const title = document.getElementById('execModalMissionTitle');
         const logsContainer = document.getElementById('execLogsConsole');
+        const fullLogsContainer = document.getElementById('execFullLogsConsole');
         const deliverableContainer = document.getElementById('execDeliverablesList');
+        const summaryContent = document.getElementById('execSummaryContent');
         const progressBar = document.getElementById('execProgressBar');
         const progressPct = document.getElementById('execProgressPct');
         const statusText = document.getElementById('execStatusText');
@@ -445,10 +449,48 @@ class DisciplinesPanel {
         if (modal) modal.classList.remove('hidden');
         if (title) title.textContent = window.chainReactionEngine.missionGoal;
         if (logsContainer) logsContainer.innerHTML = '';
+        if (fullLogsContainer) fullLogsContainer.innerHTML = '';
         if (deliverableContainer) deliverableContainer.innerHTML = '<div style="color:#64748b; font-size:11px; padding:10px;">Los entregables generados por cada agente aparecerán aquí...</div>';
+        if (summaryContent) {
+            summaryContent.innerHTML = `
+                <div style="text-align:center; padding:55px 20px; color:#64748b;">
+                    <div style="font-size:28px; margin-bottom:8px;">⏳</div>
+                    <div style="font-size:11px; color:#cbd5e1; font-weight:bold;">Ejecutando secuencia multi-agente en tiempo real...</div>
+                    <div style="font-size:10px; margin-top:4px;">El resumen comprimido de toda la operación y los archivos para Cursor / Claude aparecerán aquí al finalizar.</div>
+                </div>
+            `;
+        }
         if (progressBar) progressBar.style.width = '0%';
         if (progressPct) progressPct.textContent = '0%';
         if (statusText) statusText.textContent = 'Iniciando secuencia...';
+
+        // During execution, show the steps pane so user sees live action
+        this.switchExecView('steps');
+    }
+
+    initExecutionModalTabs() {
+        const tabBtns = document.querySelectorAll('.exec-view-tab-btn');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const view = btn.dataset.view;
+                this.switchExecView(view);
+                if (window.pixelAudio) window.pixelAudio.playClick();
+            });
+        });
+    }
+
+    switchExecView(view) {
+        document.querySelectorAll('.exec-view-tab-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.view === view);
+        });
+
+        const paneSummary = document.getElementById('execViewSummary');
+        const paneSteps = document.getElementById('execViewSteps');
+        const paneLogs = document.getElementById('execViewLogs');
+
+        if (paneSummary) paneSummary.style.display = (view === 'summary') ? 'block' : 'none';
+        if (paneSteps) paneSteps.style.display = (view === 'steps') ? 'block' : 'none';
+        if (paneLogs) paneLogs.style.display = (view === 'logs') ? 'block' : 'none';
     }
 
     updateExecutionModalProgress(stepIdx, item, total) {
@@ -464,13 +506,21 @@ class DisciplinesPanel {
 
     appendExecutionModalLog(entry) {
         const logsContainer = document.getElementById('execLogsConsole');
-        if (!logsContainer) return;
-
+        const fullLogsContainer = document.getElementById('execFullLogsConsole');
+        
         const line = document.createElement('div');
         line.className = `exec-log-line ${entry.type}`;
         line.innerHTML = `<span class="log-time">[${entry.time}]</span> ${entry.text}`;
-        logsContainer.appendChild(line);
-        logsContainer.scrollTop = logsContainer.scrollHeight;
+        
+        if (logsContainer) {
+            logsContainer.appendChild(line.cloneNode(true));
+            logsContainer.scrollTop = logsContainer.scrollHeight;
+        }
+
+        if (fullLogsContainer) {
+            fullLogsContainer.appendChild(line);
+            fullLogsContainer.scrollTop = fullLogsContainer.scrollHeight;
+        }
     }
 
     appendExecutionModalDeliverable(stepIdx, result) {
@@ -498,6 +548,117 @@ class DisciplinesPanel {
         deliverableContainer.scrollTop = deliverableContainer.scrollHeight;
     }
 
+    renderCompressedExecutiveSummary(deliverables) {
+        const container = document.getElementById('execSummaryContent');
+        if (!container) return;
+
+        const goal = window.chainReactionEngine.missionGoal;
+        const total = deliverables.length;
+
+        let html = `
+            <div style="background: linear-gradient(135deg, #1e1b4b, #0f172a); border: 2px solid #8b5cf6; padding: 12px 14px; margin-bottom: 12px; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.25);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <span style="background:#059669; color:#fff; font-size:9px; font-weight:bold; padding:2px 8px; border-radius:2px; letter-spacing:0.5px;">
+                        ✔ MISIÓN COMPLETADA • SÍNTESIS EJECUTIVA
+                    </span>
+                    <span style="font-size:10px; color:#fde047; font-weight:bold;">
+                        👥 ${total} Especialistas Sincronizados
+                    </span>
+                </div>
+                <div style="font-size:13px; font-weight:900; color:#ffffff; margin-bottom:8px; line-height:1.4;">
+                    🎯 ${goal}
+                </div>
+                <!-- Visual Pipeline Sequence -->
+                <div style="display:flex; gap:6px; overflow-x:auto; padding:6px 0; border-top:1px solid rgba(255,255,255,0.1); margin-top:4px;">
+                    ${deliverables.map((d, i) => `
+                        <div style="display:flex; align-items:center; gap:4px; background:#1e293b; padding:4px 8px; border:1px solid #334155; white-space:nowrap; font-size:10px;">
+                            <span>${d.agentEmoji}</span>
+                            <span style="font-weight:bold; color:#e2e8f0;">${d.agentName}</span>
+                            ${i < total - 1 ? '<span style="color:#8b5cf6; margin-left:4px; font-weight:bold;">➔</span>' : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+
+            <!-- Master Prompt for Cursor / Claude Code Button -->
+            <div style="background:#050811; border:1px solid #334155; padding:10px 14px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <div style="font-size:11px; font-weight:bold; color:#38bdf8;">🤖 ¿Quieres que una IA aplique todo esto en tu código?</div>
+                    <div style="font-size:9.5px; color:#94a3b8;">Copia este prompt maestro y pégalo en Cursor (Ctrl+L) o en Claude Code CLI.</div>
+                </div>
+                <button id="copyMasterPromptBtn" class="action-btn btn-gold" style="font-size:10px; padding:6px 12px; white-space:nowrap;">
+                    📋 Copiar Prompt Maestro para Cursor / Claude
+                </button>
+            </div>
+
+            <!-- Compressed Results Table -->
+            <div style="font-size:10px; font-weight:bold; color:var(--brand-gold); margin-bottom:6px; text-transform:uppercase;">
+                📦 Entregables Comprimidos de la Operación:
+            </div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+                ${deliverables.map(d => {
+                    const cleanSummary = d.content.replace(/[*#`_]/g, '').split('\n').filter(l => l.trim().length > 10)[0] || d.title;
+                    const shortSummary = cleanSummary.length > 115 ? cleanSummary.substring(0, 112) + '...' : cleanSummary;
+
+                    return `
+                        <div style="background:#1e293b; border:1px solid #334155; padding:8px 12px; display:flex; justify-content:space-between; align-items:center; gap:10px;">
+                            <div style="flex:1;">
+                                <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
+                                    <span style="background:#e11d48; color:#fff; font-size:8px; font-weight:bold; padding:1px 5px;">Paso ${d.step}</span>
+                                    <span style="font-weight:bold; color:#ffffff; font-size:10.5px;">${d.agentEmoji} ${d.agentName}</span>
+                                    <span style="font-size:9px; color:#94a3b8;">(${d.department})</span>
+                                </div>
+                                <div style="font-size:10px; color:#fde047; font-weight:bold; margin-bottom:2px;">
+                                    🎯 ${d.title}
+                                </div>
+                                <div style="font-size:9.5px; color:#cbd5e1; line-height:1.4;">
+                                    ${shortSummary}
+                                </div>
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-end;">
+                                <button class="step-mini-btn copy-single-prompt-btn" data-step="${d.step}" data-name="${d.agentName}" data-title="${d.title}" style="color:#38bdf8; border-color:#38bdf8;" title="Copiar prompt de este paso">
+                                    📋 Copiar Prompt
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        `;
+
+        container.innerHTML = html;
+
+        // Bind master prompt copy button
+        const masterBtn = document.getElementById('copyMasterPromptBtn');
+        if (masterBtn) {
+            masterBtn.addEventListener('click', () => {
+                let masterPrompt = `Actúa como Desarrollador Senior para Criterio AI.\n`;
+                masterPrompt += `Se acaba de completar la misión "${goal}" con ${total} especialistas.\n`;
+                masterPrompt += `Abre el archivo AI_EXECUTION_QUEUE.md y la carpeta tasks/. Aplica e implementa de forma secuencial cada una de las directrices técnicas respetando la tipografía de peso 400, accesibilidad WCAG AA y canal verificado de WhatsApp +57 318 941 1010. Ejecuta las validaciones al concluir.`;
+
+                navigator.clipboard.writeText(masterPrompt);
+                if (window.gitConnector) {
+                    window.gitConnector.showToast("📋 ¡Prompt Maestro copiado! Pégalo en Cursor (Ctrl+L) o Claude Code", "#f59e0b");
+                }
+                if (window.pixelAudio) window.pixelAudio.playSuccess();
+            });
+        }
+
+        // Bind individual prompt copy buttons
+        container.querySelectorAll('.copy-single-prompt-btn').forEach(b => {
+            b.addEventListener('click', () => {
+                const name = b.dataset.name;
+                const title = b.dataset.title;
+                const prompt = `Actúa como Desarrollador Senior para Criterio AI. Lee la tarea asignada por "${name}" (${title}). Aplica las modificaciones de código o copy descritas y ejecuta la verificación correspondiente.`;
+                navigator.clipboard.writeText(prompt);
+                if (window.gitConnector) {
+                    window.gitConnector.showToast(`📋 Prompt para ${name} copiado!`, "#38bdf8");
+                }
+                if (window.pixelAudio) window.pixelAudio.playClick();
+            });
+        });
+    }
+
     showExecutionModalCompleted(deliverables) {
         const progressBar = document.getElementById('execProgressBar');
         const progressPct = document.getElementById('execProgressPct');
@@ -510,6 +671,10 @@ class DisciplinesPanel {
         if (statusText) statusText.textContent = '✅ Reacción en Cadena Completada!';
         if (copyBtn) copyBtn.style.display = 'inline-flex';
         if (syncGitBtn) syncGitBtn.style.display = 'inline-flex';
+
+        // Render compressed executive summary and automatically switch to it!
+        this.renderCompressedExecutiveSummary(deliverables);
+        this.switchExecView('summary');
 
         // If Git connector is active and auto_commit is enabled, auto-sync deliverables!
         if (window.gitConnector && window.gitConnector.config.auto_commit) {
