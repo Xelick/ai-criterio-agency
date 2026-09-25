@@ -1,37 +1,50 @@
 # 🤖 Criterio AI — Cola Maestra de Ejecución de Tareas para IAs
 > **Fuente:** Cuartel General Pixel Art (296 Agentes Autónomos)
-> **Última Actualización:** 2026-09-25 16:27:00 (Ejecutado por Antigravity)
-> **Misión Activa:** Desbloqueo Técnico gocriterio.com, Prospección de 119 Restaurantes en Bogotá y Lanzamiento de Carta Viva.
+> **Última Actualización:** 2026-09-25 18:08:19
+> **Misión Activa:** Prospectar 119 restaurantes de Bogotá sin web, presentar catálogo demo con anticipo 50% ($200k) y cerrar ventas directas.
+
+Este repositorio contiene las tareas y especificaciones generadas por el equipo de especialistas para ser ejecutadas por IAs de codificación (**Cursor**, **Claude Code**, **Antigravity**, **GitHub Copilot CLI**).
 
 ---
 
-## 📋 Tareas Ejecutadas & Entregables Listos
+## 📋 Tareas en Cola para Ejecución
 
-| Estado | ID Tarea | Especialista | Entregable Resuelto | Archivo Generado |
+| Estado | ID Tarea | Especialista | Entregable / Objetivo | Archivo .MD |
 | :---: | :--- | :--- | :--- | :--- |
-| 🟢 COMPLETADA | `TASK-20260925-01-marketing-social-media-strategist` | **Social Media Strategist** | Plan de contenidos y ganchos de pedidos WhatsApp | [`entregables/03_MARKETING_Y_REDES_INSTAGRAM/CARRUSEL_MENU_PDF_6_SLIDES.md`](entregables/03_MARKETING_Y_REDES_INSTAGRAM/CARRUSEL_MENU_PDF_6_SLIDES.md) |
-| 🟢 COMPLETADA | `TASK-20260925-01-specialized-codebase-archaeologist` | **Codebase Archaeologist** | Unificación de WhatsApp real `+57 318 941 1010` y rutas de catálogos | [`entregables/01_DESBLOQUEO_WEB_GOCRITERIO/briefing_patch.html`](entregables/01_DESBLOQUEO_WEB_GOCRITERIO/briefing_patch.html) |
-| 🟢 COMPLETADA | `TASK-20260925-01-specialized-pricing-analyst` | **Pricing Analyst** | Tarifario oficial ($400k catálogo, $200k/mes Carta Viva, 50% anticipo) | [`entregables/02_COMERCIAL_BOGOTA_SPRINT/TARIFARIO_Y_MARGENES.md`](entregables/02_COMERCIAL_BOGOTA_SPRINT/TARIFARIO_Y_MARGENES.md) |
-| 🟢 COMPLETADA | `TASK-20260925-02-engineering-frontend-developer` | **Frontend Developer** | Parche de formulario `/briefing/` con input `form-name` y validación | [`entregables/01_DESBLOQUEO_WEB_GOCRITERIO/briefing_patch.html`](entregables/01_DESBLOQUEO_WEB_GOCRITERIO/briefing_patch.html) |
-| 🟢 COMPLETADA | `TASK-20260925-02-marketing-content-creator` | **Content Creator** | Casos de estudio de prueba social (Cheddar 1997, Embajada, El Edén) | [`entregables/03_MARKETING_Y_REDES_INSTAGRAM/CARRUSEL_MENU_PDF_6_SLIDES.md`](entregables/03_MARKETING_Y_REDES_INSTAGRAM/CARRUSEL_MENU_PDF_6_SLIDES.md) |
-| 🟢 COMPLETADA | `TASK-20260925-02-support-legal-compliance-checker` | **Legal Compliance Checker** | Dictamen Ley 1581 Habeas Data, Ley 2300 y contrato de Carta Viva | [`entregables/02_COMERCIAL_BOGOTA_SPRINT/MARCO_LEGAL_COLOMBIA.md`](entregables/02_COMERCIAL_BOGOTA_SPRINT/MARCO_LEGAL_COLOMBIA.md) |
-| 🟢 COMPLETADA | `TASK-20260925-03-design-ui-finish-gate-reviewer` | **UI Finish-Gate Reviewer** | Normalización de tokens `criterio.css` (24px radios, sombras duras, fuentes 400) | [`entregables/01_DESBLOQUEO_WEB_GOCRITERIO/criterio_tokens.css`](entregables/01_DESBLOQUEO_WEB_GOCRITERIO/criterio_tokens.css) |
-| 🟢 COMPLETADA | `TASK-20260925-03-marketing-carousel-growth-engine` | **Carousel Growth Engine** | Guion de 6 diapositivas estilo *The Futur* para Instagram (`@criterio_ai`) | [`entregables/03_MARKETING_Y_REDES_INSTAGRAM/CARRUSEL_MENU_PDF_6_SLIDES.md`](entregables/03_MARKETING_Y_REDES_INSTAGRAM/CARRUSEL_MENU_PDF_6_SLIDES.md) |
-| 🟢 COMPLETADA | `TASK-20260925-03-sales-offer-lead-gen-strategist` | **Offer & Lead Gen Strategist** | Depuración de los 119 restaurantes de Bogotá sin web con teléfonos y reseñas | [`entregables/02_COMERCIAL_BOGOTA_SPRINT/LISTA_119_RESTAURANTES_BOGOTA.md`](entregables/02_COMERCIAL_BOGOTA_SPRINT/LISTA_119_RESTAURANTES_BOGOTA.md) |
-| 🟢 COMPLETADA | `TASK-20260925-04-marketing-growth-hacker` | **Growth Hacker** | Playbook de prospección presencial y métricas de cierre del sprint | [`entregables/02_COMERCIAL_BOGOTA_SPRINT/LISTA_119_RESTAURANTES_BOGOTA.md`](entregables/02_COMERCIAL_BOGOTA_SPRINT/LISTA_119_RESTAURANTES_BOGOTA.md) |
-| 🟢 COMPLETADA | `TASK-20260925-04-sales-outreach` | **Sales Outreach** | Guiones de WhatsApp "Demo en Mano" (video 5s + link Netlify) por rubro | [`entregables/02_COMERCIAL_BOGOTA_SPRINT/GUIONES_WHATSAPP_DEMO_EN_MANO.md`](entregables/02_COMERCIAL_BOGOTA_SPRINT/GUIONES_WHATSAPP_DEMO_EN_MANO.md) |
-| 🟢 COMPLETADA | `TASK-20260925-04-testing-accessibility-auditor` | **Accessibility Auditor** | Asociación accesible `<label for>` / `<input id>`, foco visible y 44px táctil | [`entregables/01_DESBLOQUEO_WEB_GOCRITERIO/briefing_patch.html`](entregables/01_DESBLOQUEO_WEB_GOCRITERIO/briefing_patch.html) |
-| 🟢 COMPLETADA | `TASK-20260925-05-engineering-devops-automator` | **DevOps Automator** | Archivo `netlify.toml` con cabeceras de seguridad CSP, caché y 404 limpio | [`entregables/01_DESBLOQUEO_WEB_GOCRITERIO/netlify.toml`](entregables/01_DESBLOQUEO_WEB_GOCRITERIO/netlify.toml) |
-| 🟢 COMPLETADA | `TASK-20260925-05-marketing-email-strategist` | **Email Marketing Strategist** | Plantilla de correo HTML de bienvenida y entrega para Carta Viva | [`entregables/03_MARKETING_Y_REDES_INSTAGRAM/EMAIL_BIENVENIDA_CARTA_VIVA.html`](entregables/03_MARKETING_Y_REDES_INSTAGRAM/EMAIL_BIENVENIDA_CARTA_VIVA.html) |
-| 🟢 COMPLETADA | `TASK-20260925-05-sales-deal-strategist` | **Deal Strategist** | Protocolo de cierre comercial, objeción comisión Rappi y cobro de anticipo | [`entregables/02_COMERCIAL_BOGOTA_SPRINT/TARIFARIO_Y_MARGENES.md`](entregables/02_COMERCIAL_BOGOTA_SPRINT/TARIFARIO_Y_MARGENES.md) |
+| 🟢 COMPLETADA | `TASK-20260925-01-marketing-social-media-strategist` | **Social Media Strategist** | [Marketing & Growth] Estrategia de visibilidad y posicionamiento local en Bogotá | [Ver Tarea](tasks/TASK-20260925-01-marketing-social-media-strategist.md) |
+| 🟢 COMPLETADA | `TASK-20260925-01-specialized-codebase-archaeologist` | **Codebase Archaeologist** | [Ingeniería & Web] Auditoría de enlaces y activos del portafolio anterior | [Ver Tarea](tasks/TASK-20260925-01-specialized-codebase-archaeologist.md) |
+| 🟡 PENDIENTE | `TASK-20260925-01-specialized-pricing-analyst` | **Pricing Analyst** | [Estrategia & Dirección] Tarifario y estructura de márgenes de Criterio AI | [Ver Tarea](tasks/TASK-20260925-01-specialized-pricing-analyst.md) |
+| 🟢 COMPLETADA | `TASK-20260925-02-engineering-frontend-developer` | **Frontend Developer** | [Ingeniería & Web] Reparar el formulario de Netlify en /briefing/ | [Ver Tarea](tasks/TASK-20260925-02-engineering-frontend-developer.md) |
+| 🟢 COMPLETADA | `TASK-20260925-02-marketing-content-creator` | **Content Creator** | [Marketing & Growth] Fichas de casos de estudio reales para prueba social | [Ver Tarea](tasks/TASK-20260925-02-marketing-content-creator.md) |
+| 🟡 PENDIENTE | `TASK-20260925-02-support-legal-compliance-checker` | **Legal Compliance Checker** | [Estrategia & Dirección] Verificación de Ley 1581 (Habeas Data), Ley 2300 y RNE en Colombia | [Ver Tarea](tasks/TASK-20260925-02-support-legal-compliance-checker.md) |
+| 🟢 COMPLETADA | `TASK-20260925-03-design-ui-finish-gate-reviewer` | **UI Finish-Gate Reviewer** | [Diseño & Sistema] Estandarización de radios de borde y sombras duras en criterio.css | [Ver Tarea](tasks/TASK-20260925-03-design-ui-finish-gate-reviewer.md) |
+| 🟢 COMPLETADA | `TASK-20260925-03-marketing-carousel-growth-engine` | **Carousel Growth Engine** | [Marketing & Growth] Diseño de narrativa 'Hoy vs. con Criterio' para redes sociales | [Ver Tarea](tasks/TASK-20260925-03-marketing-carousel-growth-engine.md) |
+| 🟡 PENDIENTE | `TASK-20260925-03-sales-offer-lead-gen-strategist` | **Offer & Lead Gen Strategist** | [Ventas & Prospección] Depuración de la base de datos de 1.374 negocios a los 119 de comida | [Ver Tarea](tasks/TASK-20260925-03-sales-offer-lead-gen-strategist.md) |
+| 🟢 COMPLETADA | `TASK-20260925-04-marketing-growth-hacker` | **Growth Hacker** | [Marketing & Growth] Estrategia del Sprint de 14 Días para 119 Restaurantes de Bogotá | [Ver Tarea](tasks/TASK-20260925-04-marketing-growth-hacker.md) |
+| 🟡 PENDIENTE | `TASK-20260925-04-sales-outreach` | **Sales Outreach** | [Ventas & Prospección] Gestión de los 119 prospectos de comida de Bogotá en lista_envio.html | [Ver Tarea](tasks/TASK-20260925-04-sales-outreach.md) |
+| 🟢 COMPLETADA | `TASK-20260925-04-testing-accessibility-auditor` | **Accessibility Auditor** | [Testing & QA] Asociación de etiquetas <label for> y foco visible universal | [Ver Tarea](tasks/TASK-20260925-04-testing-accessibility-auditor.md) |
+| 🟢 COMPLETADA | `TASK-20260925-05-engineering-devops-automator` | **DevOps Automator** | [Ingeniería & Web] Configuración de Netlify, redirects y cabeceras de seguridad | [Ver Tarea](tasks/TASK-20260925-05-engineering-devops-automator.md) |
+| 🟢 COMPLETADA | `TASK-20260925-05-marketing-email-strategist` | **Email Marketing Strategist** | [Marketing & Growth] Plantilla de bienvenida y facturación con pie legal colombiano | [Ver Tarea](tasks/TASK-20260925-05-marketing-email-strategist.md) |
+| 🟡 PENDIENTE | `TASK-20260925-05-sales-deal-strategist` | **Deal Strategist** | [Ventas & Prospección] Cierre comercial: Catálogo $400k COP + Carta Viva $200k/mes | [Ver Tarea](tasks/TASK-20260925-05-sales-deal-strategist.md) |
 
 ---
 
-## 📸 Estado de la API de Instagram (`@criterio_ai`)
-- **Token Meta Graph API:** `SYSTEM_USER` (Permanente, no caduca).
-- **Permisos:** `instagram_content_publish`, `instagram_manage_comments`, `whatsapp_business_messaging`.
-- **Auditoría completa:** [`entregables/03_MARKETING_Y_REDES_INSTAGRAM/AUDITORIA_TOKEN_INSTAGRAM.md`](entregables/03_MARKETING_Y_REDES_INSTAGRAM/AUDITORIA_TOKEN_INSTAGRAM.md).
-- **Publicación:** Lista para dispararse vía `00_AGENCIA/MARCA/INSTAGRAM/ig.py`.
+## 🚀 Guía de Uso para IAs Ejecutoras
+
+### 1. En Cursor (IDE)
+1. Abre este repositorio en Cursor.
+2. Abre cualquier archivo de `tasks/` que desees implementar.
+3. Presiona `Ctrl+L` (o `Cmd+L`) en Cursor Composer / Chat.
+4. Pega: *"Ejecuta e implementa todo lo indicado en este archivo tasks/TASK-...md de forma autónoma"*.
+
+### 2. En Claude Code (CLI)
+Ejecuta en tu terminal:
+```bash
+claude "Lee AI_EXECUTION_QUEUE.md, toma la siguiente tarea pendiente en tasks/ e impleméntala en el código fuente."
+```
+
+### 3. En Antigravity
+Invoca el subagente de codificación y pásale la ruta del archivo `.md` como instrucción directa.
 
 ---
-*Criterio AI Virtual Agency — 296 Especialistas Autónomos.*
+*Criterio AI Virtual Agency — 296 Agentes Especializados.*
