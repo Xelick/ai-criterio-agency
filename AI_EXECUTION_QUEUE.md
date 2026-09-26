@@ -1,7 +1,7 @@
 # 🤖 Criterio AI — Cola Maestra de Ejecución de Tareas para IAs
 > **Fuente:** Cuartel General Pixel Art (296 Agentes Autónomos)
-> **Última Actualización:** 2026-09-26 00:18:20
-> **Misión Activa:** Desbloquear gocriterio.com y ejecutar el Sprint de 14 días para Catálogos WhatsApp en Bogotá
+> **Última Actualización:** 2026-09-26 00:49:20
+> **Misión Activa:** Llegar a los 116 negocios de comida de Bogotá con catálogo demo y cobrar anticipo del 50% en Las Perras.
 
 Este repositorio contiene las tareas y especificaciones generadas por el equipo de especialistas para ser ejecutadas por IAs de codificación (**Cursor**, **Claude Code**, **Antigravity**, **GitHub Copilot CLI**).
 
@@ -78,10 +78,15 @@ Este repositorio contiene las tareas y especificaciones generadas por el equipo 
 | 🟢 COMPLETADA | `TASK-20260925-42-paid-media-search-query-analyst` | **Search Query Analyst** | [Growth & Campañas] Search Query Analyst: Adquisición & Viralidad en Redes | [Ver Tarea](tasks/TASK-20260925-42-paid-media-search-query-analyst.md) |
 | 🟢 COMPLETADA | `TASK-20260925-43-paid-media-tracking-specialist` | **Tracking & Measurement Specialist** | [Growth & Campañas] Tracking & Measurement Specialist: Adquisición & Viralidad en Redes | [Ver Tarea](tasks/TASK-20260925-43-paid-media-tracking-specialist.md) |
 | 🟡 PENDIENTE | `TASK-20260926-01-marketing-aeo-foundations` | **AEO Foundations Architect** | [Growth & Campañas] AEO Foundations Architect: Adquisición & Viralidad en Redes | [Ver Tarea](tasks/TASK-20260926-01-marketing-aeo-foundations.md) |
+| 🟡 PENDIENTE | `TASK-20260926-01-specialized-pricing-analyst` | **Pricing Analyst** | [Estrategia & Dirección] Tarifario y estructura de márgenes de Criterio AI | [Ver Tarea](tasks/TASK-20260926-01-specialized-pricing-analyst.md) |
 | 🟡 PENDIENTE | `TASK-20260926-02-marketing-agentic-search-optimizer` | **Agentic Search Optimizer** | [Growth & Campañas] Agentic Search Optimizer: Adquisición & Viralidad en Redes | [Ver Tarea](tasks/TASK-20260926-02-marketing-agentic-search-optimizer.md) |
+| 🟡 PENDIENTE | `TASK-20260926-02-support-legal-compliance-checker` | **Legal Compliance Checker** | [Estrategia & Dirección] Verificación de Ley 1581 (Habeas Data), Ley 2300 y RNE en Colombia | [Ver Tarea](tasks/TASK-20260926-02-support-legal-compliance-checker.md) |
 | 🟡 PENDIENTE | `TASK-20260926-03-marketing-ai-citation-strategist` | **AI Citation Strategist** | [Growth & Campañas] AI Citation Strategist: Adquisición & Viralidad en Redes | [Ver Tarea](tasks/TASK-20260926-03-marketing-ai-citation-strategist.md) |
+| 🟡 PENDIENTE | `TASK-20260926-03-sales-offer-lead-gen-strategist` | **Offer & Lead Gen Strategist** | [Ventas & Prospección] Depuración de la base de datos de 1.374 negocios a los 119 de comida | [Ver Tarea](tasks/TASK-20260926-03-sales-offer-lead-gen-strategist.md) |
 | 🟡 PENDIENTE | `TASK-20260926-04-marketing-app-store-optimizer` | **App Store Optimizer** | [Growth & Campañas] App Store Optimizer: Adquisición & Viralidad en Redes | [Ver Tarea](tasks/TASK-20260926-04-marketing-app-store-optimizer.md) |
+| 🟡 PENDIENTE | `TASK-20260926-04-sales-outreach` | **Sales Outreach** | [Ventas & Prospección] Gestión de los 119 prospectos de comida de Bogotá en lista_envio.html | [Ver Tarea](tasks/TASK-20260926-04-sales-outreach.md) |
 | 🟡 PENDIENTE | `TASK-20260926-05-marketing-baidu-seo-specialist` | **Baidu SEO Specialist** | [Growth & Campañas] Baidu SEO Specialist: Adquisición & Viralidad en Redes | [Ver Tarea](tasks/TASK-20260926-05-marketing-baidu-seo-specialist.md) |
+| 🟡 PENDIENTE | `TASK-20260926-05-sales-deal-strategist` | **Deal Strategist** | [Ventas & Prospección] Cierre comercial: Catálogo $400k COP + Carta Viva $200k/mes | [Ver Tarea](tasks/TASK-20260926-05-sales-deal-strategist.md) |
 | 🟡 PENDIENTE | `TASK-20260926-06-marketing-bilibili-content-strategist` | **Bilibili Content Strategist** | [Growth & Campañas] Bilibili Content Strategist: Adquisición & Viralidad en Redes | [Ver Tarea](tasks/TASK-20260926-06-marketing-bilibili-content-strategist.md) |
 | 🟡 PENDIENTE | `TASK-20260926-07-marketing-book-co-author` | **Book Co-Author** | [Growth & Campañas] Book Co-Author: Adquisición & Viralidad en Redes | [Ver Tarea](tasks/TASK-20260926-07-marketing-book-co-author.md) |
 | 🟡 PENDIENTE | `TASK-20260926-08-marketing-carousel-growth-engine` | **Carousel Growth Engine** | [Marketing & Growth] Diseño de narrativa 'Hoy vs. con Criterio' para redes sociales | [Ver Tarea](tasks/TASK-20260926-08-marketing-carousel-growth-engine.md) |
