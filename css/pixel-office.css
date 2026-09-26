@@ -406,6 +406,17 @@ main.app-workspace {
     color: #ffffff;
 }
 
+.cmd-btn-add-chain {
+    background: #4338ca;
+    border-color: #818cf8;
+    color: #ffffff;
+}
+
+.cmd-btn-add-chain:hover {
+    background: #4f46e5;
+    border-color: #a5b4fc;
+}
+
 .commander-hint {
     display: flex;
     align-items: center;

@@ -76,6 +76,10 @@ class ChainReactionEngine {
 
     addAgent(agentId, customGoal = '') {
         if (!agentId) return false;
+        // Prevent duplicate agents in the chain
+        if (this.pipeline.some(p => p.agentId === agentId)) {
+            return false;
+        }
         const agent = window.agentsManager.agentsSummary.find(a => a.id === agentId);
         if (!agent) return false;
 
@@ -85,6 +89,18 @@ class ChainReactionEngine {
             customGoal: customGoal || `Aportar desde la especialidad de ${agent.name} para la misión.`
         });
         return true;
+    }
+
+    addSquad(agentsList, customGoal = '') {
+        if (!Array.isArray(agentsList)) return 0;
+        let addedCount = 0;
+        agentsList.forEach(item => {
+            const id = typeof item === 'string' ? item : (item && item.id);
+            if (id && this.addAgent(id, customGoal)) {
+                addedCount++;
+            }
+        });
+        return addedCount;
     }
 
     removeAgent(index) {
@@ -232,11 +248,56 @@ class ChainReactionEngine {
             deliverableTitle = `[${taskforceInfo.front}] ${taskforceInfo.task}`;
             deliverableContent = taskforceInfo.deliverable;
         } else {
-            deliverableTitle = `Aporte de ${agent.name} (${agent.department_name})`;
-            deliverableContent = `**Misión analizada:** ${payload.missionGoal}\n\n` +
-                `* **Enfoque táctico:** ${agent.vibe}\n` +
-                `* **Diagnóstico:** Se procesaron las dependencias del paso anterior. Se emitieron recomendaciones y directrices validadas con el contexto de Criterio AI.\n` +
-                `* **Paquete de datos transferido:** Síntesis estructurada enviada al siguiente especialista.`;
+            // Role & Department specialized content (Zero boilerplate redundancy)
+            const dept = agent.department || 'specialized';
+            const tools = agent.tools || 'Análisis & Estrategia';
+            
+            if (dept === 'engineering' || dept === 'testing' || dept === 'security' || dept === 'integrations') {
+                deliverableTitle = `[Tech Spec] ${agent.name}: Arquitectura Técnica & Rendimiento`;
+                deliverableContent = `### 💻 Especificación Técnica y Ejecución
+* **Especialidad:** ${agent.department_name} • **Herramientas:** ${tools}
+* **Criterio de Calidad:** Garantizar que gocriterio.com cargue en <1.0s (LCP) y pese menos de 300KB sin dependencias innecesarias.
+* **Implementación:**
+  1. Validación de contratos de datos para formularios de /briefing/ y redirección a WhatsApp +57 318 941 1010.
+  2. Depuración de tokens CSS y componentes accesibles según lineamientos WCAG AA.
+  3. Paquete de código verificado y listo para integración continua con Netlify y GitHub.`;
+            } else if (dept === 'design' || dept === 'game-development' || dept === 'spatial-computing') {
+                deliverableTitle = `[Design System] ${agent.name}: Tokens Visuales & Experiencia de Usuario`;
+                deliverableContent = `### 🎨 Sistema Visual y Experiencia de Usuario
+* **Especialidad:** ${agent.department_name} • **Vibe:** "${agent.vibe}"
+* **Criterio de Diseño:** Negro espacial (#080d1e), Acento Cielo (#38bdf8), Oro (#f59e0b) con fuentes Manrope 400 y Martian Mono 400.
+* **Entregable Visual:**
+  1. Diseño de componentes móviles con touch targets mínimos de 48x48px para evitar clics accidentales.
+  2. Ajuste de jerarquía visual en cartas de restaurantes para destacar combos y promociones estrella.
+  3. Ficha de estilos exportable para integración directa en CSS.`;
+            } else if (dept === 'sales' || dept === 'finance' || dept === 'support') {
+                deliverableTitle = `[Comercial & Negocios] ${agent.name}: Prospección & Cierre Bogotá`;
+                deliverableContent = `### 💼 Estrategia Comercial y Monetización
+* **Especialidad:** ${agent.department_name} • **Objetivo:** 119 restaurantes prioritarios en Bogotá
+* **Oferta:** Catálogo WhatsApp $400.000 COP (pago único) + Mantenimiento Carta Viva $200.000 COP/mes (Margen: 80%).
+* **Plan de Acción:**
+  1. Aplicación estricta de Ley 2300 (horarios de contacto y permiso explícito).
+  2. Demo interactiva en el móvil del dueño con menú digital pre-cargado antes de pedir anticipo.
+  3. Cierre con anticipo del 50% y programación de entrega en 48 horas.`;
+            } else if (dept === 'marketing' || dept === 'paid-media') {
+                deliverableTitle = `[Growth & Campañas] ${agent.name}: Adquisición & Viralidad en Redes`;
+                deliverableContent = `### 🚀 Estrategia de Crecimiento y Contenido
+* **Especialidad:** ${agent.department_name} • **Canal:** Instagram @criterio_ai + WhatsApp Directo
+* **Ángulo de Conversión:** Demostrar por qué el menú en PDF genera fuga de comensales y cómo el catálogo interactivo duplica pedidos.
+* **Materiales Producidos:**
+  1. Estructura de carrusel de 6 diapositivas con gancho de alto impacto y llamado a la acción claro.
+  2. Copy persuasivo enfocado en dolor operativo de los restauranteros de Bogotá.
+  3. Configuración de automatización para derivar comentarios a mensajes directos.`;
+            } else {
+                deliverableTitle = `[Estrategia & Nexus] ${agent.name}: Dirección y KPIs del Sprint`;
+                deliverableContent = `### 🧠 Gobernanza Estratégica y Alineación
+* **Especialidad:** ${agent.department_name} • **Liderazgo:** ${agent.name}
+* **Supervisión del Ecosistema:** Sincronización de los frentes técnico, comercial y creativo para cumplir el objetivo del sprint.
+* **Directrices Emitidas:**
+  1. Priorizar restaurantes con ticket promedio superior a $35.000 COP en Chapinero, Usaquén y Zona T.
+  2. Cobro riguroso de cartera pendiente para autofinanciar la expansión de servidores.
+  3. Aprobación final de entregables antes de despliegue a producción.`;
+            }
         }
 
         return {

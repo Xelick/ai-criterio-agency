@@ -766,8 +766,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         const coffeeBtn = document.getElementById('cmdCoffeeBtn');
         const returnBtn = document.getElementById('cmdReturnBtn');
         const executeChainBtn = document.getElementById('cmdExecuteChainBtn');
+        const addGroupToChainBtn = document.getElementById('cmdAddGroupToChainBtn');
+        const groupCountBadge = document.getElementById('cmdGroupCountBadge');
 
         if (!deptSelect) return;
+
+        function updateSquadBadge() {
+            if (!deptSelect || !groupCountBadge) return;
+            const key = deptSelect.value;
+            const squad = engine.getAgentsForSelection(key);
+            groupCountBadge.textContent = squad.length;
+        }
+
+        deptSelect.addEventListener('change', updateSquadBadge);
+        setTimeout(updateSquadBadge, 300);
 
         // Auto-switch to floor if selecting a single department that lives elsewhere
         const deptFloorMap = {
@@ -805,6 +817,47 @@ document.addEventListener('DOMContentLoaded', async () => {
                 setTimeout(() => {
                     engine.rallySquad(key);
                 }, 120);
+            });
+        }
+
+        if (addGroupToChainBtn) {
+            addGroupToChainBtn.addEventListener('click', () => {
+                const key = deptSelect.value;
+                const squad = engine.getAgentsForSelection(key);
+                if (!squad || squad.length === 0) return;
+
+                // Add squad to chain without duplicates
+                let added = 0;
+                squad.forEach((agent) => {
+                    if (window.chainReactionEngine.addAgent(agent.id, `Fase especializada: ${agent.name} (${agent.department_name}) aportando a la solución.`)) {
+                        added++;
+                    }
+                });
+
+                // Update UI in disciplines panel
+                if (window.disciplinesPanel) {
+                    window.disciplinesPanel.renderChainPipeline();
+                    window.disciplinesPanel.updateChainBadge();
+                    window.disciplinesPanel.renderDisciplinesList();
+                    // Open panel and show chain tab so user sees them right away
+                    const panel = document.getElementById('disciplinesPanel');
+                    if (panel && panel.classList.contains('collapsed')) {
+                        panel.classList.remove('collapsed');
+                        window.disciplinesPanel.isOpen = true;
+                        const toggleBtn = document.getElementById('toggleDisciplinesBtn');
+                        if (toggleBtn) toggleBtn.innerHTML = '◀';
+                    }
+                    window.disciplinesPanel.switchTab('chain');
+                }
+
+                if (window.pixelAudio) window.pixelAudio.playLaser();
+
+                const optText = deptSelect.options[deptSelect.selectedIndex].text;
+                if (added > 0) {
+                    engine.showToast(`🔗 ${added} agentes de [${optText}] añadidos a la Cadena (${window.chainReactionEngine.pipeline.length} en total)`, '#818cf8');
+                } else {
+                    engine.showToast(`✔ Todos los agentes de este grupo ya estaban en la Cadena`, '#38bdf8');
+                }
             });
         }
 

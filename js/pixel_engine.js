@@ -1277,32 +1277,28 @@ class PixelOfficeEngine {
             ctx.fillText(`[${a.department_name}]`, hx, by + 34);
         }
 
-        // 2. Periodic Thought Bubbles for working agents
-        this.agents.forEach((a, i) => {
-            // Show thought bubble intermittently
-            const showThought = (Math.sin(this.timeTick + i * 2.3) > 0.85);
-            if (showThought && a !== this.hoveredAgent) {
-                const tx = a.currentX + 14;
-                const ty = a.currentY - 32;
+        // 2. Periodic Thought Bubbles (subtle, 1 agent at a time on floor, zero repetition)
+        const activeThinkerIdx = Math.floor(this.timeTick * 0.25) % Math.max(1, this.agents.length);
+        const thinker = this.agents[activeThinkerIdx];
+        if (thinker && thinker !== this.hoveredAgent && !thinker.isBeingDragged && !this.activeSpeechBubbles.has(thinker.id)) {
+            const tx = thinker.currentX + 14;
+            const ty = thinker.currentY - 32;
 
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(tx, ty, 30, 18);
-                ctx.strokeStyle = '#0f172a';
-                ctx.lineWidth = 1;
-                ctx.strokeRect(tx, ty, 30, 18);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(tx, ty, 30, 18);
+            ctx.strokeStyle = '#0f172a';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(tx, ty, 30, 18);
 
-                // Small connector circles
-                ctx.fillRect(tx - 4, ty + 12, 3, 3);
-                ctx.fillRect(tx - 7, ty + 16, 2, 2);
+            // Small connector circles
+            ctx.fillRect(tx - 4, ty + 12, 3, 3);
+            ctx.fillRect(tx - 7, ty + 16, 2, 2);
 
-                // Icon or Mini Emoji
-                ctx.fillStyle = '#0f172a';
-                ctx.font = '10px monospace';
-                ctx.textAlign = 'center';
-                const icons = [a.emoji, '⚡', '☕', '💡', '📈', '🧠', '💼'];
-                ctx.fillText(icons[i % icons.length], tx + 15, ty + 13);
-            }
-        });
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '10px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText(thinker.emoji || '💡', tx + 15, ty + 13);
+        }
 
         // 3. Chain Reaction Active Speech Bubble
         if (this.chainActiveAgent && this.chainActiveSpeech) {
@@ -1546,28 +1542,71 @@ class PixelOfficeEngine {
             window.pixelAudio.playSprintType();
         }
 
-        const phrases = [
-            "¡Compilando Netlify Forms!",
-            "¡Cerrando restaurante Chapinero!",
-            "¡Auditando WCAG AA!",
-            "¡Diseñando carrusel Instagram!",
-            "¡Optimizando LCP a 0.8s!",
-            "¡Redactando guiones WhatsApp!",
-            "¡Generando demo interactiva!",
-            "¡Cobrando cartera Cheddar 1997!"
-        ];
+        const deptPhrases = {
+            engineering: [
+                "¡Compilando Netlify Forms en /briefing/!",
+                "¡Optimizando bundle JS a menos de 300KB!",
+                "¡Asegurando LCP < 1.0s en redes móviles 4G!",
+                "¡Validando enlace real a WhatsApp +57 318 941 1010!"
+            ],
+            design: [
+                "¡Aplicando tokens CSS oficiales en modo oscuro!",
+                "¡Auditando contraste WCAG AA en catálogo!",
+                "¡Alineando fuentes Manrope y Martian Mono 400!",
+                "¡Rediseñando barra fija para no tapar los platos!"
+            ],
+            sales: [
+                "¡Contactando restaurante de la lista de 119!",
+                "¡Enviando demo interactiva en mano por WhatsApp!",
+                "¡Cerrando paquete Catálogo $400k + Carta Viva!",
+                "¡Aplicando guión de permiso sin spam (Ley 2300)!"
+            ],
+            marketing: [
+                "¡Diseñando carrusel de 6 slides para Instagram!",
+                "¡Redactando hook: 'Por qué tu menú en PDF pierde ventas'!",
+                "¡Verificando token permanente de Graph API de Meta!",
+                "¡Configurando email de bienvenida para Carta Viva!"
+            ],
+            testing: [
+                "¡Ejecutando pruebas de carga y touch targets de 48px!",
+                "¡Comprobando navegación por teclado y formularios!",
+                "¡Simulando pedido de 3 platos por WhatsApp!",
+                "¡Validando que no haya errores de consola!"
+            ],
+            finance: [
+                "¡Calculando margen neto del 80% por catálogo!",
+                "¡Auditando cobro recurrente de $200.000 COP/mes!",
+                "¡Gestionando recuperación de cartera vencida!",
+                "¡Verificando facturación electrónica y anticipos!"
+            ],
+            strategy: [
+                "¡Alineando KPIs del Sprint de choque a 14 días!",
+                "¡Priorizando restaurantes con ticket promedio alto!",
+                "¡Supervisando gobernanza de los entregables!",
+                "¡Monitoreando conversión de visitas a demos activas!"
+            ]
+        };
 
-        squad.forEach((agent, i) => {
+        const usedPhrases = new Set();
+        squad.forEach((agent) => {
             agent.isSprinting = true;
             agent.state = 'working';
             for (let k = 0; k < 3; k++) {
                 this.addParticle(agent.currentX, agent.currentY - 10, ['⚡', '🔥', '💻'][k % 3], '#fde047');
             }
+        });
 
-            if (i < 4 || Math.random() < 0.25) {
-                const phrase = phrases[(i + Math.floor(Math.random() * phrases.length)) % phrases.length];
-                this.showSpeechBubble(agent.id, phrase, 3000 + i * 400, '#ef4444');
-            }
+        // Pick 3 distinct agents to speak with 100% unique phrases
+        const speakers = squad.slice(0, Math.min(3, squad.length));
+        speakers.forEach((agent, i) => {
+            const list = deptPhrases[agent.department] || [
+                `¡${agent.name} liderando entregables en ${agent.department_name}!`,
+                `¡Procesando requerimiento técnico prioritario!`,
+                `¡Sincronizando tareas del sprint sin redundancia!`
+            ];
+            const uniquePhrase = list.find(p => !usedPhrases.has(p)) || list[0];
+            usedPhrases.add(uniquePhrase);
+            this.showSpeechBubble(agent.id, uniquePhrase, 3200 + i * 400, '#ef4444');
         });
 
         this.showToast(`🔥 ¡SPRINT FURIA ACTIVADO! ${squad.length} agentes trabajando a máxima velocidad`, '#ef4444');
@@ -1585,14 +1624,16 @@ class PixelOfficeEngine {
         }
 
         const breakQuotes = [
-            "¡Un espresso y seguimos!",
-            "¡Pausa café bien merecida!",
-            "¿Quién para una partida de Arcade?",
-            "¡Recargando cafeína y azúcar!",
-            "¡Hidratación de código!",
-            "Hablando del Sprint en la cafetería..."
+            "¡Un espresso doble y seguimos!",
+            "¡Pausa café bien merecida para el equipo!",
+            "¿Quién para una partida en el arcade de 8-bit?",
+            "¡Recargando cafeína y azúcar para codear!",
+            "¡Hidratación de código en el dispensador!",
+            "Repasando la estrategia mientras sale el café...",
+            "¡Unos minutos de estiramiento para no quemar la vista!"
         ];
 
+        const usedBreak = new Set();
         squad.forEach((agent, i) => {
             agent.isSprinting = false;
             agent.state = 'walking';
@@ -1610,10 +1651,14 @@ class PixelOfficeEngine {
             agent.wanderWait = 600 + Math.random() * 400;
 
             this.addParticle(agent.currentX, agent.currentY - 10, ['☕', '🍩', '🕹️', '🥤'][i % 4], '#f59e0b');
+        });
 
-            if (i < 4 || Math.random() < 0.3) {
-                this.showSpeechBubble(agent.id, breakQuotes[i % breakQuotes.length], 3500, '#f59e0b');
-            }
+        // Only 3 agents speak with unique phrases
+        const breakSpeakers = squad.slice(0, Math.min(3, squad.length));
+        breakSpeakers.forEach((agent, i) => {
+            const uniqueQuote = breakQuotes.find(q => !usedBreak.has(q)) || breakQuotes[0];
+            usedBreak.add(uniqueQuote);
+            this.showSpeechBubble(agent.id, uniqueQuote, 3400 + i * 350, '#f59e0b');
         });
 
         this.showToast(`☕ Pausa Café: ${squad.length} agentes dirigiéndose al Coffee Bar y Arcade`, '#f59e0b');
@@ -1631,14 +1676,14 @@ class PixelOfficeEngine {
         }
 
         const meetingQuotes = [
-            "Alineando KPIs del Sprint de 14d",
-            "Mapeando los 119 restaurantes de Bogotá",
-            "Estructurando margen del 80%",
-            "Plan de Carta Viva ($200k/mes)",
-            "Gobernanza y revisión de entregables"
+            "Alineando KPIs del Sprint de 14 días para Bogotá",
+            "Mapeando los 119 restaurantes gastronómicos",
+            "Validando margen del 80% y costos operativos",
+            "Estructurando SLA de 24h para Carta Viva ($200k/mes)",
+            "Gobernanza del código y entregables sin redundancia"
         ];
 
-        // Gather around whiteboard & table
+        const usedMeeting = new Set();
         const centerX = this.sprintWhiteboard.x;
         const centerY = this.sprintWhiteboard.y + 60;
 
@@ -1658,10 +1703,14 @@ class PixelOfficeEngine {
             agent.wanderWait = 99999;
 
             this.addParticle(agent.currentX, agent.currentY - 10, ['🧠', '📊', '💡', '🎯'][i % 4], '#a855f7');
+        });
 
-            if (i < 4 || Math.random() < 0.3) {
-                this.showSpeechBubble(agent.id, meetingQuotes[i % meetingQuotes.length], 3500, '#a855f7');
-            }
+        // Only 3 agents speak with unique phrases
+        const meetingSpeakers = squad.slice(0, Math.min(3, squad.length));
+        meetingSpeakers.forEach((agent, i) => {
+            const uniqueQuote = meetingQuotes.find(q => !usedMeeting.has(q)) || meetingQuotes[0];
+            usedMeeting.add(uniqueQuote);
+            this.showSpeechBubble(agent.id, uniqueQuote, 3500 + i * 400, '#a855f7');
         });
 
         // Pan to meeting whiteboard
