@@ -7,7 +7,7 @@ department: "Marketing & Crecimiento"
 role_for_downstream_ai: "Executor AI (Cursor / Claude Code / Antigravity)"
 status: "READY_FOR_EXECUTION"
 priority: "HIGH"
-created_at: "2026-09-26T00:12:56.851244"
+created_at: "2026-09-26T00:18:20.075658"
 business: "Criterio AI (gocriterio.com)"
 mission: "Desbloquear gocriterio.com y ejecutar el Sprint de 14 días para Catálogos WhatsApp en Bogotá"
 target_files:
