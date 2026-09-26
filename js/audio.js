@@ -252,24 +252,138 @@ class PixelAudio {
         osc.stop(now + 0.16);
     }
 
-    playStepSuccess() {
+    // Casino-style Progressive Step Success Sound
+    // Scales pitch, tempo, coin clinks and multipliers as tasks complete
+    playCasinoStepSuccess(stepIndex = 0, totalSteps = 10) {
         if (!this.enabled) return;
         this.init();
         if (!this.ctx) return;
         const now = this.ctx.currentTime;
-        const notes = [440, 554.37, 659.25, 880];
-        notes.forEach((freq, idx) => {
+
+        // Progressive pitch scaling: escalates chromatically / pentatonically with each step
+        const clampedStep = Math.max(0, stepIndex);
+        const pitchRatio = Math.pow(1.059463, Math.min(clampedStep, 36)); // Up to 3 octaves higher
+        const baseRoot = 440 * pitchRatio; // Starts at A4 (440Hz) and climbs upward
+
+        // 1. Dual Metallic Slot Coin Clink (crisp high pings in slot tray)
+        const coinFreq1 = Math.min(3800, 1600 * Math.pow(1.04, Math.min(clampedStep, 24)));
+        const coinFreq2 = Math.min(4800, 2400 * Math.pow(1.04, Math.min(clampedStep, 24)));
+
+        [coinFreq1, coinFreq2].forEach((freq, idx) => {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
             osc.type = 'triangle';
-            osc.frequency.setValueAtTime(freq, now + idx * 0.05);
-            gain.gain.setValueAtTime(0.1, now + idx * 0.05);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.05 + 0.2);
+            osc.frequency.setValueAtTime(freq, now + idx * 0.02);
+            gain.gain.setValueAtTime(0.09, now + idx * 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.02 + 0.05);
             osc.connect(gain);
             gain.connect(this.ctx.destination);
-            osc.start(now + idx * 0.05);
-            osc.stop(now + idx * 0.05 + 0.22);
+            osc.start(now + idx * 0.02);
+            osc.stop(now + idx * 0.02 + 0.06);
         });
+
+        // 2. Progressive Ascending Arpeggio (Root, Major 3rd, 5th, Octave)
+        const chordIntervals = [1.0, 1.2599, 1.4983, 2.0];
+        const stepArpSpeed = Math.max(0.035, 0.06 - Math.min(clampedStep, 30) * 0.001); // Snappier as combo grows
+
+        chordIntervals.forEach((interval, idx) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = clampedStep >= 10 ? 'sawtooth' : 'triangle';
+            const f = baseRoot * interval;
+            const startTime = now + 0.03 + (idx * stepArpSpeed);
+
+            osc.frequency.setValueAtTime(Math.min(3600, f), startTime);
+            gain.gain.setValueAtTime(0.08, startTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.16);
+
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(startTime);
+            osc.stop(startTime + 0.18);
+        });
+
+        // 3. Multiplier Ding / Coin Count-Up Roll for High Combos (Step 5+, 15+, 30+)
+        if (clampedStep >= 4) {
+            const extraPings = clampedStep >= 20 ? 3 : (clampedStep >= 10 ? 2 : 1);
+            for (let p = 0; p < extraPings; p++) {
+                const tickOsc = this.ctx.createOscillator();
+                const tickGain = this.ctx.createGain();
+                tickOsc.type = 'square';
+                const tickTime = now + 0.20 + (p * 0.04);
+                tickOsc.frequency.setValueAtTime(Math.min(4200, 2093 * (1 + p * 0.15)), tickTime);
+                tickGain.gain.setValueAtTime(0.04, tickTime);
+                tickGain.gain.exponentialRampToValueAtTime(0.0001, tickTime + 0.035);
+                tickOsc.connect(tickGain);
+                tickGain.connect(this.ctx.destination);
+                tickOsc.start(tickTime);
+                tickOsc.stop(tickTime + 0.04);
+            }
+        }
+    }
+
+    // Full Slot Machine Jackpot Fanfare & Coin Shower
+    playCasinoJackpot() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+
+        // Part 1: Rapid escalating fanfare arpeggios (C major across 4 octaves)
+        const fanfareNotes = [
+            261.63, 329.63, 392.00, 523.25, 659.25, 783.99,
+            1046.50, 1318.51, 1567.98, 2093.00, 2637.02
+        ];
+        fanfareNotes.forEach((freq, idx) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sawtooth';
+            const noteStart = now + idx * 0.055;
+            osc.frequency.setValueAtTime(freq, noteStart);
+            gain.gain.setValueAtTime(0.11, noteStart);
+            gain.gain.exponentialRampToValueAtTime(0.001, noteStart + 0.22);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(noteStart);
+            osc.stop(noteStart + 0.25);
+        });
+
+        // Part 2: Cascading Coin Shower (35 rapid metallic coin pings)
+        const coinShowerStart = now + 0.55;
+        for (let i = 0; i < 35; i++) {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            const f = 1600 + Math.random() * 2200;
+            const dropTime = coinShowerStart + (i * 0.032) + (Math.random() * 0.015);
+            osc.frequency.setValueAtTime(f, dropTime);
+            gain.gain.setValueAtTime(0.07, dropTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, dropTime + 0.05);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(dropTime);
+            osc.stop(dropTime + 0.055);
+        }
+
+        // Part 3: Grand Finale Triumphant Chord (C6 + E6 + G6 + C7)
+        const chordStart = now + 1.25;
+        const grandChord = [1046.50, 1318.51, 1567.98, 2093.00];
+        grandChord.forEach(freq => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(freq, chordStart);
+            gain.gain.setValueAtTime(0.07, chordStart);
+            gain.gain.exponentialRampToValueAtTime(0.0001, chordStart + 0.85);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(chordStart);
+            osc.stop(chordStart + 0.9);
+        });
+    }
+
+    playStepSuccess(stepIndex = 0, totalSteps = 1) {
+        this.playCasinoStepSuccess(stepIndex, totalSteps);
     }
 
     playArcadeCoin() {

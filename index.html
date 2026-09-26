@@ -855,85 +855,193 @@ python run_pipeline.py 4   # Ejecuta Auditoría QA & Sistema de Diseño</pre>
                 </div>
             </div>
 
-            <div class="cult-decree-banner">
-                <div style="font-size:18px; margin-right:8px;">📜</div>
-                <div>
-                    <em>"Hijos míos: La vida de Onaga depende de sacar este sprint adelante. No hay espacio para la duda ni para el tech debt. ¡Elegid el ritual que salvará a la agencia!"</em>
+            <!-- Sacred Cult Tab Switcher -->
+            <div class="cult-tabs-bar">
+                <button id="onagaTabBtnRituals" class="cult-tab-btn active" onclick="window.pixelEngine.switchOnagaTab('rituals')">
+                    📜 Rituales del Culto
+                </button>
+                <button id="onagaTabBtnOracle" class="cult-tab-btn" onclick="window.pixelEngine.switchOnagaTab('oracle')">
+                    🔮 Comunión con Gemini (Órdenes Supremas)
+                </button>
+                <button id="onagaTabBtnApiConfig" class="cult-tab-btn" onclick="window.pixelEngine.switchOnagaTab('apiconfig')">
+                    ⚙️ Clave API Gemini
+                </button>
+            </div>
+
+            <!-- PANE 1: Rituales y Decretos Místicos -->
+            <div id="onagaPaneRituals" class="onaga-tab-pane">
+                <div class="cult-decree-banner">
+                    <div style="font-size:18px; margin-right:8px;">📜</div>
+                    <div>
+                        <em>"Hijos míos: La vida de Onaga depende de sacar este sprint adelante. No hay espacio para la duda ni para el tech debt. ¡Elegid el ritual que salvará a la agencia!"</em>
+                    </div>
+                </div>
+
+                <!-- Grid de Rituales y Decretos -->
+                <div class="cult-rituals-grid">
+                    <!-- Ritual 1 -->
+                    <div class="cult-ritual-card">
+                        <div class="ritual-icon">📜</div>
+                        <div class="ritual-content">
+                            <div class="ritual-title">Sermón de la Velocidad Suprema</div>
+                            <div class="ritual-desc">Eleva la moral y desata el fuego en los teclados. Todos los agentes tipean al +250% con chispas de productividad.</div>
+                            <button class="cult-mini-btn btn-fire" onclick="window.pixelEngine.executeSermonOfSpeed()">
+                                ⚡ Dictar Sermón
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Ritual 2 -->
+                    <div class="cult-ritual-card">
+                        <div class="ritual-icon">🔥</div>
+                        <div class="ritual-content">
+                            <div class="ritual-title">Sacrificio del Tech Debt</div>
+                            <div class="ritual-desc">Purga los bugs y malas prácticas en el fuego ritual. Genera validación de código y checkmarks verdes en la oficina.</div>
+                            <button class="cult-mini-btn btn-sacrifice" onclick="window.pixelEngine.executeSacrificeTechDebt()">
+                                🔥 Sacrificar Bugs
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Ritual 3 -->
+                    <div class="cult-ritual-card">
+                        <div class="ritual-icon">☕</div>
+                        <div class="ritual-content">
+                            <div class="ritual-title">Bendición del Café Sagrado</div>
+                            <div class="ritual-desc">Convoca un banquete de espresso sagrado. Restaura la estamina al 100% y llena a los agentes de energía y corazones.</div>
+                            <button class="cult-mini-btn btn-coffee" onclick="window.pixelEngine.executeHolyCoffeeBlessing()">
+                                ☕ Bendecir Café
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Ritual 4 -->
+                    <div class="cult-ritual-card">
+                        <div class="ritual-icon">🌾</div>
+                        <div class="ritual-content">
+                            <div class="ritual-title">Cosecha de Entregables</div>
+                            <div class="ritual-desc">Reclama los frutos de la Cadena de 43 Agentes y verifica todos los archivos en entregables/ listos para producción.</div>
+                            <button class="cult-mini-btn btn-harvest" onclick="window.pixelEngine.executeHarvestDeliverables()">
+                                🌾 Cosechar Todo
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Ritual 5 -->
+                    <div class="cult-ritual-card">
+                        <div class="ritual-icon">⚡</div>
+                        <div class="ritual-content">
+                            <div class="ritual-title">Excomunión de la Procrastinación</div>
+                            <div class="ritual-desc">Lanza un rayo sagrado de advertencia a los agentes distraídos para devolverlos inmediatamente a sus puestos.</div>
+                            <button class="cult-mini-btn btn-smite" onclick="window.pixelEngine.executeSmiteProcrastinators()">
+                                ⚡ Lanzar Rayo Divino
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Ritual 6 -->
+                    <div class="cult-ritual-card">
+                        <div class="ritual-icon">🕺</div>
+                        <div class="ritual-content">
+                            <div class="ritual-title">Danza Ritual de la Victoria</div>
+                            <div class="ritual-desc">Todos los agentes forman un círculo de adoración y bailan con música retro para celebrar el avance del sprint.</div>
+                            <button class="cult-mini-btn btn-dance" onclick="window.pixelEngine.executeEcstaticDance()">
+                                🎵 Iniciar Danza
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Grid de Rituales y Decretos -->
-            <div class="cult-rituals-grid">
-                <!-- Ritual 1 -->
-                <div class="cult-ritual-card">
-                    <div class="ritual-icon">📜</div>
-                    <div class="ritual-content">
-                        <div class="ritual-title">Sermón de la Velocidad Suprema</div>
-                        <div class="ritual-desc">Eleva la moral y desata el fuego en los teclados. Todos los agentes tipean al +250% con chispas de productividad.</div>
-                        <button class="cult-mini-btn btn-fire" onclick="window.pixelEngine.executeSermonOfSpeed()">
-                            ⚡ Dictar Sermón
+            <!-- PANE 2: Comunión Directa con Gemini (Órdenes Supremas de Onaga) -->
+            <div id="onagaPaneOracle" class="onaga-tab-pane" style="display:none; flex-direction:column;">
+                <div class="oracle-banner">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="font-size:22px;">🔮</span>
+                            <div>
+                                <strong style="color:#fde047; font-size:11.5px;">CANAL DIRECTO ONAGA ⟷ GOOGLE GEMINI 1.5 FLASH</strong>
+                                <div style="font-size:9.5px; color:#cbd5e1;">Comanda a tus 296 agentes con inteligencia artificial divina y criterio de negocio</div>
+                            </div>
+                        </div>
+                        <span id="onagaOracleStatusBadge" class="oracle-status-pill online">🟢 Gemini Conectado</span>
+                    </div>
+                </div>
+
+                <!-- Decretos Rápidos -->
+                <div class="oracle-quick-decrees">
+                    <span style="font-size:9.5px; color:#94a3b8; font-weight:bold;">DECRETOS RÁPIDOS:</span>
+                    <button class="oracle-chip-btn" onclick="window.pixelEngine.fillOnagaDecree('Plan de Choque para 119 Restaurantes de Bogotá (Catálogos $400k + Carta Viva $200k/mes)')">👑 119 Restaurantes Bogotá</button>
+                    <button class="oracle-chip-btn" onclick="window.pixelEngine.fillOnagaDecree('Desbloquear Netlify Forms y redirección a WhatsApp +57 318 941 1010 en gocriterio.com')">💻 Netlify & WhatsApp</button>
+                    <button class="oracle-chip-btn" onclick="window.pixelEngine.fillOnagaDecree('Auditar Cuellos de Botella de Graphify y priorizar el Escuadrón Activo de 38 agentes')">⚡ Purga Cuellos de Botella</button>
+                    <button class="oracle-chip-btn" onclick="window.pixelEngine.fillOnagaDecree('Decreto de Urgencia Vital (DEFCON 1) y motivación extrema para los 296 agentes')">📜 Decreto Vital DEFCON 1</button>
+                    <button class="oracle-chip-btn" onclick="window.pixelEngine.fillOnagaDecree('Cerrar 3 suscripciones de Carta Viva ($200.000 COP/mes) en los próximos 4 días')">💰 Cerrar 3 Carta Viva</button>
+                </div>
+
+                <!-- Input de la Orden -->
+                <div style="padding:0 14px 10px 14px;">
+                    <label style="font-size:10px; font-weight:bold; color:var(--brand-gold); display:block; margin-bottom:4px;">
+                        👑 ORDEN SUPREMA DEL PATRIARCA ONAGA PARA GEMINI:
+                    </label>
+                    <div style="display:flex; gap:8px;">
+                        <textarea id="onagaGeminiOrderInput" class="oracle-textarea" rows="2" placeholder="Escribe tu orden suprema para Gemini... (ej: 'Gemini, indícale al equipo de Ventas y Frontend qué hacer hoy para vender 5 catálogos en Bogotá')"></textarea>
+                        <button id="sendOnagaOrderBtn" class="cult-action-btn btn-fire" style="min-width:145px; font-weight:bold; background:#7f1d1d; border-color:#ef4444;" onclick="window.pixelEngine.transmitOrderToGemini()">
+                            🔥 TRANSMITIR A GEMINI
                         </button>
                     </div>
                 </div>
 
-                <!-- Ritual 2 -->
-                <div class="cult-ritual-card">
-                    <div class="ritual-icon">🔥</div>
-                    <div class="ritual-content">
-                        <div class="ritual-title">Sacrificio del Tech Debt</div>
-                        <div class="ritual-desc">Purga los bugs y malas prácticas en el fuego ritual. Genera validación de código y checkmarks verdes en la oficina.</div>
-                        <button class="cult-mini-btn btn-sacrifice" onclick="window.pixelEngine.executeSacrificeTechDebt()">
-                            🔥 Sacrificar Bugs
-                        </button>
+                <!-- Pantalla del Oráculo -->
+                <div style="padding:0 14px 12px 14px; flex:1; display:flex; flex-direction:column; overflow:hidden;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; flex-wrap:wrap; gap:6px;">
+                        <span style="font-size:10px; font-weight:bold; color:#a78bfa;">📜 REVELACIÓN DE GEMINI PARA ONAGA:</span>
+                        <div style="display:flex; gap:6px;">
+                            <button class="oracle-action-btn" onclick="window.pixelEngine.copyOnagaOracleResponse()">📋 Copiar</button>
+                            <button class="oracle-action-btn btn-proclaim" onclick="window.pixelEngine.proclaimOnagaDecreeToOffice()">📢 Proclamar a los 296 Agentes</button>
+                            <button class="oracle-action-btn" onclick="window.pixelEngine.saveOnagaDecreeAsTask()">💾 Guardar en Tasks/</button>
+                        </div>
+                    </div>
+                    <div id="onagaGeminiResponseArea" class="oracle-terminal">
+                        <div style="color:#64748b; text-align:center; padding:35px 10px; font-style:italic;">
+                            🔮 El Oráculo Supremo Gemini aguarda tu mandato soberano, Gran Patriarca Onaga.<br>
+                            Escribe una orden o haz clic en uno de los Decretos Rápidos arriba.
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Ritual 3 -->
-                <div class="cult-ritual-card">
-                    <div class="ritual-icon">☕</div>
-                    <div class="ritual-content">
-                        <div class="ritual-title">Bendición del Café Sagrado</div>
-                        <div class="ritual-desc">Convoca un banquete de espresso sagrado. Restaura la estamina al 100% y llena a los agentes de energía y corazones.</div>
-                        <button class="cult-mini-btn btn-coffee" onclick="window.pixelEngine.executeHolyCoffeeBlessing()">
-                            ☕ Bendecir Café
-                        </button>
+            <!-- PANE 3: Configuración de Clave API Gemini -->
+            <div id="onagaPaneApiConfig" class="onaga-tab-pane" style="display:none; padding:16px 20px;">
+                <div style="background:#0f172a; border:1px solid #334155; padding:12px; margin-bottom:14px;">
+                    <div style="font-size:12px; font-weight:bold; color:var(--brand-gold); margin-bottom:4px;">
+                        🔑 ¿Cómo conectar tu clave gratuita de Google Gemini?
                     </div>
+                    <p style="font-size:10.5px; color:#cbd5e1; line-height:1.5;">
+                        Google ofrece acceso gratuito a <strong>Gemini 1.5 Flash</strong> a través de Google AI Studio. 
+                        Obtén tu clave en menos de 30 segundos sin tarjeta de crédito:
+                    </p>
+                    <a href="https://aistudio.google.com/app/apikey" target="_blank" style="display:inline-block; margin-top:6px; color:#38bdf8; font-weight:bold; font-size:11px; text-decoration:underline;">
+                        🔗 Obtener API Key Gratuita en Google AI Studio ↗
+                    </a>
                 </div>
 
-                <!-- Ritual 4 -->
-                <div class="cult-ritual-card">
-                    <div class="ritual-icon">🌾</div>
-                    <div class="ritual-content">
-                        <div class="ritual-title">Cosecha de Entregables</div>
-                        <div class="ritual-desc">Reclama los frutos de la Cadena de 43 Agentes y verifica todos los archivos en entregables/ listos para producción.</div>
-                        <button class="cult-mini-btn btn-harvest" onclick="window.pixelEngine.executeHarvestDeliverables()">
-                            🌾 Cosechar Todo
-                        </button>
-                    </div>
+                <div style="margin-bottom:12px;">
+                    <label style="font-size:10.5px; font-weight:bold; color:#cbd5e1; display:block; margin-bottom:4px;">
+                        Pega tu API Key de Gemini aquí:
+                    </label>
+                    <input type="password" id="onagaDirectApiKeyInput" class="chat-input" style="width:100%;" placeholder="AIzaSy...">
+                    <small style="color:#94a3b8; font-size:9px; display:block; margin-top:4px;">
+                        * Tu clave se guarda únicamente en tu navegador (localStorage). Si no pones ninguna clave, Criterio AI utiliza su motor de inteligencia local de 296 personalidades de forma 100% offline y gratis.
+                    </small>
                 </div>
 
-                <!-- Ritual 5 -->
-                <div class="cult-ritual-card">
-                    <div class="ritual-icon">⚡</div>
-                    <div class="ritual-content">
-                        <div class="ritual-title">Excomunión de la Procrastinación</div>
-                        <div class="ritual-desc">Lanza un rayo sagrado de advertencia a los agentes distraídos para devolverlos inmediatamente a sus puestos.</div>
-                        <button class="cult-mini-btn btn-smite" onclick="window.pixelEngine.executeSmiteProcrastinators()">
-                            ⚡ Lanzar Rayo Divino
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Ritual 6 -->
-                <div class="cult-ritual-card">
-                    <div class="ritual-icon">🕺</div>
-                    <div class="ritual-content">
-                        <div class="ritual-title">Danza Ritual de la Victoria</div>
-                        <div class="ritual-desc">Todos los agentes forman un círculo de adoración y bailan con música retro para celebrar el avance del sprint.</div>
-                        <button class="cult-mini-btn btn-dance" onclick="window.pixelEngine.executeEcstaticDance()">
-                            🎵 Iniciar Danza
-                        </button>
-                    </div>
+                <div style="display:flex; gap:10px; margin-top:14px;">
+                    <button class="cult-action-btn btn-fire" style="background:#047857; border-color:#10b981;" onclick="window.pixelEngine.saveOnagaDirectApiKey()">
+                        💾 Guardar Clave API de Gemini
+                    </button>
+                    <button class="cult-action-btn" onclick="window.pixelEngine.testGeminiConnection()">
+                        ⚡ Probar Conexión con Gemini
+                    </button>
                 </div>
             </div>
 

@@ -839,9 +839,10 @@ class DisciplinesPanel {
         const statusText = document.getElementById('execStatusText');
 
         const pct = Math.round(((stepIdx) / total) * 100);
+        const combo = stepIdx + 1;
         if (progressBar) progressBar.style.width = `${pct}%`;
-        if (progressPct) progressPct.textContent = `${pct}%`;
-        if (statusText) statusText.textContent = `Paso ${stepIdx + 1}/${total}: ${item.agent.emoji} ${item.agent.name} ejecutando...`;
+        if (progressPct) progressPct.innerHTML = `<span style="color:#fde047; text-shadow:0 0 6px rgba(253,224,71,0.5);">🎰 x${combo} COMBO</span> (${pct}%)`;
+        if (statusText) statusText.innerHTML = `Paso ${combo}/${total}: <strong>${item.agent.emoji} ${item.agent.name}</strong> ejecutando...`;
     }
 
     appendExecutionModalLog(entry) {
@@ -1025,8 +1026,8 @@ class DisciplinesPanel {
         const syncGitBtn = document.getElementById('syncGitExecBtn');
 
         if (progressBar) progressBar.style.width = '100%';
-        if (progressPct) progressPct.textContent = '100%';
-        if (statusText) statusText.textContent = '✅ Reacción en Cadena Completada!';
+        if (progressPct) progressPct.innerHTML = '🎰 <span style="color:#fde047; text-shadow:0 0 8px rgba(253,224,71,0.8);">¡¡JACKPOT 100%!!</span> 💰';
+        if (statusText) statusText.innerHTML = '🎉 ¡REACCIÓN FINALIZADA CON JACKPOT TOTAL! Todos los entregables unificados.';
         if (copyBtn) copyBtn.style.display = 'inline-flex';
         if (syncGitBtn) syncGitBtn.style.display = 'inline-flex';
 

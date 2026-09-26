@@ -1373,6 +1373,7 @@ class PixelOfficeEngine {
         let modal = document.getElementById('onagaCultModal');
         if (modal) {
             modal.style.display = 'flex';
+            this.updateOnagaOracleStatus();
         }
     }
 
@@ -1380,6 +1381,250 @@ class PixelOfficeEngine {
         let modal = document.getElementById('onagaCultModal');
         if (modal) {
             modal.style.display = 'none';
+        }
+    }
+
+    switchOnagaTab(tabName) {
+        if (window.pixelAudio) window.pixelAudio.playClick();
+        const tabs = ['rituals', 'oracle', 'apiconfig'];
+        tabs.forEach(t => {
+            const btn = document.getElementById(`onagaTabBtn${t.charAt(0).toUpperCase() + t.slice(1)}`);
+            const pane = document.getElementById(`onagaPane${t.charAt(0).toUpperCase() + t.slice(1)}`);
+            if (btn) {
+                if (t === tabName) btn.classList.add('active');
+                else btn.classList.remove('active');
+            }
+            if (pane) {
+                pane.style.display = (t === tabName) ? (t === 'oracle' ? 'flex' : 'block') : 'none';
+            }
+        });
+
+        if (tabName === 'oracle') {
+            this.updateOnagaOracleStatus();
+            const orderInput = document.getElementById('onagaGeminiOrderInput');
+            if (orderInput && !orderInput.value) {
+                orderInput.value = 'Plan de Choque para 119 Restaurantes de Bogotá (Catálogos $400k + Carta Viva $200k/mes)';
+            }
+        } else if (tabName === 'apiconfig') {
+            const keyInput = document.getElementById('onagaDirectApiKeyInput');
+            if (keyInput) {
+                keyInput.value = localStorage.getItem('aicriterio_api_key') || '';
+            }
+        }
+    }
+
+    updateOnagaOracleStatus() {
+        const badge = document.getElementById('onagaOracleStatusBadge');
+        if (!badge) return;
+        const key = localStorage.getItem('aicriterio_api_key');
+        if (key && key.trim().length > 5) {
+            badge.className = 'oracle-status-pill online';
+            badge.innerHTML = '🟢 Gemini 1.5 Flash Conectado';
+        } else {
+            badge.className = 'oracle-status-pill offline';
+            badge.innerHTML = '⚡ Modo Oráculo Local Activo (Offline / Gratis)';
+        }
+    }
+
+    fillOnagaDecree(decreeText) {
+        const orderInput = document.getElementById('onagaGeminiOrderInput');
+        if (orderInput) {
+            orderInput.value = decreeText;
+            this.transmitOrderToGemini();
+        }
+    }
+
+    async transmitOrderToGemini() {
+        const orderInput = document.getElementById('onagaGeminiOrderInput');
+        const responseArea = document.getElementById('onagaGeminiResponseArea');
+        const sendBtn = document.getElementById('sendOnagaOrderBtn');
+        if (!orderInput || !responseArea) return;
+
+        const orderText = orderInput.value.trim() || 'Plan de Choque para 119 Restaurantes de Bogotá y activación de Carta Viva';
+
+        if (window.pixelAudio && window.pixelAudio.playCultChant) {
+            window.pixelAudio.playCultChant();
+        }
+
+        // Show mystical loading state
+        if (sendBtn) {
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '⏳ CANALIZANDO...';
+        }
+        responseArea.innerHTML = `
+            <div style="text-align:center; padding:40px 10px; color:#a78bfa;">
+                <div style="font-size:24px; margin-bottom:8px;">🔮</div>
+                <div style="font-weight:bold; font-size:12px; color:#fde047;">Consultando al Oráculo Supremo Gemini...</div>
+                <div style="font-size:10px; color:#cbd5e1; margin-top:4px;">Canalizando directriz estratégica para el Gran Patriarca Onaga y los 296 agentes</div>
+            </div>
+        `;
+
+        try {
+            const response = await window.consultationEngine.askGeminiAsOnaga(orderText);
+            this.lastOnagaOracleResponse = {
+                order: orderText,
+                text: response,
+                time: new Date().toLocaleTimeString()
+            };
+
+            const html = this.formatMarkdownForOracle(response);
+            responseArea.innerHTML = html;
+
+            if (window.pixelAudio && window.pixelAudio.playDivineLightning) {
+                window.pixelAudio.playDivineLightning();
+            }
+
+            if (this.masterOnaga) {
+                this.masterOnaga.speechText = '¡Gemini ha hablado! ¡Que se cumpla la orden!';
+                this.masterOnaga.speechTimer = 280;
+            }
+        } catch (err) {
+            console.error("Error communicating with Gemini:", err);
+            responseArea.innerHTML = `
+                <div style="color:#ef4444; padding:20px; text-align:center;">
+                    ⚠️ Error al invocar a Gemini: ${err.message}.<br>
+                    Verifica tu conexión o revisa tu clave en la pestaña "⚙️ Clave API Gemini".
+                </div>
+            `;
+        } finally {
+            if (sendBtn) {
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = '🔥 TRANSMITIR A GEMINI';
+            }
+        }
+    }
+
+    formatMarkdownForOracle(text) {
+        if (!text) return '';
+        let escaped = text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+
+        // Headers
+        escaped = escaped.replace(/^### (.*$)/gim, '<h3 style="color:#fde047; margin:8px 0 4px 0; font-size:11.5px;">$1</h3>');
+        escaped = escaped.replace(/^#### (.*$)/gim, '<h4 style="color:#38bdf8; margin:6px 0 3px 0; font-size:10.5px;">$1</h4>');
+        
+        // Blockquotes
+        escaped = escaped.replace(/^\> (.*$)/gim, '<blockquote style="border-left:3px solid #ef4444; padding-left:8px; color:#fca5a5; margin:6px 0; font-style:italic;">$1</blockquote>');
+
+        // Bold & Italic
+        escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong style="color:#fef08a;">$1</strong>');
+        escaped = escaped.replace(/\*(.*?)\*/g, '<em style="color:#e2e8f0;">$1</em>');
+
+        // Inline Code
+        escaped = escaped.replace(/`([^`]+)`/g, '<code style="background:#1e1b4b; color:#38bdf8; padding:1px 4px; border:1px solid #4338ca;">$1</code>');
+
+        // Horizontal Rules
+        escaped = escaped.replace(/^---$/gim, '<hr style="border:none; border-top:1px solid #334155; margin:10px 0;">');
+
+        // Bullet lists
+        escaped = escaped.replace(/^\s*[\*\-]\s+(.*$)/gim, '<div style="margin-left:14px; margin-bottom:3px;">• $1</div>');
+        escaped = escaped.replace(/^\s*(\d+)\.\s+(.*$)/gim, '<div style="margin-left:14px; margin-bottom:3px;"><span style="color:#a78bfa; font-weight:bold;">$1.</span> $2</div>');
+
+        // Line breaks
+        escaped = escaped.replace(/\n\n/g, '<div style="margin-bottom:8px;"></div>');
+        escaped = escaped.replace(/\n/g, '<br>');
+
+        return escaped;
+    }
+
+    copyOnagaOracleResponse() {
+        if (!this.lastOnagaOracleResponse || !this.lastOnagaOracleResponse.text) {
+            this.showToast('⚠️ No hay revelación de Gemini para copiar.', '#ef4444');
+            return;
+        }
+        navigator.clipboard.writeText(this.lastOnagaOracleResponse.text);
+        if (window.pixelAudio) window.pixelAudio.playClick();
+        this.showToast('📋 ¡Revelación de Gemini copiada al portapapeles!', '#38bdf8');
+    }
+
+    proclaimOnagaDecreeToOffice() {
+        if (!this.lastOnagaOracleResponse || !this.lastOnagaOracleResponse.text) {
+            this.showToast('⚠️ Transmite primero una orden a Gemini para proclamarla.', '#f59e0b');
+            return;
+        }
+        const summary = this.lastOnagaOracleResponse.order || 'Cumplir el Sprint de 14 Días';
+        window.consultationEngine.broadcastOnagaDecree(summary);
+        this.closeOnagaCultModal();
+    }
+
+    saveOnagaDecreeAsTask() {
+        if (!this.lastOnagaOracleResponse || !this.lastOnagaOracleResponse.text) {
+            this.showToast('⚠️ No hay decreto para guardar.', '#ef4444');
+            return;
+        }
+        const content = `# DECRETO SUPREMO DEL GRAN PATRIARCA ONAGA
+**Fecha:** ${new Date().toISOString()}
+**Orden Transmitida:** "${this.lastOnagaOracleResponse.order}"
+**Canal:** Google Gemini 1.5 Flash ⟷ Cuartel General Criterio AI
+
+${this.lastOnagaOracleResponse.text}
+`;
+        if (window.gitConnector && window.gitConnector.saveDeliverableFile) {
+            window.gitConnector.saveDeliverableFile('DECRETO_ONAGA_GEMINI.md', content);
+        } else {
+            // Fallback download
+            const blob = new Blob([content], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'DECRETO_ONAGA_GEMINI.md';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        if (window.pixelAudio) window.pixelAudio.playClick();
+        this.showToast('💾 Decreto guardado como DECRETO_ONAGA_GEMINI.md', '#10b981');
+    }
+
+    saveOnagaDirectApiKey() {
+        const input = document.getElementById('onagaDirectApiKeyInput');
+        if (!input) return;
+        const key = input.value.trim();
+        localStorage.setItem('aicriterio_api_key', key);
+        localStorage.setItem('aicriterio_api_provider', 'gemini');
+
+        if (window.consultationEngine) {
+            window.consultationEngine.apiKey = key;
+            window.consultationEngine.apiProvider = 'gemini';
+        }
+
+        const settingsKey = document.getElementById('apiKeyInput');
+        if (settingsKey) settingsKey.value = key;
+
+        if (window.pixelAudio) window.pixelAudio.playClick();
+        this.showToast('🔑 Clave de Gemini guardada correctamente!', '#10b981');
+        this.updateOnagaOracleStatus();
+        this.switchOnagaTab('oracle');
+    }
+
+    async testGeminiConnection() {
+        const input = document.getElementById('onagaDirectApiKeyInput');
+        const key = (input ? input.value.trim() : '') || localStorage.getItem('aicriterio_api_key');
+        if (!key) {
+            alert('Por favor introduce primero una API Key de Gemini para realizar la prueba.');
+            return;
+        }
+
+        this.showToast('⚡ Probando conexión con Google Gemini...', '#38bdf8');
+        try {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ role: 'user', parts: [{ text: 'Responde solo con la palabra: CONECTADO' }] }]
+                })
+            });
+            if (res.ok) {
+                if (window.pixelAudio && window.pixelAudio.playSuccess) window.pixelAudio.playSuccess();
+                alert('🟢 ¡Conexión Exitosa con Google Gemini 1.5 Flash! El Oráculo Divino está 100% operativo para el Gran Patriarca Onaga.');
+                this.updateOnagaOracleStatus();
+            } else {
+                alert(`⚠️ La API de Gemini devolvió código ${res.status}. Verifica que tu clave sea correcta en Google AI Studio.`);
+            }
+        } catch (e) {
+            alert(`⚠️ Error de red al contactar con Gemini: ${e.message}`);
         }
     }
 
@@ -1877,18 +2122,73 @@ class PixelOfficeEngine {
         });
     }
 
-    addParticle(x, y, char = '✨', color = '#38bdf8') {
-        if (this.particles.length > 70) this.particles.shift();
+    addParticle(x, y, char = '✨', color = '#38bdf8', vx = null, vy = null) {
+        if (this.particles.length > 160) this.particles.shift();
         this.particles.push({
             x: x + (Math.random() * 16 - 8),
             y: y + (Math.random() * 10 - 5),
-            vx: (Math.random() - 0.5) * 30,
-            vy: -25 - Math.random() * 35,
+            vx: vx !== null ? vx : (Math.random() - 0.5) * 30,
+            vy: vy !== null ? vy : -25 - Math.random() * 35,
             char: char,
             color: color,
             life: 1.0,
-            decay: 0.9 + Math.random() * 0.5
+            decay: 0.8 + Math.random() * 0.4
         });
+    }
+
+    // Casino-style particle eruption on task / step completion
+    spawnCasinoStepCelebration(agent, stepNum = 1, totalSteps = 10) {
+        const x = agent ? agent.currentX : 1000;
+        const y = agent ? agent.currentY - 15 : 500;
+        const casinoIcons = ['🪙', '💰', '💎', '7️⃣', '✨', '⭐'];
+        const colors = ['#fde047', '#f59e0b', '#38bdf8', '#ef4444', '#10b981'];
+
+        // Erupt 8-12 floating casino coins and jewels
+        const count = Math.min(18, 8 + Math.floor(stepNum / 3));
+        for (let i = 0; i < count; i++) {
+            const angle = (Math.PI * 2 * i) / count + (Math.random() * 0.4 - 0.2);
+            const speed = 25 + Math.random() * 40;
+            const vx = Math.cos(angle) * speed;
+            const vy = -35 - Math.sin(Math.abs(angle)) * 30;
+            const icon = casinoIcons[i % casinoIcons.length];
+            const col = colors[i % colors.length];
+            this.addParticle(x, y, icon, col, vx, vy);
+        }
+
+        // Floating combo text
+        const comboText = stepNum >= 10 ? `x${stepNum} 🔥` : `x${stepNum}!`;
+        this.addParticle(x, y - 22, comboText, '#fde047', 0, -45);
+
+        if (agent) {
+            this.showSpeechBubble(agent.id, `🎰 +${stepNum * 100} XP (x${stepNum})`, 1800, '#fde047');
+        }
+    }
+
+    // Grand Jackpot Celebration across the office
+    spawnJackpotCelebration(totalSteps = 43) {
+        const icons = ['🪙', '💰', '💎', '7️⃣', '✨', '👑', '🔥'];
+        const colors = ['#fde047', '#f59e0b', '#ef4444', '#38bdf8', '#10b981'];
+
+        // Shower of 60+ gold coins falling across camera viewport
+        for (let i = 0; i < 65; i++) {
+            const startX = this.camera.x + Math.random() * (this.canvas.width / this.camera.zoom);
+            const startY = this.camera.y - 20 - Math.random() * 80;
+            const icon = icons[Math.floor(Math.random() * icons.length)];
+            const col = colors[Math.floor(Math.random() * colors.length)];
+            const vx = (Math.random() - 0.5) * 40;
+            const vy = 50 + Math.random() * 70; // Falling down like coin rain
+            this.addParticle(startX, startY, icon, col, vx, vy);
+        }
+
+        if (this.masterOnaga) {
+            this.masterOnaga.speechText = `🎰 ¡¡JACKPOT SUPREMO!! ¡${totalSteps} ENTREGABLES CONSEGUIDOS! 💰`;
+            this.masterOnaga.speechTimer = 350;
+            for (let j = 0; j < 15; j++) {
+                this.addParticle(this.masterOnaga.currentX, this.masterOnaga.currentY - 30, '👑', '#fde047');
+            }
+        }
+
+        this.showToast(`🎰 ¡¡JACKPOT DE PRODUCTIVIDAD!! ${totalSteps}/${totalSteps} PASOS COMPLETADOS 💰🪙💎`, '#fde047', 260);
     }
 
     showSpeechBubble(agentId, text, durationMs = 3000, color = '#38bdf8') {

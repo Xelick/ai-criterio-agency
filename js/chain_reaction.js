@@ -194,13 +194,19 @@ class ChainReactionEngine {
             intermediatePayload.previousOutputs.push(stepResult);
             this.generatedDeliverables.push(stepResult);
 
-            if (window.pixelAudio) window.pixelAudio.playStepSuccess();
+            // Casino-style progressive sound (rising pitch, coin clinks, multipliers)
+            if (window.pixelAudio) {
+                window.pixelAudio.playCasinoStepSuccess(i, this.pipeline.length);
+            }
+            if (window.pixelEngine && window.pixelEngine.spawnCasinoStepCelebration) {
+                window.pixelEngine.spawnCasinoStepCelebration(agent, i + 1, this.pipeline.length);
+            }
 
             this.logStepEnd(i, agent, stepResult);
 
             // Update speech bubble with summary
             if (window.pixelEngine) {
-                window.pixelEngine.chainActiveSpeech = `✅ Paso ${i + 1} Listo!`;
+                window.pixelEngine.chainActiveSpeech = `🎰 Paso ${i + 1} Listo! (x${i + 1})`;
             }
 
             if (this.onStepFinished) this.onStepFinished(i, stepResult);
@@ -209,7 +215,7 @@ class ChainReactionEngine {
             await this.delay(this.stepDelay);
         }
 
-        // Complete
+        // Complete & Grand Casino Jackpot!
         this.isRunning = false;
         this.currentStep = -1;
 
@@ -218,7 +224,13 @@ class ChainReactionEngine {
             window.pixelEngine.chainActiveSpeech = '';
         }
 
-        if (window.pixelAudio) window.pixelAudio.playSuccess();
+        // Grand Casino Jackpot Fanfare & Coin Shower across the office
+        if (window.pixelAudio) {
+            window.pixelAudio.playCasinoJackpot();
+        }
+        if (window.pixelEngine && window.pixelEngine.spawnJackpotCelebration) {
+            window.pixelEngine.spawnJackpotCelebration(this.pipeline.length);
+        }
 
         this.logSystem(`🎉 REACCIÓN EN CADENA FINALIZADA CON ÉXITO. Todos los entregables han sido unificados.`);
         
