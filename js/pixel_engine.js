@@ -57,6 +57,7 @@ class PixelOfficeEngine {
 
         this.activeSpeechBubbles = new Map();
         this.particles = [];
+        this.urgencyModeActive = false;
 
         // Master Onaga Entity (Cult of the Lamb x Extreme Productivity)
         this.masterOnaga = {
@@ -124,6 +125,15 @@ class PixelOfficeEngine {
             this.masterOnaga.currentY = 940;
             this.masterOnaga.altarX = 950;
             this.masterOnaga.altarY = 940;
+        }
+        if (window.bottleneckDetector && window.bottleneckDetector.propagateUrgencyToAgents) {
+            window.bottleneckDetector.propagateUrgencyToAgents();
+        }
+        if (this.urgencyModeActive) {
+            this.agents.forEach(a => {
+                a.isSprinting = true;
+                a.hasUrgentBottleneck = true;
+            });
         }
         // Center camera smoothly
         this.camera.x = Math.max(0, (this.worldWidth - this.canvas.width / this.camera.zoom) / 2);
@@ -445,9 +455,13 @@ class PixelOfficeEngine {
         this.agents.forEach((a, idx) => {
             if (a.isBeingDragged) return; // Suspended in air by user!
 
-            // Periodically emit work spark if sprinting
-            if (a.isSprinting && Math.random() < 0.05) {
-                this.addParticle(a.currentX, a.currentY - 10, ['⚡', '💻', '💡'][Math.floor(Math.random() * 3)], '#fde047');
+            // Periodically emit work spark or bottleneck alarm if sprinting
+            if ((a.isSprinting || a.hasUrgentBottleneck) && Math.random() < 0.05) {
+                if (a.hasUrgentBottleneck) {
+                    this.addParticle(a.currentX, a.currentY - 12, Math.random() < 0.5 ? '⚠️' : '🔥', '#ef4444');
+                } else {
+                    this.addParticle(a.currentX, a.currentY - 10, ['⚡', '💻', '💡'][Math.floor(Math.random() * 3)], '#fde047');
+                }
             }
 
             // Autonomous wander decisions (suppressed if assembled in formation or sprinting at desk)
@@ -540,6 +554,11 @@ class PixelOfficeEngine {
 
         // 5. Draw Screen-Space HUD (Minimap, Floor Watermark)
         this.renderMinimap();
+
+        // 6. Urgency DEFCON 1 Screen Alert Overlay
+        if (this.urgencyModeActive) {
+            this.renderUrgencyOverlay();
+        }
     }
 
     renderOfficeEnvironment() {
@@ -1531,7 +1550,9 @@ class PixelOfficeEngine {
 
     openDailyReportFromOnaga() {
         this.closeOnagaCultModal();
-        if (window.dailyReporter && window.dailyReporter.openModal) {
+        if (window.dailyExecutiveReporter && window.dailyExecutiveReporter.openDailyReportModal) {
+            window.dailyExecutiveReporter.openDailyReportModal();
+        } else if (window.dailyReporter && window.dailyReporter.openModal) {
             window.dailyReporter.openModal();
         } else {
             const reportModal = document.getElementById('dailyReportModal');
@@ -1541,10 +1562,12 @@ class PixelOfficeEngine {
 
     openBottlenecksFromOnaga() {
         this.closeOnagaCultModal();
-        if (window.bottleneckDetector && window.bottleneckDetector.openModal) {
+        if (window.bottleneckDetector && window.bottleneckDetector.openBottleneckModal) {
+            window.bottleneckDetector.openBottleneckModal();
+        } else if (window.bottleneckDetector && window.bottleneckDetector.openModal) {
             window.bottleneckDetector.openModal();
         } else {
-            const bnModal = document.getElementById('bottleneckDetectorModal');
+            const bnModal = document.getElementById('bottleneckReportModal');
             if (bnModal) bnModal.style.display = 'flex';
         }
     }
@@ -1948,6 +1971,8 @@ ${this.lastOnagaOracleResponse.text}
         const isSelected = (this.selectedAgent && this.selectedAgent.id === a.id);
         const isHovered = (this.hoveredAgent && this.hoveredAgent.id === a.id);
 
+        const hasUrgentAlert = (a.hasUrgentBottleneck || (this.urgencyModeActive && a.isSprinting));
+
         // Highlight ring if chain active, hovered or selected
         if (isChainActive) {
             // Intense pulsing electric aura
@@ -1981,6 +2006,25 @@ ${this.lastOnagaOracleResponse.text}
             ctx.font = '12px monospace';
             ctx.textAlign = 'center';
             ctx.fillText('▼', x, y - 32);
+        } else if (hasUrgentAlert) {
+            // Pulsing emergency warning halo at agent feet
+            const pulse = 18 + Math.sin(this.timeTick * 8 + (x % 5)) * 4;
+            ctx.strokeStyle = '#ef4444';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.arc(x, y + 8, pulse, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.fillStyle = 'rgba(239, 68, 68, 0.22)';
+            ctx.beginPath();
+            ctx.arc(x, y + 8, pulse, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Pulsing warning triangle icon above head
+            const beaconY = y - 32 + Math.sin(this.timeTick * 10 + (x % 7)) * 3;
+            ctx.font = '14px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('⚠️', x, beaconY);
         } else if (a.isTaskforce) {
             // Taskforce Active badge
             ctx.fillStyle = '#ef4444';
@@ -1991,6 +2035,14 @@ ${this.lastOnagaOracleResponse.text}
             ctx.strokeStyle = '#38bdf8';
             ctx.lineWidth = 1.5;
             ctx.strokeRect(x - 18, y - 26, 36, 42);
+        }
+
+        // If selected or hovered AND has urgent alert, also ensure the warning beacon is rendered!
+        if (hasUrgentAlert && (isSelected || isHovered) && !isChainActive) {
+            const beaconY = y - 44 + Math.sin(this.timeTick * 10 + (x % 7)) * 3;
+            ctx.font = '13px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('⚠️', x, beaconY);
         }
 
         // Bobbing & Floating animation
@@ -2720,6 +2772,112 @@ ${this.lastOnagaOracleResponse.text}
         ctx.strokeStyle = '#f59e0b';
         ctx.lineWidth = 1;
         ctx.strokeRect(vpX, vpY, vpW, vpH);
+    }
+
+    renderUrgencyOverlay() {
+        const ctx = this.ctx;
+        const w = this.canvas.width;
+        const h = this.canvas.height;
+        const pulse = 0.4 + 0.3 * Math.sin(this.timeTick * 7);
+
+        ctx.save();
+        // 1. Red warning perimeter glow around office canvas
+        ctx.strokeStyle = `rgba(239, 68, 68, ${pulse})`;
+        ctx.lineWidth = 6;
+        ctx.strokeRect(3, 3, w - 6, h - 6);
+
+        ctx.strokeStyle = `rgba(245, 158, 11, ${pulse * 0.7})`;
+        ctx.lineWidth = 2;
+        ctx.strokeRect(9, 9, w - 18, h - 18);
+
+        // 2. Screen-top urgent alert banner
+        const ribbonW = Math.min(680, w - 30);
+        const ribbonH = 26;
+        const rx = (w - ribbonW) / 2;
+        const ry = 8;
+
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.94)';
+        ctx.fillRect(rx, ry, ribbonW, ribbonH);
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(rx, ry, ribbonW, ribbonH);
+
+        // Red flashing dot
+        ctx.fillStyle = (Math.floor(this.timeTick * 4) % 2 === 0) ? '#ef4444' : '#fde047';
+        ctx.beginPath();
+        ctx.arc(rx + 16, ry + 13, 5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 11px monospace';
+        ctx.textAlign = 'center';
+        const alertText = '🚨 MODO DEFCON 1 VITAL ACTIVADO • 5 CUELLOS DE BOTELLA EN RESOLUCIÓN • CERO PROCRASTINACIÓN';
+        ctx.fillText(alertText, w / 2, ry + 17);
+
+        ctx.restore();
+    }
+
+    toggleUrgencyMode(force = null) {
+        this.urgencyModeActive = (force !== null) ? !!force : !this.urgencyModeActive;
+
+        if (this.urgencyModeActive) {
+            if (window.pixelAudio && window.pixelAudio.playDefconAlert) {
+                window.pixelAudio.playDefconAlert();
+            } else if (window.pixelAudio && window.pixelAudio.playWhistle) {
+                window.pixelAudio.playWhistle();
+            }
+
+            const phrases = [
+                '¡La vida de Onaga depende de este sprint! ¡A resolver ya!',
+                '¡Cero procrastinación! ¡Prioridad absoluta a los cuellos de botella!',
+                '¡119 restaurantes en Bogotá esperan! ¡Desplegando Carta Viva!',
+                '¡Netlify Forms y WhatsApp +57 318 941 1010 al 100%!',
+                '¡Por el Gran Sombrero Sagrado de Onaga, este bug cae hoy!',
+                '¡Cero deuda técnica! ¡Velocidad y calidad máxima!'
+            ];
+
+            let bubbleCount = 0;
+            this.agents.forEach((a, i) => {
+                a.isSprinting = true;
+                a.hasUrgentBottleneck = true;
+
+                // Burst of emergency particles
+                for (let k = 0; k < 2; k++) {
+                    this.addParticle(a.currentX, a.currentY - 14, Math.random() < 0.5 ? '⚠️' : '🔥', '#ef4444');
+                }
+
+                // Distribute urgent speech bubbles across several visible agents
+                if (bubbleCount < 6 && (i % 3 === 0 || Math.random() < 0.3)) {
+                    const quote = phrases[bubbleCount % phrases.length];
+                    this.showSpeechBubble(a.id, quote, 4000 + bubbleCount * 400, '#ef4444');
+                    bubbleCount++;
+                }
+            });
+
+            if (this.masterOnaga) {
+                this.masterOnaga.speechText = '🚨 ¡ESTADO DE ALERTA DEFCON 1 ACTIVADO! ¡MI VIDA DEPENDE DE ESTO!';
+                this.masterOnaga.speechTimer = 400;
+                this.masterOnaga.speechColor = '#ef4444';
+                for (let j = 0; j < 12; j++) {
+                    this.addParticle(this.masterOnaga.currentX, this.masterOnaga.currentY - 25, '👑', '#fde047');
+                }
+            }
+
+            this.showToast('🚨 ALERTA DEFCON 1 VITAL ACTIVADA: ¡SPRINT DE EMERGENCIA EN LA OFICINA!', '#ef4444', 280);
+        } else {
+            this.agents.forEach(a => {
+                a.isSprinting = false;
+                a.hasUrgentBottleneck = false;
+            });
+            if (this.masterOnaga) {
+                this.masterOnaga.speechText = '✨ Alerta disipada. Mantengan el rigor y la disciplina sagrada.';
+                this.masterOnaga.speechTimer = 220;
+                this.masterOnaga.speechColor = '#10b981';
+            }
+            this.showToast('🛡️ Modo de Alerta DEFCON 1 desactivado. Estado normal restaurado.', '#10b981', 180);
+        }
+
+        return this.urgencyModeActive;
     }
 }
 

@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Load initial floor (Floor 1)
     const initialAgents = window.agentsManager.getAgentsOnFloor(1);
     engine.setAgents(initialAgents, 1);
+    if (window.bottleneckDetector && window.bottleneckDetector.propagateUrgencyToAgents) {
+        window.bottleneckDetector.propagateUrgencyToAgents();
+    }
 
     // 3. UI Element References
     const floorButtons = document.querySelectorAll('.floor-btn');
@@ -927,6 +930,51 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
                 engine.showToast(`⚡ Escuadrón cargado en la Cadena de Ejecución`, '#059669');
                 if (window.pixelAudio) window.pixelAudio.playSuccess();
+            });
+        }
+
+        // Connect Onaga Cult, Bottlenecks Urgency, and Daily Report buttons
+        const onagaCultBtn = document.getElementById('cmdOnagaCultBtn');
+        const bottlenecksBtn = document.getElementById('cmdBottlenecksBtn');
+        const dailyReportBtn = document.getElementById('cmdDailyReportBtn');
+
+        if (bottlenecksBtn) {
+            bottlenecksBtn.addEventListener('click', () => {
+                if (window.pixelAudio && window.pixelAudio.playDefconAlert) {
+                    window.pixelAudio.playDefconAlert();
+                } else if (window.pixelAudio && window.pixelAudio.playClick) {
+                    window.pixelAudio.playClick();
+                }
+                if (window.bottleneckDetector && window.bottleneckDetector.openBottleneckModal) {
+                    window.bottleneckDetector.openBottleneckModal();
+                } else if (window.bottleneckDetector && window.bottleneckDetector.openModal) {
+                    window.bottleneckDetector.openModal();
+                } else {
+                    const m = document.getElementById('bottleneckReportModal');
+                    if (m) m.style.display = 'flex';
+                }
+            });
+        }
+
+        if (onagaCultBtn) {
+            onagaCultBtn.addEventListener('click', () => {
+                if (engine && engine.openOnagaCultModal) {
+                    engine.openOnagaCultModal();
+                }
+            });
+        }
+
+        if (dailyReportBtn) {
+            dailyReportBtn.addEventListener('click', () => {
+                if (window.pixelAudio && window.pixelAudio.playClick) window.pixelAudio.playClick();
+                if (window.dailyExecutiveReporter && window.dailyExecutiveReporter.openDailyReportModal) {
+                    window.dailyExecutiveReporter.openDailyReportModal();
+                } else if (window.dailyReporter && window.dailyReporter.openModal) {
+                    window.dailyReporter.openModal();
+                } else {
+                    const m = document.getElementById('dailyReportModal');
+                    if (m) m.style.display = 'flex';
+                }
             });
         }
     }

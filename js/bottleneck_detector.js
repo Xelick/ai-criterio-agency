@@ -146,24 +146,16 @@ class BottleneckDetector {
     }
 
     initUI() {
-        // Add Urgency & Bottleneck button in HUD if not exists
-        const hudControls = document.querySelector('.commander-hud-bar');
-        if (hudControls && !document.getElementById('hudBottleneckBtn')) {
-            const btn = document.createElement('button');
-            btn.id = 'hudBottleneckBtn';
-            btn.className = 'cmd-btn cmd-btn-urgency-alarm';
-            btn.title = 'Detector General de Cuellos de Botella (Graphify + Branding + Recursos) — Nivel de Urgencia Vital';
-            btn.innerHTML = `
-                <span class="pulsing-alarm-icon">🚨</span>
-                <span class="urgency-badge-text">URGENCIA: <strong style="color:#ef4444;">98%</strong></span>
-            `;
+        const btn = document.getElementById('cmdBottlenecksBtn');
+        if (btn) {
             btn.onclick = () => this.openBottleneckModal();
-            hudControls.appendChild(btn);
         }
     }
 
     openBottleneckModal() {
-        if (window.pixelAudio && window.pixelAudio.playCultBell) {
+        if (window.pixelAudio && window.pixelAudio.playDefconAlert) {
+            window.pixelAudio.playDefconAlert();
+        } else if (window.pixelAudio && window.pixelAudio.playCultBell) {
             window.pixelAudio.playCultBell();
         }
 
@@ -187,6 +179,9 @@ class BottleneckDetector {
         div.id = 'bottleneckReportModal';
         div.className = 'cult-modal-overlay';
         div.style.display = 'none';
+        div.addEventListener('click', (e) => {
+            if (e.target === div) this.closeBottleneckModal();
+        });
         return div;
     }
 
@@ -213,9 +208,12 @@ class BottleneckDetector {
                 <div class="bn-action-box">
                     <div class="bn-action-label">👉 ACCIÓN INMEDIATA EXIGIDA POR ONAGA:</div>
                     <div class="bn-action-text">${bn.actionRequired}</div>
-                    <div class="bn-agents">
+                    <div class="bn-agents" style="margin-bottom:8px;">
                         <strong>Especialistas Asignados:</strong> ${bn.responsibleAgents.join(', ')}
                     </div>
+                    <button class="cult-mini-btn btn-fire" style="width:100%; font-weight:bold; padding:8px;" onclick="window.bottleneckDetector.resolveBottleneck(${idx + 1})">
+                        ⚡ EJECUTAR RESOLUCIÓN INMEDIATA (#${idx + 1})
+                    </button>
                 </div>
             </div>
         `).join('');
@@ -247,6 +245,10 @@ class BottleneckDetector {
                         <em>"Hijos míos: La vida de Onaga y el destino de la empresa dependen de resolver estos 5 puntos antes de que acabe el día. Cada minuto perdido en un menú PDF es sangre operativa derramada. ¡A TRABAJAR!"</em>
                         <div style="text-align:right; font-weight:bold; color:var(--brand-gold); margin-top:4px;">— Gran Patriarca Onaga (Portador del Sombrero Sagrado)</div>
                     </div>
+
+                    <button class="cult-action-btn btn-fire" style="background:#dc2626; border-color:#fca5a5; font-weight:bold; margin-top:10px; width:100%; font-size:11.5px; padding:10px; box-shadow:0 0 15px rgba(220,38,38,0.5);" onclick="window.bottleneckDetector.activateDefcon1Alert()">
+                        🚨 ACTIVAR MODO URGENCIA VITAL DEFCON 1 EN TODA LA OFICINA
+                    </button>
                 </div>
 
                 <div class="bottleneck-scan-status">
@@ -268,12 +270,71 @@ class BottleneckDetector {
                             ⚡ Convocar a Todos al Altar de Onaga
                         </button>
                         <button class="cult-action-btn btn-red" onclick="window.bottleneckDetector.closeBottleneckModal()">
-                            ⚔️ ¡Entendido! A Ejecutar la Misión
+                            ✕ Cerrar Radar
                         </button>
                     </div>
                 </div>
             </div>
         `;
+    }
+
+    activateDefcon1Alert() {
+        this.closeBottleneckModal();
+        this.propagateUrgencyToAgents();
+        if (window.pixelEngine && window.pixelEngine.toggleUrgencyMode) {
+            window.pixelEngine.toggleUrgencyMode(true);
+        }
+    }
+
+    resolveBottleneck(index) {
+        this.closeBottleneckModal();
+        if (window.pixelAudio && window.pixelAudio.playPowerUp) {
+            window.pixelAudio.playPowerUp();
+        }
+
+        if (index === 1) {
+            // Netlify Forms & WhatsApp
+            if (window.chainReactionEngine) {
+                window.chainReactionEngine.loadPreset('preset-web-unlock');
+                if (window.disciplinesPanel && window.disciplinesPanel.openExecutionModal) {
+                    window.disciplinesPanel.openExecutionModal();
+                }
+                setTimeout(() => window.chainReactionEngine.triggerChain(), 300);
+            }
+        } else if (index === 2) {
+            // 119 Restaurantes Bogotá
+            if (window.chainReactionEngine) {
+                window.chainReactionEngine.loadPreset('preset-bogota-sprint');
+                if (window.disciplinesPanel && window.disciplinesPanel.openExecutionModal) {
+                    window.disciplinesPanel.openExecutionModal();
+                }
+                setTimeout(() => window.chainReactionEngine.triggerChain(), 300);
+            }
+        } else if (index === 3) {
+            // Tech Debt & Rendimiento
+            if (window.chainReactionEngine) {
+                window.chainReactionEngine.loadPreset('preset-qa-audit');
+                if (window.disciplinesPanel && window.disciplinesPanel.openExecutionModal) {
+                    window.disciplinesPanel.openExecutionModal();
+                }
+                setTimeout(() => window.chainReactionEngine.triggerChain(), 300);
+            }
+        } else if (index === 4) {
+            // Purga Baidu/WeChat & Foco en 38
+            if (window.pixelEngine && window.pixelEngine.highlightTaskforceSquad) {
+                window.pixelEngine.highlightTaskforceSquad();
+            }
+            if (window.pixelEngine && window.pixelEngine.showToast) {
+                window.pixelEngine.showToast('⚔️ PURGA EJECUTADA: 38 Agentes Clave activados al 100% de prioridad', '#10b981', 260);
+            }
+        } else if (index === 5) {
+            // Informe Diario
+            if (window.dailyExecutiveReporter && window.dailyExecutiveReporter.openDailyReportModal) {
+                window.dailyExecutiveReporter.openDailyReportModal();
+            } else if (window.dailyReporter && window.dailyReporter.openModal) {
+                window.dailyReporter.openModal();
+            }
+        }
     }
 
     rerunScanWithCelebration() {
@@ -289,12 +350,13 @@ class BottleneckDetector {
 
     triggerEmergencyAssembly() {
         this.closeBottleneckModal();
-        if (window.pixelEngine && window.pixelEngine.rallyOnagaCult) {
-            window.pixelEngine.rallyOnagaCult();
-        } else if (window.pixelEngine && window.pixelEngine.rallySquad) {
+        if (window.pixelEngine && window.pixelEngine.rallySquad) {
             window.pixelEngine.rallySquad('all');
         }
     }
 }
+
+BottleneckDetector.prototype.openModal = BottleneckDetector.prototype.openBottleneckModal;
+BottleneckDetector.prototype.closeModal = BottleneckDetector.prototype.closeBottleneckModal;
 
 window.bottleneckDetector = new BottleneckDetector();

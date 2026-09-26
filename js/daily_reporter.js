@@ -118,6 +118,9 @@ class DailyExecutiveReporter {
             modal = document.createElement('div');
             modal.id = 'dailyReportModal';
             modal.className = 'cult-modal-overlay';
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) this.closeDailyReportModal();
+            });
             document.body.appendChild(modal);
         }
 
@@ -244,4 +247,8 @@ class DailyExecutiveReporter {
     }
 }
 
+DailyExecutiveReporter.prototype.openModal = DailyExecutiveReporter.prototype.openDailyReportModal;
+DailyExecutiveReporter.prototype.closeModal = DailyExecutiveReporter.prototype.closeDailyReportModal;
+
 window.dailyExecutiveReporter = new DailyExecutiveReporter();
+window.dailyReporter = window.dailyExecutiveReporter;
