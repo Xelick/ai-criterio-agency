@@ -1,0 +1,54 @@
+# Criterio AI — Robots.txt & AI Crawler Permissions
+# Dominio: https://gocriterio.com
+# Actualizado: 2026-09-25
+
+# 1. Reglas Generales para Buscadores Tradicionales
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /scratch/
+Disallow: /tmp/
+Disallow: /api/private/
+
+# 2. Permisos Explícitos para Motores de Inteligencia Artificial (AEO)
+# OpenAI ChatGPT / SearchGPT
+User-agent: GPTBot
+Allow: /
+Allow: /llms.txt
+
+User-agent: ChatGPT-User
+Allow: /
+
+# Anthropic Claude & Claude Search
+User-agent: ClaudeBot
+Allow: /
+Allow: /llms.txt
+
+User-agent: anthropic-ai
+Allow: /
+
+# Perplexity AI
+User-agent: PerplexityBot
+Allow: /
+Allow: /llms.txt
+
+# Google Gemini / Vertex AI / Google Extended
+User-agent: Google-Extended
+Allow: /
+
+# Apple Intelligence
+User-agent: Applebot
+User-agent: Applebot-Extended
+Allow: /
+
+# Cohere & Meta
+User-agent: cohere-ai
+User-agent: Meta-ExternalAgent
+Allow: /
+
+# 3. Directiva de Sitemaps y Manifiestos
+Sitemap: https://gocriterio.com/sitemap.xml
+Sitemap: https://gocriterio.com/sitemap-catalogos.xml
+
+# LLM Manifest Reference
+# https://gocriterio.com/llms.txt

@@ -99,6 +99,9 @@
                 <button class="disciplines-tab-btn" data-tab="presets">
                     ⚡ Presets
                 </button>
+                <button class="disciplines-tab-btn" data-tab="history">
+                    📜 Historial (<span id="historyChainCount">2</span>)
+                </button>
             </div>
 
             <!-- Tab 1: Disciplines & NPCs Accordion -->
@@ -161,6 +164,15 @@
                     Equipos donde las habilidades de cada disciplina se encadenan para multiplicar el impacto en Criterio AI.
                 </div>
                 <div id="combosListContainer" style="display:flex; flex-direction:column; gap:10px; padding:10px 8px; max-height: calc(100vh - 210px); overflow-y:auto;"></div>
+            </div>
+
+            <!-- Tab 5: Executed Chains History & Re-run Hub -->
+            <div id="tabHistoryContent" class="disciplines-tab-content" style="display:none;">
+                <div style="padding:8px 10px; font-size:10px; color:#cbd5e1; background:#0f172a; border-bottom:1px solid #1e293b;">
+                    📜 <strong>Historial de Cadenas Ejecutadas:</strong><br>
+                    Inspecciona resultados, revisa entregables generados o vuelve a ejecutarlas con un solo clic.
+                </div>
+                <div id="historyListContainer" class="history-list-container" style="display:flex; flex-direction:column; gap:10px; padding:10px 8px; max-height: calc(100vh - 210px); overflow-y:auto;"></div>
             </div>
         </aside>
 
@@ -241,6 +253,15 @@
                     </button>
                     <button id="cmdExecuteChainBtn" class="cmd-btn cmd-btn-chain" title="Cargar este departamento a la Cadena de Ejecución Multidisciplinar">
                         <span>⚡</span> Ejecutar Misión
+                    </button>
+                    <button id="cmdOnagaCultBtn" class="cmd-btn cmd-btn-onaga" title="Invocar a Onaga (Gran Líder del Culto de la Productividad) y dictar Decretos">
+                        <span>👑</span> Culto Onaga
+                    </button>
+                    <button id="cmdBottlenecksBtn" class="cmd-btn cmd-btn-urgency" title="Detector de Cuellos de Botella (Graphify + Recursos) — Nivel Vital">
+                        <span>🚨</span> Urgencia (98%)
+                    </button>
+                    <button id="cmdDailyReportBtn" class="cmd-btn cmd-btn-report" title="Informe Diario Consolidado para Onaga (Victoria Sterling, Chief of Staff)">
+                        <span>📋</span> Informe Diario
                     </button>
                 </div>
                 <div class="commander-hint" title="Tip: Mantén click izquierdo sostenido sobre cualquier agente para moverlo libremente por la oficina con bracitos animados">
@@ -804,6 +825,129 @@ python run_pipeline.py 4   # Ejecuta Auditoría QA & Sistema de Diseño</pre>
         </div>
     </div>
 
+    <!-- Modal: Culto de la Productividad de Onaga (Estilo Cult of the Lamb) -->
+    <div id="onagaCultModal" class="cult-modal-overlay" style="display:none;">
+        <div class="cult-modal-container cult-dialog">
+            <div class="cult-modal-header cult-red-header">
+                <div class="cult-header-left">
+                    <div class="cult-eye-avatar">👁️</div>
+                    <div>
+                        <h2 class="cult-title">EL CULTO DE LA PRODUCTIVIDAD — GRAN PATRIARCA ONAGA</h2>
+                        <div class="cult-subtitle">Quien porta el Sombrero Sagrado • Supremo Comandante del Cuartel General</div>
+                    </div>
+                </div>
+                <button class="cult-close-btn" onclick="window.pixelEngine.closeOnagaCultModal()">✕</button>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="cult-stats-bar">
+                <div class="cult-stat-pill">
+                    <span>👑 Fe en Onaga:</span>
+                    <strong style="color:#ef4444;">100% DEVOCIÓN</strong>
+                </div>
+                <div class="cult-stat-pill">
+                    <span>🔥 Estado de Misión:</span>
+                    <strong style="color:var(--brand-gold);">ALERTA VITAL (DEFCON 1)</strong>
+                </div>
+                <div class="cult-stat-pill">
+                    <span>⚡ Fieles en el Cuartel:</span>
+                    <strong style="color:#38bdf8;">296 NPCs AUTÓNOMOS</strong>
+                </div>
+            </div>
+
+            <div class="cult-decree-banner">
+                <div style="font-size:18px; margin-right:8px;">📜</div>
+                <div>
+                    <em>"Hijos míos: La vida de Onaga depende de sacar este sprint adelante. No hay espacio para la duda ni para el tech debt. ¡Elegid el ritual que salvará a la agencia!"</em>
+                </div>
+            </div>
+
+            <!-- Grid de Rituales y Decretos -->
+            <div class="cult-rituals-grid">
+                <!-- Ritual 1 -->
+                <div class="cult-ritual-card">
+                    <div class="ritual-icon">📜</div>
+                    <div class="ritual-content">
+                        <div class="ritual-title">Sermón de la Velocidad Suprema</div>
+                        <div class="ritual-desc">Eleva la moral y desata el fuego en los teclados. Todos los agentes tipean al +250% con chispas de productividad.</div>
+                        <button class="cult-mini-btn btn-fire" onclick="window.pixelEngine.executeSermonOfSpeed()">
+                            ⚡ Dictar Sermón
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ritual 2 -->
+                <div class="cult-ritual-card">
+                    <div class="ritual-icon">🔥</div>
+                    <div class="ritual-content">
+                        <div class="ritual-title">Sacrificio del Tech Debt</div>
+                        <div class="ritual-desc">Purga los bugs y malas prácticas en el fuego ritual. Genera validación de código y checkmarks verdes en la oficina.</div>
+                        <button class="cult-mini-btn btn-sacrifice" onclick="window.pixelEngine.executeSacrificeTechDebt()">
+                            🔥 Sacrificar Bugs
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ritual 3 -->
+                <div class="cult-ritual-card">
+                    <div class="ritual-icon">☕</div>
+                    <div class="ritual-content">
+                        <div class="ritual-title">Bendición del Café Sagrado</div>
+                        <div class="ritual-desc">Convoca un banquete de espresso sagrado. Restaura la estamina al 100% y llena a los agentes de energía y corazones.</div>
+                        <button class="cult-mini-btn btn-coffee" onclick="window.pixelEngine.executeHolyCoffeeBlessing()">
+                            ☕ Bendecir Café
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ritual 4 -->
+                <div class="cult-ritual-card">
+                    <div class="ritual-icon">🌾</div>
+                    <div class="ritual-content">
+                        <div class="ritual-title">Cosecha de Entregables</div>
+                        <div class="ritual-desc">Reclama los frutos de la Cadena de 43 Agentes y verifica todos los archivos en entregables/ listos para producción.</div>
+                        <button class="cult-mini-btn btn-harvest" onclick="window.pixelEngine.executeHarvestDeliverables()">
+                            🌾 Cosechar Todo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ritual 5 -->
+                <div class="cult-ritual-card">
+                    <div class="ritual-icon">⚡</div>
+                    <div class="ritual-content">
+                        <div class="ritual-title">Excomunión de la Procrastinación</div>
+                        <div class="ritual-desc">Lanza un rayo sagrado de advertencia a los agentes distraídos para devolverlos inmediatamente a sus puestos.</div>
+                        <button class="cult-mini-btn btn-smite" onclick="window.pixelEngine.executeSmiteProcrastinators()">
+                            ⚡ Lanzar Rayo Divino
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ritual 6 -->
+                <div class="cult-ritual-card">
+                    <div class="ritual-icon">🕺</div>
+                    <div class="ritual-content">
+                        <div class="ritual-title">Danza Ritual de la Victoria</div>
+                        <div class="ritual-desc">Todos los agentes forman un círculo de adoración y bailan con música retro para celebrar el avance del sprint.</div>
+                        <button class="cult-mini-btn btn-dance" onclick="window.pixelEngine.executeEcstaticDance()">
+                            🎵 Iniciar Danza
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cult-modal-footer">
+                <button class="cult-action-btn btn-altar-rally" onclick="window.pixelEngine.closeOnagaCultModal(); window.pixelEngine.rallySquad('all');">
+                    🎯 Convocatoria Masiva al Altar
+                </button>
+                <button class="cult-action-btn btn-close" onclick="window.pixelEngine.closeOnagaCultModal()">
+                    ✕ Cerrar Púlpito
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Embedded Data (Ensures 100% immediate load offline, with file:// and with http://) -->
     <script src="js/taskforce_data.js"></script>
     <script src="js/agents_data.js"></script>
@@ -816,6 +960,8 @@ python run_pipeline.py 4   # Ejecuta Auditoría QA & Sistema de Diseño</pre>
     <script src="js/chain_reaction.js"></script>
     <script src="js/disciplines_panel.js"></script>
     <script src="js/git_connector.js"></script>
+    <script src="js/bottleneck_detector.js"></script>
+    <script src="js/daily_reporter.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

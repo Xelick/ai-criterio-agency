@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Smash Burger & Co — Carta Viva Digital Bogotá | Criterio AI</title>
+    <meta name="description" content="Catálogo interactivo ultra-rápido para pedidos directos a WhatsApp sin comisiones del 30%. Desarrollado por Criterio AI.">
+    <style>
+        :root {
+            --bg-base: #080d1e;
+            --bg-card: #0f172a;
+            --bg-elevated: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --brand-primary: #38bdf8;
+            --brand-gold: #f59e0b;
+            --brand-green: #22c55e;
+            --border: #334155;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            padding-bottom: 90px;
+            line-height: 1.4;
+        }
+
+        header.store-header {
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .store-logo {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #f59e0b, #b45309);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+
+        .store-info h1 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .store-info p {
+            font-size: 11px;
+            color: var(--brand-primary);
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid var(--brand-green);
+            color: var(--brand-green);
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 20px;
+        }
+
+        .criterio-banner {
+            margin: 12px 16px 4px 16px;
+            background: rgba(56, 189, 248, 0.08);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 11px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-nav {
+            display: flex;
+            gap: 8px;
+            padding: 12px 16px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .category-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .cat-chip {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .cat-chip.active {
+            background: var(--brand-primary);
+            color: #080d1e;
+            border-color: var(--brand-primary);
+        }
+
+        .menu-container {
+            padding: 8px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .product-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            display: flex;
+            gap: 12px;
+            position: relative;
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .product-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .product-price {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--brand-gold);
+        }
+
+        .product-badge {
+            display: inline-block;
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--brand-gold);
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-bottom: 4px;
+        }
+
+        .product-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .product-thumb {
+            width: 76px;
+            height: 76px;
+            background: #1e293b;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            border: 1px solid #334155;
+        }
+
+        .add-btn {
+            background: var(--brand-primary);
+            color: #080d1e;
+            border: none;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 7px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            min-height: 38px;
+            min-width: 76px;
+            margin-top: 6px;
+        }
+
+        .add-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Sticky Bottom Order Bar */
+        .order-bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #0f172a;
+            border-top: 1px solid var(--border);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 30;
+            box-shadow: 0 -4px 16px rgba(0,0,0,0.6);
+        }
+
+        .cart-summary {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-count {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .cart-total {
+            font-size: 17px;
+            font-weight: 900;
+            color: var(--brand-gold);
+        }
+
+        .checkout-btn {
+            background: var(--brand-green);
+            color: #ffffff;
+            border: none;
+            font-size: 13px;
+            font-weight: 800;
+            padding: 12px 20px;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            min-height: 48px;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+        }
+
+        /* Modal Sheet */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            display: none;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 50;
+            padding: 0;
+        }
+
+        .modal-sheet {
+            background: var(--bg-card);
+            border-top: 2px solid var(--brand-primary);
+            border-radius: 20px 20px 0 0;
+            width: 100%;
+            max-width: 500px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+        }
+
+        .form-input {
+            width: 100%;
+            background: var(--bg-base);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="store-header">
+        <div class="header-top">
+            <div class="brand-badge">
+                <div class="store-logo">🍔</div>
+                <div class="store-info">
+                    <h1>Smash Burger & Co</h1>
+                    <p>📍 Chapinero Alto, Bogotá • 30-45 min</p>
+                </div>
+            </div>
+            <div class="status-pill">
+                <span>●</span> ABIERTO
+            </div>
+        </div>
+    </header>
+
+    <div class="criterio-banner">
+        <span>⚡ <strong>Carta Viva</strong> (Carga < 1s • Cero Apps)</span>
+        <span style="color:var(--brand-gold);">0% Comisión</span>
+    </div>
+
+    <div class="category-nav">
+        <button class="cat-chip active">Hamburguesas</button>
+        <button class="cat-chip">Acompañamientos</button>
+        <button class="cat-chip">Bebidas</button>
+        <button class="cat-chip">Postres</button>
+    </div>
+
+    <div class="menu-container">
+        <!-- Item 1 -->
+        <div class="product-card">
+            <div class="product-info">
+                <span class="product-badge">🔥 MÁS VENDIDA</span>
+                <h2 class="product-title">Smash Doble Cheddar Bacon</h2>
+                <p class="product-desc">Dos carnes de 100g con costra caramelizada, cuádruple queso cheddar fundido, tocineta crujiente y salsa de la casa en pan brioche artesanal.</p>
+                <div class="product-price">$28.900 COP</div>
+            </div>
+            <div class="product-action">
+                <div class="product-thumb">🍔</div>
+                <button class="add-btn" onclick="addToCart('Smash Doble Cheddar Bacon', 28900)">+ Pedir</button>
+            </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="product-card">
+            <div class="product-info">
+                <span class="product-badge">⭐ FAVORITO DEL CHEF</span>
+                <h2 class="product-title">Trufa & Portobello Burger</h2>
+                <p class="product-desc">Carne angus seleccionada, hongos portobello salteados al vino tinto, queso suizo madurado y mayo trufada con rúgula fresca.</p>
+                <div class="product-price">$31.900 COP</div>
+            </div>
+            <div class="product-action">
+                <div class="product-thumb">🍄</div>
+                <button class="add-btn" onclick="addToCart('Trufa & Portobello Burger', 31900)">+ Pedir</button>
+            </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="product-card">
+            <div class="product-info">
+                <h2 class="product-title">Crispy Chicken Club</h2>
+                <p class="product-desc">Pechuga marinada 24h frita con doble apanado crujiente, ensalada coleslaw de manzana verde, pepinillos dulces y aderezo ranch.</p>
+                <div class="product-price">$26.500 COP</div>
+            </div>
+            <div class="product-action">
+                <div class="product-thumb">🍗</div>
+                <button class="add-btn" onclick="addToCart('Crispy Chicken Club', 26500)">+ Pedir</button>
+            </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="product-card">
+            <div class="product-info">
+                <h2 class="product-title">Papas Rústicas al Romero</h2>
+                <p class="product-desc">Papas naturales con piel, crujientes por fuera y suaves por dentro, espolvoreadas con sal marina y romero fresco con dip de ajo asado.</p>
+                <div class="product-price">$11.500 COP</div>
+            </div>
+            <div class="product-action">
+                <div class="product-thumb">🍟</div>
+                <button class="add-btn" onclick="addToCart('Papas Rústicas al Romero', 11500)">+ Pedir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sticky Order Bar -->
+    <div class="order-bottom-bar">
+        <div class="cart-summary">
+            <span id="cartCountLabel" class="cart-count">0 productos seleccionados</span>
+            <span id="cartTotalLabel" class="cart-total">$0 COP</span>
+        </div>
+        <button id="openCheckoutBtn" class="checkout-btn" onclick="openCheckoutModal()">
+            <span>Pedir por WhatsApp</span> 💬
+        </button>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="modal-overlay">
+        <div class="modal-sheet">
+            <div class="modal-header">
+                <h3>🛍️ Confirmar Pedido WhatsApp</h3>
+                <button onclick="closeCheckoutModal()" style="background:none; border:none; color:white; font-size:18px; cursor:pointer;">✕</button>
+            </div>
+
+            <div id="modalOrderSummary" style="font-size:12px; color:var(--text-muted); margin-bottom:14px;"></div>
+
+            <label style="font-size:11px; font-weight:700; color:var(--brand-gold);">TU NOMBRE:</label>
+            <input type="text" id="custName" class="form-input" placeholder="Ej: Camilo Rodríguez">
+
+            <label style="font-size:11px; font-weight:700; color:var(--brand-gold);">DIRECCIÓN EN BOGOTÁ (O NÚMERO DE MESA):</label>
+            <input type="text" id="custAddress" class="form-input" placeholder="Ej: Cra 7 # 65-20 Apto 402 / Chapinero">
+
+            <label style="font-size:11px; font-weight:700; color:var(--brand-gold);">MÉTODO DE PAGO:</label>
+            <select id="custPayment" class="form-input">
+                <option value="Transferencia Nequi / Daviplata">Nequi / Daviplata</option>
+                <option value="Datafono contra entrega">Datafono contra entrega</option>
+                <option value="Efectivo contra entrega">Efectivo contra entrega</option>
+            </select>
+
+            <button onclick="dispatchWhatsAppOrder()" style="width:100%; background:var(--brand-green); color:white; font-weight:bold; padding:14px; border-radius:10px; border:none; font-size:14px; cursor:pointer; margin-top:8px;">
+                🚀 Enviar Pedido a WhatsApp (+57 318 941 1010)
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+
+        function addToCart(name, price) {
+            cart.push({ name, price });
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const total = cart.reduce((acc, item) => acc + item.price, 0);
+            document.getElementById('cartCountLabel').textContent = `${cart.length} producto${cart.length === 1 ? '' : 's'} en la canastilla`;
+            document.getElementById('cartTotalLabel').textContent = `$${total.toLocaleString('es-CO')} COP`;
+        }
+
+        function openCheckoutModal() {
+            if (cart.length === 0) {
+                alert('Selecciona al menos un producto para enviar tu pedido.');
+                return;
+            }
+            const total = cart.reduce((acc, item) => acc + item.price, 0);
+            let itemsText = cart.map(i => `• ${i.name} ($${i.price.toLocaleString('es-CO')})`).join('<br>');
+            document.getElementById('modalOrderSummary').innerHTML = `<strong>Items:</strong><br>${itemsText}<br><br><strong>Total a pagar:</strong> $${total.toLocaleString('es-CO')} COP`;
+            document.getElementById('checkoutModal').style.display = 'flex';
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkoutModal').style.display = 'none';
+        }
+
+        function dispatchWhatsAppOrder() {
+            const name = document.getElementById('custName').value.trim() || 'Cliente';
+            const address = document.getElementById('custAddress').value.trim() || 'Para recoger / Mesa';
+            const payment = document.getElementById('custPayment').value;
+            const total = cart.reduce((acc, item) => acc + item.price, 0);
+
+            const itemsBreakdown = cart.map(i => `  🍔 ${i.name} - $${i.price.toLocaleString('es-CO')} COP`).join('%0A');
+
+            const message = `*NUEVO PEDIDO - CARTA VIVA (CRITERIO AI)*%0A%0A` +
+                            `👤 *Cliente:* ${encodeURIComponent(name)}%0A` +
+                            `📍 *Dirección:* ${encodeURIComponent(address)}%0A` +
+                            `💳 *Pago:* ${encodeURIComponent(payment)}%0A%0A` +
+                            `📦 *Detalle del Pedido:*%0A${itemsBreakdown}%0A%0A` +
+                            `💰 *TOTAL A PAGAR:* $${total.toLocaleString('es-CO')} COP%0A%0A` +
+                            `_Generado desde el catálogo interactivo oficial en gocriterio.com_`;
+
+            const waUrl = `https://wa.me/573189411010?text=${message}`;
+            window.open(waUrl, '_blank');
+            closeCheckoutModal();
+        }
+    </script>
+</body>
+</html>

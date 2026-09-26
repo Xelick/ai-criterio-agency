@@ -55,11 +55,32 @@ class PixelOfficeEngine {
         this.isDraggingAgent = false;
         this.didDragMove = false;
 
-        // Squad Modes, Active Speech Bubbles & Floating Particles
-        this.squadActiveMode = 'normal'; // 'normal', 'sprint', 'break', 'meeting', 'rally'
-        this.assembledSquad = null;
         this.activeSpeechBubbles = new Map();
         this.particles = [];
+
+        // Master Onaga Entity (Cult of the Lamb x Extreme Productivity)
+        this.masterOnaga = {
+            id: 'master-onaga',
+            name: 'Gran Patriarca Onaga',
+            title: 'Sumo Pontífice del Culto de la Productividad',
+            isMaster: true,
+            scale: 1.75,
+            emoji: '👑',
+            color: '#ef4444',
+            facing: 'down',
+            currentX: 950,
+            currentY: 940,
+            altarX: 950,
+            altarY: 940,
+            state: 'preaching',
+            isWalking: false,
+            isBeingDragged: false,
+            isPreaching: true,
+            ritualTime: 0,
+            speechTimer: 180,
+            speechText: '¡La vida de Onaga depende de este sprint! ¡Cero procrastinación!',
+            speechColor: '#f59e0b'
+        };
 
         this.initEventListeners();
         this.resize();
@@ -98,6 +119,12 @@ class PixelOfficeEngine {
     setAgents(agentsList, floor) {
         this.currentFloor = floor;
         this.agents = agentsList;
+        if (this.masterOnaga) {
+            this.masterOnaga.currentX = 950;
+            this.masterOnaga.currentY = 940;
+            this.masterOnaga.altarX = 950;
+            this.masterOnaga.altarY = 940;
+        }
         // Center camera smoothly
         this.camera.x = Math.max(0, (this.worldWidth - this.canvas.width / this.camera.zoom) / 2);
         this.camera.y = 80;
@@ -150,7 +177,11 @@ class PixelOfficeEngine {
                 this.draggedAgent.currentY = Math.max(120, Math.min(this.worldHeight - 30, Math.round(worldPos.y)));
                 this.draggedAgent.wanderTarget = null;
 
-                if (Math.random() < 0.2) {
+                if (this.draggedAgent.isMaster) {
+                    if (Math.random() < 0.35) {
+                        this.addParticle(this.draggedAgent.currentX + (Math.random() * 24 - 12), this.draggedAgent.currentY + 12, ['🔥', '✨', '⚡', '👁️'][Math.floor(Math.random() * 4)], '#ef4444');
+                    }
+                } else if (Math.random() < 0.2) {
                     this.addParticle(this.draggedAgent.currentX, this.draggedAgent.currentY - 14, '✨', '#38bdf8');
                 }
             } else if (this.camera.isDragging) {
@@ -180,20 +211,35 @@ class PixelOfficeEngine {
                 this.agentDragCandidate = null;
                 this.canvas.style.cursor = 'default';
 
-                if (window.pixelAudio && window.pixelAudio.playAgentDrop) {
-                    window.pixelAudio.playAgentDrop();
-                } else if (window.pixelAudio) {
-                    window.pixelAudio.playClick();
-                }
+                if (agent.isMaster) {
+                    if (window.pixelAudio && window.pixelAudio.playCultBell) {
+                        window.pixelAudio.playCultBell();
+                    }
+                    for (let p = 0; p < 8; p++) {
+                        this.addParticle(agent.currentX, agent.currentY - 10, ['🔥', '👑', '⚡', '👁️'][p % 4], '#ef4444');
+                    }
+                    agent.speechText = "¡El Sombrero Sagrado ha descendido!";
+                    agent.speechTimer = 220;
+                } else {
+                    if (window.pixelAudio && window.pixelAudio.playAgentDrop) {
+                        window.pixelAudio.playAgentDrop();
+                    } else if (window.pixelAudio) {
+                        window.pixelAudio.playClick();
+                    }
 
-                for (let p = 0; p < 6; p++) {
-                    this.addParticle(agent.currentX, agent.currentY - 10, ['✨', '⭐', '💫'][p % 3], '#f59e0b');
+                    for (let p = 0; p < 6; p++) {
+                        this.addParticle(agent.currentX, agent.currentY - 10, ['✨', '⭐', '💫'][p % 3], '#f59e0b');
+                    }
+                    this.showSpeechBubble(agent.id, "¡A sus órdenes!", 2200, '#38bdf8');
                 }
-                this.showSpeechBubble(agent.id, "¡A sus órdenes!", 2200, '#38bdf8');
             } else if (this.agentDragCandidate) {
                 // Click without drag
                 const clicked = this.agentDragCandidate;
                 this.agentDragCandidate = null;
+                if (clicked.isMaster) {
+                    this.openOnagaCultModal();
+                    return;
+                }
                 this.selectedAgent = clicked;
                 if (window.pixelAudio) window.pixelAudio.playAgentSelect();
                 if (this.onAgentSelected) {
@@ -229,6 +275,10 @@ class PixelOfficeEngine {
             const worldPos = this.screenToWorld(canvasPoint.x, canvasPoint.y);
             const clicked = this.getAgentAt(worldPos.x, worldPos.y);
             if (clicked) {
+                if (clicked.isMaster) {
+                    this.openOnagaCultModal();
+                    return;
+                }
                 this.selectedAgent = clicked;
                 if (window.pixelAudio) window.pixelAudio.playAgentSelect();
                 if (this.onAgentSelected) {
@@ -291,6 +341,13 @@ class PixelOfficeEngine {
     }
 
     getAgentAt(wx, wy) {
+        if (this.masterOnaga) {
+            const o = this.masterOnaga;
+            // Larger hitbox for Master Onaga (scaled character with hat)
+            if (wx >= o.currentX - 35 && wx <= o.currentX + 35 && wy >= o.currentY - 65 && wy <= o.currentY + 25) {
+                return o;
+            }
+        }
         for (let i = this.agents.length - 1; i >= 0; i--) {
             const a = this.agents[i];
             const ax = a.currentX;
@@ -727,6 +784,9 @@ class PixelOfficeEngine {
             this.drawSprintWhiteboard(this.worldWidth / 2 - 160, 890, 320, 80);
             this.drawMeetingPod(this.worldWidth / 2 - 140, 990, 280, 95);
         }
+
+        // 6. Altar Sagrado de Onaga (Púlpito de la Productividad)
+        this.drawOnagaAltar(950, 930);
     }
 
     drawArcadeMachine(x, y) {
@@ -1013,10 +1073,414 @@ class PixelOfficeEngine {
             this.drawDesk(a.deskX, a.deskY, a);
         });
 
-        // Then sort agents by currentY for correct isometric/2D depth layering
-        const sorted = [...this.agents].sort((a, b) => a.currentY - b.currentY);
+        // Sort all entities including Master Onaga by currentY for correct isometric/2D depth layering
+        const allEntities = this.masterOnaga ? [...this.agents, this.masterOnaga] : [...this.agents];
+        const sorted = allEntities.sort((a, b) => a.currentY - b.currentY);
         sorted.forEach(a => {
-            this.drawAgentSprite(a);
+            if (a.isMaster) {
+                this.drawMasterOnaga(a);
+            } else {
+                this.drawAgentSprite(a);
+            }
+        });
+    }
+
+    drawOnagaAltar(x, y) {
+        const ctx = this.ctx;
+        // Ceremonial velvet carpet
+        ctx.fillStyle = '#7f1d1d';
+        ctx.fillRect(x - 60, y - 40, 120, 80);
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x - 60, y - 40, 120, 80);
+
+        // Gold fringe corner tassels
+        ctx.fillStyle = '#fde047';
+        ctx.fillRect(x - 62, y - 42, 5, 5);
+        ctx.fillRect(x + 57, y - 42, 5, 5);
+        ctx.fillRect(x - 62, y + 37, 5, 5);
+        ctx.fillRect(x + 57, y + 37, 5, 5);
+
+        // Rotating Summoning Circle on carpet
+        const rot = this.timeTick * 0.8;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.strokeStyle = 'rgba(245, 158, 11, 0.45)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 38, 22, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        // Inner runes
+        for (let r = 0; r < 5; r++) {
+            const ang = rot + (r * Math.PI * 2) / 5;
+            const rx = Math.cos(ang) * 32;
+            const ry = Math.sin(ang) * 18;
+            ctx.fillStyle = '#ef4444';
+            ctx.fillRect(rx - 1.5, ry - 1.5, 3, 3);
+        }
+        ctx.restore();
+
+        // 2 Ritual Torches / Braziers on left and right
+        [-45, 45].forEach(bx => {
+            // Brazier stone pedestal
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(x + bx - 6, y - 25, 12, 22);
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(x + bx - 8, y - 28, 16, 5);
+            // Eternal Ritual Flame (Cult purple-crimson fire)
+            const flameFlicker = Math.sin(this.timeTick * 16 + bx) * 2;
+            ctx.fillStyle = '#ef4444';
+            ctx.beginPath();
+            ctx.ellipse(x + bx, y - 32 + flameFlicker, 5, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#fde047';
+            ctx.beginPath();
+            ctx.ellipse(x + bx, y - 30 + flameFlicker, 2.5, 4, 0, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        // Sacred Pulpit / Lectern with Book of Sprint Doctrines
+        ctx.fillStyle = '#09090b';
+        ctx.fillRect(x - 18, y - 10, 36, 26);
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(x - 18, y - 10, 36, 26);
+
+        // Open Sacred Tome
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillRect(x - 14, y - 16, 12, 9);
+        ctx.fillRect(x + 2, y - 16, 12, 9);
+        ctx.fillStyle = '#b91c1c';
+        ctx.fillRect(x - 1, y - 16, 2, 9);
+        // Tome bookmark ribbon
+        ctx.fillStyle = '#ef4444';
+        ctx.fillRect(x - 1, y - 7, 2, 8);
+
+        // Floating Title above Altar
+        ctx.font = 'bold 8px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#fde047';
+        ctx.fillText('👑 PÚLPITO DE ONAGA', x, y - 48);
+    }
+
+    drawMasterOnaga(o) {
+        const ctx = this.ctx;
+        const x = Math.round(o.currentX);
+        const y = Math.round(o.currentY);
+        const isDragged = o.isBeingDragged;
+
+        // Shadow & Rotating Pentagram under Onaga
+        ctx.save();
+        ctx.translate(x, y + 16);
+        const rot = this.timeTick * (isDragged ? 5 : 1.8);
+        ctx.strokeStyle = isDragged ? '#ef4444' : 'rgba(245, 158, 11, 0.7)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, isDragged ? 26 : 22, isDragged ? 12 : 9, 0, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Summoning runes on the ground
+        for (let s = 0; s < 5; s++) {
+            const ang = rot + (s * Math.PI * 2) / 5;
+            const px = Math.cos(ang) * (isDragged ? 24 : 20);
+            const py = Math.sin(ang) * (isDragged ? 10 : 7);
+            ctx.fillStyle = isDragged ? '#fde047' : '#ef4444';
+            ctx.fillRect(px - 1.5, py - 1.5, 3, 3);
+        }
+
+        // Shadow ellipse
+        ctx.fillStyle = isDragged ? 'rgba(0,0,0,0.25)' : 'rgba(0,0,0,0.45)';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, isDragged ? 14 : 18, isDragged ? 5 : 7, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        // Levitation / Bobbing physics
+        let charY = y;
+        if (isDragged) {
+            // Serene dignified levitation pose in the air!
+            const levitate = Math.sin(this.timeTick * 12) * 4;
+            charY = y - 22 + levitate;
+        } else {
+            // Majestic breathing
+            const breathe = Math.sin(this.timeTick * 3) * 1.5;
+            charY = y - 4 + breathe;
+        }
+
+        // Staff of Eternal Productivity (Báculo Sagrado) - held at side
+        const staffX = x - 18;
+        const staffTopY = charY - 38;
+        ctx.fillStyle = '#3f1a0a'; // Dark ironwood
+        ctx.fillRect(staffX, staffTopY, 4, 48);
+        // Gold bands on staff
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillRect(staffX - 1, staffTopY + 12, 6, 2);
+        ctx.fillRect(staffX - 1, staffTopY + 24, 6, 2);
+        ctx.fillRect(staffX - 1, staffTopY + 36, 6, 2);
+
+        // Staff Head: Ornate Golden Crescent & Orbiting Crimson Orb
+        ctx.fillStyle = '#f59e0b';
+        ctx.beginPath();
+        ctx.arc(staffX + 2, staffTopY - 4, 8, Math.PI * 0.2, Math.PI * 1.8);
+        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = '#f59e0b';
+        ctx.stroke();
+
+        // Glowing Crimson Productivity Eye / Orb on Staff
+        const orbGlow = Math.sin(this.timeTick * 10) * 1.5;
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.arc(staffX + 2, staffTopY - 4, 4 + orbGlow * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(staffX + 1, staffTopY - 5, 2, 2);
+
+        // Master Robe: Dark Midnight Cloth (#09090b) with Crimson Velvet Mantle (#991b1b)
+        // Robe Hem / Skirt (Scale 1.75x -> width 26px, height 20px)
+        ctx.fillStyle = '#09090b';
+        ctx.fillRect(x - 13, charY + 2, 26, 16);
+        // Gold trim along hem
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillRect(x - 13, charY + 16, 26, 2.5);
+
+        // Crossed robe folds when levitating
+        if (isDragged) {
+            ctx.fillStyle = '#1e1b4b';
+            ctx.fillRect(x - 11, charY + 6, 22, 6);
+        }
+
+        // Torso & Crimson Velvet Mantle
+        ctx.fillStyle = '#7f1d1d';
+        ctx.fillRect(x - 11, charY - 14, 22, 18);
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(x - 11, charY - 14, 22, 18);
+
+        // Golden Stole (Episcopal bands with runes)
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillRect(x - 8, charY - 14, 4, 18);
+        ctx.fillRect(x + 4, charY - 14, 4, 18);
+
+        // Golden Productivity Medallion with glowing center
+        ctx.fillStyle = '#fbbf24';
+        ctx.beginPath();
+        ctx.arc(x, charY - 4, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ef4444';
+        ctx.fillRect(x - 1.5, charY - 5.5, 3, 3);
+
+        // Arms & Hands
+        ctx.fillStyle = '#fed7aa'; // Elder skin
+        if (isDragged) {
+            ctx.fillRect(x - 16, charY - 10, 5, 5);
+            ctx.fillRect(x + 11, charY - 10, 5, 5);
+            ctx.fillStyle = '#7f1d1d';
+            ctx.fillRect(x - 17, charY - 14, 6, 8);
+            ctx.fillRect(x + 11, charY - 14, 6, 8);
+        } else {
+            ctx.fillRect(x - 18, charY - 10, 4, 4);
+            ctx.fillRect(x + 8, charY - 6, 4, 4);
+        }
+
+        // Head & Wise Elder Visage
+        ctx.fillStyle = '#fed7aa';
+        ctx.fillRect(x - 9, charY - 28, 18, 15);
+
+        // Glowing Amber / Crimson Cult Eyes
+        ctx.fillStyle = '#ef4444';
+        ctx.fillRect(x - 6, charY - 24, 3, 3);
+        ctx.fillRect(x + 3, charY - 24, 3, 3);
+        ctx.fillStyle = '#000000'; // Slit pupil
+        ctx.fillRect(x - 5, charY - 24, 1, 3);
+        ctx.fillRect(x + 4, charY - 24, 1, 3);
+
+        // Bushy White Elder Eyebrows
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(x - 7, charY - 26, 4, 2);
+        ctx.fillRect(x + 3, charY - 26, 4, 2);
+
+        // Majestic Flowing White Beard (Past chest down to waist!)
+        const beardSway = Math.sin(this.timeTick * 4) * 2;
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(x - 9, charY - 18, 18, 14);
+        ctx.fillRect(x - 7 + beardSway * 0.5, charY - 4, 14, 10);
+        ctx.fillRect(x - 4 + beardSway, charY + 6, 8, 8);
+        ctx.fillRect(x - 2 + beardSway, charY + 14, 4, 4);
+
+        // Shading strands
+        ctx.fillStyle = '#cbd5e1';
+        ctx.fillRect(x - 6, charY - 16, 2, 12);
+        ctx.fillRect(x, charY - 14, 2, 16);
+        ctx.fillRect(x + 4, charY - 16, 2, 12);
+
+        // Long white hair from sides
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(x - 12, charY - 28, 4, 16);
+        ctx.fillRect(x + 8, charY - 28, 4, 16);
+
+        // ==========================================
+        // 👑 THE ICONIC HAT (EL SOMBRERO SAGRADO DE ONAGA)
+        // ==========================================
+        // Wide curved brim
+        ctx.fillStyle = '#09090b';
+        ctx.fillRect(x - 17, charY - 30, 34, 4);
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x - 17, charY - 30, 34, 4);
+
+        // Tall Cultist Crown
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(x - 13, charY - 50, 26, 20);
+        // Flared top rim of the hat
+        ctx.fillStyle = '#09090b';
+        ctx.fillRect(x - 15, charY - 53, 30, 4);
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x - 15, charY - 53, 30, 4);
+
+        // Crimson Velvet Ribbon wrapped around hat base
+        ctx.fillStyle = '#b91c1c';
+        ctx.fillRect(x - 13, charY - 35, 26, 5);
+
+        // THE ALL-SEEING EYE OF PRODUCTIVITY (Embedded in Hat)
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.ellipse(x, charY - 42, 6, 4, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Slit eye pupil
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(x - 1, charY - 45, 2, 6);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(x - 3, charY - 44, 2, 2);
+
+        // Radiating Eye Arcane Pulse
+        const eyePulse = Math.sin(this.timeTick * 8) * 4;
+        ctx.strokeStyle = 'rgba(239, 68, 68, 0.4)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(x, charY - 42, 8 + eyePulse, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    openOnagaCultModal() {
+        if (window.pixelAudio && window.pixelAudio.playCultBell) {
+            window.pixelAudio.playCultBell();
+        }
+        let modal = document.getElementById('onagaCultModal');
+        if (modal) {
+            modal.style.display = 'flex';
+        }
+    }
+
+    closeOnagaCultModal() {
+        let modal = document.getElementById('onagaCultModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    executeSermonOfSpeed() {
+        this.closeOnagaCultModal();
+        if (window.pixelAudio && window.pixelAudio.playCultChant) {
+            window.pixelAudio.playCultChant();
+        }
+        this.showToast('📜 SERMÓN DEL SPRINT: ¡Velocidad de desarrollo +250% activada!', '#f59e0b');
+        if (this.masterOnaga) {
+            this.masterOnaga.speechText = '¡Que vuestros dedos ardan en el fuego del Sprint!';
+            this.masterOnaga.speechTimer = 260;
+        }
+        this.agents.forEach(a => {
+            a.isSprinting = true;
+            for (let i = 0; i < 3; i++) {
+                this.addParticle(a.currentX, a.currentY - 12, '🔥', '#ef4444');
+            }
+        });
+    }
+
+    executeSacrificeTechDebt() {
+        this.closeOnagaCultModal();
+        if (window.pixelAudio && window.pixelAudio.playSacrificeBoom) {
+            window.pixelAudio.playSacrificeBoom();
+        }
+        this.showToast('🔥 SACRIFICIO DEL TECH DEBT: ¡42 bugs purgados y código bendecido!', '#ef4444');
+        if (this.masterOnaga) {
+            this.masterOnaga.speechText = '¡El Tech Debt ha sido purgado ante el Sombrero!';
+            this.masterOnaga.speechTimer = 260;
+        }
+        for (let i = 0; i < 20; i++) {
+            this.addParticle(950 + (Math.random() * 80 - 40), 930 + (Math.random() * 60 - 30), ['✓', '✨', '⚡', '💻'][i % 4], '#10b981');
+        }
+    }
+
+    executeHolyCoffeeBlessing() {
+        this.closeOnagaCultModal();
+        if (window.pixelAudio && window.pixelAudio.playCultBell) {
+            window.pixelAudio.playCultBell();
+        }
+        this.showToast('☕ BENDICIÓN DEL CAFÉ SAGRADO: ¡Estamina y devoción al 100%!', '#38bdf8');
+        if (this.masterOnaga) {
+            this.masterOnaga.speechText = '¡Bebed del tinto sagrado, el sueño ha sido derrotado!';
+            this.masterOnaga.speechTimer = 260;
+        }
+        this.agents.forEach(a => {
+            this.addParticle(a.currentX, a.currentY - 14, '☕', '#38bdf8');
+        });
+    }
+
+    executeHarvestDeliverables() {
+        this.closeOnagaCultModal();
+        if (window.pixelAudio && window.pixelAudio.playCultBell) {
+            window.pixelAudio.playCultBell();
+        }
+        this.showToast('🌾 COSECHA DE ENTREGABLES: ¡43 tareas validadas y listas en Git!', '#10b981');
+        if (this.masterOnaga) {
+            this.masterOnaga.speechText = '¡Cosecho los frutos del trabajo de mis 296 fieles!';
+            this.masterOnaga.speechTimer = 260;
+        }
+        // Open git sync dialog or celebrate
+        if (window.gitConnector && window.gitConnector.refreshStatus) {
+            window.gitConnector.refreshStatus();
+        }
+    }
+
+    executeSmiteProcrastinators() {
+        this.closeOnagaCultModal();
+        if (window.pixelAudio && window.pixelAudio.playDivineLightning) {
+            window.pixelAudio.playDivineLightning();
+        }
+        this.showToast('⚡ EXCOMUNIÓN DE LA PROCRASTINACIÓN: ¡Rayo divino a los distraídos!', '#fde047');
+        if (this.masterOnaga) {
+            this.masterOnaga.speechText = '¡No hay salvación para quien procrastina!';
+            this.masterOnaga.speechTimer = 260;
+        }
+        this.agents.forEach(a => {
+            if (a.state === 'walking' || !a.isSprinting) {
+                this.addParticle(a.currentX, a.currentY - 20, '⚡', '#fde047');
+                a.state = 'walking';
+                a.wanderTarget = { x: a.deskX, y: a.deskY };
+                this.showSpeechBubble(a.id, "¡Perdón Gran Onaga! ¡Ya trabajo!", 2000, '#fde047');
+            }
+        });
+    }
+
+    executeEcstaticDance() {
+        this.closeOnagaCultModal();
+        if (window.pixelAudio && window.pixelAudio.playElevator) {
+            window.pixelAudio.playElevator();
+        }
+        this.showToast('🕺 DANZA EXTÁTICA DEL SPRINT: ¡Alabado sea el Gran Patriarca Onaga!', '#c084fc');
+        if (this.masterOnaga) {
+            this.masterOnaga.speechText = '¡Danzad por el éxito del Sprint de 14 Días!';
+            this.masterOnaga.speechTimer = 260;
+        }
+        this.agents.forEach((a, i) => {
+            a.isCelebrating = true;
+            setTimeout(() => { a.isCelebrating = false; }, 4000);
+            this.addParticle(a.currentX, a.currentY - 15, ['🎵', '✨', '💖'][i % 3], '#ec4899');
         });
     }
 

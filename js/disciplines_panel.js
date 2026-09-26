@@ -300,16 +300,115 @@ class DisciplinesPanel {
         const tabCombos = document.getElementById('tabCombosContent');
         const tabChain = document.getElementById('tabChainContent');
         const tabPresets = document.getElementById('tabPresetsContent');
+        const tabHistory = document.getElementById('tabHistoryContent');
 
         if (tabDisc) tabDisc.style.display = tab === 'disciplines' ? 'block' : 'none';
         if (tabCombos) tabCombos.style.display = tab === 'combos' ? 'block' : 'none';
         if (tabChain) tabChain.style.display = tab === 'chain' ? 'block' : 'none';
         if (tabPresets) tabPresets.style.display = tab === 'presets' ? 'block' : 'none';
+        if (tabHistory) tabHistory.style.display = tab === 'history' ? 'block' : 'none';
 
         if (tab === 'combos') this.renderCombosList();
         if (tab === 'chain') this.renderChainPipeline();
         if (tab === 'presets') this.renderPresetsList();
+        if (tab === 'history') this.renderChainHistory();
         if (window.pixelAudio) window.pixelAudio.playClick();
+    }
+
+    renderChainHistory() {
+        const container = document.getElementById('historyListContainer');
+        if (!container) return;
+
+        const history = (window.chainReactionEngine && window.chainReactionEngine.chainHistory) || [];
+        const countBadge = document.getElementById('historyChainCount');
+        if (countBadge) countBadge.textContent = history.length;
+
+        if (history.length === 0) {
+            container.innerHTML = `
+                <div class="chain-empty-state">
+                    <div style="font-size:28px; margin-bottom:6px;">📜</div>
+                    <div style="font-weight:bold; color:#cbd5e1; font-size:11px;">No hay cadenas ejecutadas aún</div>
+                    <div style="font-size:9px; color:#64748b; margin-top:4px;">
+                        Crea una cadena con el botón <strong>[➕ A Cadena]</strong> o dispara un Preset para registrarla en el historial.
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = '';
+        history.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'history-chain-card';
+
+            const isDone = (item.status === 'COMPLETADA');
+            const statusClass = isDone ? 'status-completed' : 'status-pending';
+            const statusText = isDone ? '🟢 COMPLETADA' : '🟡 EN COLA / PENDIENTE';
+
+            const agentAvatarsHtml = (item.agents || []).slice(0, 12).map(ag => `
+                <span class="history-agent-chip" title="${ag.name} (${ag.dept})">${ag.emoji || '🤖'}</span>
+            `).join('');
+
+            const overflowCount = (item.agents && item.agents.length > 12) ? `+${item.agents.length - 12} más` : '';
+
+            card.innerHTML = `
+                <div class="history-card-header">
+                    <div>
+                        <div class="history-card-title">${item.title}</div>
+                        <div class="history-card-date">🕒 ${item.timestamp} • <strong>${item.stepCount} Pasos</strong></div>
+                    </div>
+                    <span class="history-status-badge ${statusClass}">${statusText}</span>
+                </div>
+
+                <div class="history-mission-goal">
+                    <strong>🎯 Misión:</strong> ${item.missionGoal || 'Aportar desde todas las disciplinas.'}
+                </div>
+
+                <div class="history-agents-row">
+                    <span style="font-size:10px; color:#94a3b8; font-weight:bold;">Agentes Convocados (${item.stepCount}):</span>
+                    <div class="history-agent-chips">
+                        ${agentAvatarsHtml}
+                        ${overflowCount ? `<span class="history-more-chip">${overflowCount}</span>` : ''}
+                    </div>
+                </div>
+
+                <div class="history-card-actions">
+                    <button class="step-mini-btn btn-rerun" style="color:var(--brand-gold); border-color:var(--brand-gold);" title="Re-ejecutar esta cadena inmediatamente">
+                        🔄 Volver a Ejecutar
+                    </button>
+                    <button class="step-mini-btn btn-load" title="Cargar agentes en el constructor de cadena">
+                        📂 Cargar en Cadena
+                    </button>
+                    <button class="step-mini-btn btn-delete" style="color:#ef4444; border-color:#ef4444;" title="Eliminar del historial">
+                        🗑️
+                    </button>
+                </div>
+            `;
+
+            // Button actions
+            card.querySelector('.btn-rerun').addEventListener('click', () => {
+                if (window.chainReactionEngine) {
+                    window.chainReactionEngine.rerunChain(item.id);
+                }
+            });
+
+            card.querySelector('.btn-load').addEventListener('click', () => {
+                if (window.chainReactionEngine) {
+                    window.chainReactionEngine.loadChainFromHistory(item.id);
+                }
+            });
+
+            card.querySelector('.btn-delete').addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (confirm(`¿Eliminar la cadena "${item.title}" del historial?`)) {
+                    if (window.chainReactionEngine) {
+                        window.chainReactionEngine.deleteChainFromHistory(item.id);
+                    }
+                }
+            });
+
+            container.appendChild(card);
+        });
     }
 
     renderDisciplinesList() {

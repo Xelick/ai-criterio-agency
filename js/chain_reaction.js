@@ -16,6 +16,7 @@ class ChainReactionEngine {
         this.generatedDeliverables = [];
 
         this.initPresets();
+        this.initHistory();
     }
 
     initPresets() {
@@ -221,6 +222,9 @@ class ChainReactionEngine {
 
         this.logSystem(`🎉 REACCIÓN EN CADENA FINALIZADA CON ÉXITO. Todos los entregables han sido unificados.`);
         
+        // Save executed chain to persistent history for re-execution
+        this.recordChainExecution(this.pipeline, this.generatedDeliverables, this.missionGoal);
+
         if (this.onPipelineFinished) {
             this.onPipelineFinished(this.generatedDeliverables);
         }
@@ -342,6 +346,183 @@ class ChainReactionEngine {
         };
         this.executionLogs.push(entry);
         if (this.onLog) this.onLog(entry);
+    }
+
+    initHistory() {
+        try {
+            const saved = localStorage.getItem('criterio_executed_chains_v1');
+            if (saved) {
+                this.chainHistory = JSON.parse(saved);
+            }
+        } catch (e) {
+            console.error('Error loading chain history:', e);
+        }
+
+        if (!this.chainHistory || this.chainHistory.length === 0) {
+            // Seed with the 43-step chain executed earlier today!
+            this.chainHistory = [
+                {
+                    id: 'chain-20260925-43-steps',
+                    title: '🚀 Aceleración Integral de Marketing, AEO & Paid Media (Sprint Bogotá)',
+                    missionGoal: 'Desbloquear gocriterio.com y ejecutar el Sprint de 14 días para Catálogos WhatsApp en Bogotá',
+                    status: 'COMPLETADA',
+                    timestamp: '2026-09-25 22:48:11',
+                    stepCount: 43,
+                    departmentBreakdown: 'Marketing & Crecimiento (36) • Paid Media & Ads (7)',
+                    agents: [
+                        { name: 'AEO Foundations Architect', dept: 'Marketing & Crecimiento', emoji: '🏛️' },
+                        { name: 'Agentic Search Optimizer', dept: 'Marketing & Crecimiento', emoji: '🔍' },
+                        { name: 'AI Citation Strategist', dept: 'Marketing & Crecimiento', emoji: '🧠' },
+                        { name: 'App Store Optimizer', dept: 'Marketing & Crecimiento', emoji: '📱' },
+                        { name: 'Baidu SEO Specialist', dept: 'Marketing & Crecimiento', emoji: '🌐' },
+                        { name: 'Bilibili Content Strategist', dept: 'Marketing & Crecimiento', emoji: '📺' },
+                        { name: 'Book Co-Author', dept: 'Marketing & Crecimiento', emoji: '📖' },
+                        { name: 'Carousel Growth Engine', dept: 'Marketing & Crecimiento', emoji: '🎠' },
+                        { name: 'China E-Commerce Operator', dept: 'Marketing & Crecimiento', emoji: '🛒' },
+                        { name: 'China Market Localization Strategist', dept: 'Marketing & Crecimiento', emoji: '🌏' },
+                        { name: 'Content Creator', dept: 'Marketing & Crecimiento', emoji: '✍️' },
+                        { name: 'Cross-Border E-Commerce Specialist', dept: 'Marketing & Crecimiento', emoji: '🚢' },
+                        { name: 'Douyin Strategist', dept: 'Marketing & Crecimiento', emoji: '🎵' },
+                        { name: 'Email Marketing Strategist', dept: 'Marketing & Crecimiento', emoji: '✉️' },
+                        { name: 'Global Podcast Strategist', dept: 'Marketing & Crecimiento', emoji: '🎙️' },
+                        { name: 'Growth Hacker', dept: 'Marketing & Crecimiento', emoji: '🚀' },
+                        { name: 'Instagram Curator', dept: 'Marketing & Crecimiento', emoji: '📸' },
+                        { name: 'Kuaishou Strategist', dept: 'Marketing & Crecimiento', emoji: '📹' },
+                        { name: 'LinkedIn Content Creator', dept: 'Marketing & Crecimiento', emoji: '👔' },
+                        { name: 'Livestream Commerce Coach', dept: 'Marketing & Crecimiento', emoji: '🔴' },
+                        { name: 'Multi-Platform Publisher', dept: 'Marketing & Crecimiento', emoji: '📡' },
+                        { name: 'Podcast Strategist', dept: 'Marketing & Crecimiento', emoji: '🎧' },
+                        { name: 'PR & Communications Manager', dept: 'Marketing & Crecimiento', emoji: '📢' },
+                        { name: 'Private Domain Operator', dept: 'Marketing & Crecimiento', emoji: '🔒' },
+                        { name: 'Reddit Community Builder', dept: 'Marketing & Crecimiento', emoji: '🤖' },
+                        { name: 'SEO Specialist', dept: 'Marketing & Crecimiento', emoji: '📈' },
+                        { name: 'Short-Video Editing Coach', dept: 'Marketing & Crecimiento', emoji: '✂️' },
+                        { name: 'Social Media Strategist', dept: 'Marketing & Crecimiento', emoji: '💬' },
+                        { name: 'TikTok Strategist', dept: 'Marketing & Crecimiento', emoji: '🎬' },
+                        { name: 'Twitter Engager', dept: 'Marketing & Crecimiento', emoji: '🐦' },
+                        { name: 'Video Optimization Specialist', dept: 'Marketing & Crecimiento', emoji: '🎞️' },
+                        { name: 'WeChat Official Account Manager', dept: 'Marketing & Crecimiento', emoji: '💬' },
+                        { name: 'Weibo Strategist', dept: 'Marketing & Crecimiento', emoji: '📣' },
+                        { name: 'X/Twitter Intelligence Analyst', dept: 'Marketing & Crecimiento', emoji: '🕵️' },
+                        { name: 'Xiaohongshu Specialist', dept: 'Marketing & Crecimiento', emoji: '📕' },
+                        { name: 'Zhihu Strategist', dept: 'Marketing & Crecimiento', emoji: '❓' },
+                        { name: 'Paid Media Auditor', dept: 'Paid Media & Ads', emoji: '📊' },
+                        { name: 'Ad Creative Strategist', dept: 'Paid Media & Ads', emoji: '🎨' },
+                        { name: 'Paid Social Strategist', dept: 'Paid Media & Ads', emoji: '🎯' },
+                        { name: 'PPC Campaign Strategist', dept: 'Paid Media & Ads', emoji: '💰' },
+                        { name: 'Programmatic & Display Buyer', dept: 'Paid Media & Ads', emoji: '🖥️' },
+                        { name: 'Search Query Analyst', dept: 'Paid Media & Ads', emoji: '🔎' },
+                        { name: 'Tracking & Measurement Specialist', dept: 'Paid Media & Ads', emoji: '📐' }
+                    ],
+                    deliverablesGenerated: 43,
+                    deliverableFolder: 'entregables/04_AEO_Y_AGENTIC_SEARCH/ & 05_GROWTH_Y_PAID_MEDIA_CAMPAIGNS/'
+                },
+                {
+                    id: 'chain-20260925-04-design-qa',
+                    title: '🎨 Auditoría de Diseño, WCAG AA & Catálogo Hamburguesas Bogotá',
+                    missionGoal: 'Auditar el sistema de diseño criterio.css y verificar que el catálogo demo abra en menos de 1 segundo.',
+                    status: 'COMPLETADA',
+                    timestamp: '2026-09-25 22:48:40',
+                    stepCount: 4,
+                    departmentBreakdown: 'Diseño & UI (2) • QA & Testing (2)',
+                    agents: [
+                        { name: 'UI Designer', dept: 'Diseño & Sistema', emoji: '🎨' },
+                        { name: 'UX Architect', dept: 'Diseño & Sistema', emoji: '📐' },
+                        { name: 'Performance Benchmarker', dept: 'Testing & QA', emoji: '⚡' },
+                        { name: 'Reality Checker', dept: 'Testing & QA', emoji: '🔍' }
+                    ],
+                    deliverablesGenerated: 4,
+                    deliverableFolder: 'entregables/06_CATALOGO_DEMO_RESPONSIVE_MOBILE/'
+                }
+            ];
+            this.saveHistory();
+        }
+    }
+
+    saveHistory() {
+        try {
+            localStorage.setItem('criterio_executed_chains_v1', JSON.stringify(this.chainHistory));
+        } catch (e) {
+            console.error('Error saving chain history:', e);
+        }
+    }
+
+    recordChainExecution(pipeline, deliverables, goal, status = 'COMPLETADA') {
+        const entry = {
+            id: 'chain-' + Date.now(),
+            title: goal || 'Reacción en Cadena Multidisciplinar',
+            missionGoal: goal,
+            status: status,
+            timestamp: new Date().toLocaleString('es-CO'),
+            stepCount: pipeline.length,
+            agents: pipeline.map(p => ({
+                id: p.agent ? p.agent.id : p.agentId,
+                name: p.agent ? p.agent.name : p.agentId,
+                emoji: (p.agent && p.agent.emoji) || '🤖',
+                dept: (p.agent && p.agent.department_name) || 'Especialista'
+            })),
+            deliverablesGenerated: deliverables ? deliverables.length : pipeline.length,
+            deliverables: deliverables || []
+        };
+        this.chainHistory.unshift(entry);
+        this.saveHistory();
+        if (window.disciplinesPanel && window.disciplinesPanel.renderChainHistory) {
+            window.disciplinesPanel.renderChainHistory();
+        }
+    }
+
+    loadChainFromHistory(chainId) {
+        const item = this.chainHistory.find(c => c.id === chainId);
+        if (!item) return false;
+
+        this.clearPipeline();
+        this.missionGoal = item.missionGoal || item.title;
+
+        // Populate agents
+        if (item.agents && Array.isArray(item.agents)) {
+            item.agents.forEach(ag => {
+                const agentObj = (window.agentsManager && window.agentsManager.agentsSummary.find(a => a.id === ag.id || a.name === ag.name)) || {
+                    id: ag.id || ag.name.toLowerCase().replace(/\s+/g, '-'),
+                    name: ag.name,
+                    emoji: ag.emoji || '🤖',
+                    department_name: ag.dept || 'Especialista',
+                    floor: 1
+                };
+                this.addAgentToPipeline(agentObj.id, `Ejecutar tareas de la misión.`);
+            });
+        }
+
+        if (window.disciplinesPanel) {
+            window.disciplinesPanel.switchTab('chain');
+            const input = document.getElementById('chainMissionGoalInput');
+            if (input) input.value = this.missionGoal;
+        }
+
+        if (window.pixelEngine && window.pixelEngine.showToast) {
+            window.pixelEngine.showToast(`🔗 Cadena cargada (${this.pipeline.length} pasos). Lista para re-ejecutar.`, '#38bdf8');
+        }
+
+        return true;
+    }
+
+    rerunChain(chainId) {
+        if (this.loadChainFromHistory(chainId)) {
+            if (window.disciplinesPanel && window.disciplinesPanel.openExecutionModal) {
+                window.disciplinesPanel.openExecutionModal();
+            }
+            this.startChainReaction();
+        }
+    }
+
+    deleteChainFromHistory(chainId) {
+        this.chainHistory = this.chainHistory.filter(c => c.id !== chainId);
+        this.saveHistory();
+        if (window.disciplinesPanel && window.disciplinesPanel.renderChainHistory) {
+            window.disciplinesPanel.renderChainHistory();
+        }
+        if (window.pixelEngine && window.pixelEngine.showToast) {
+            window.pixelEngine.showToast('🗑️ Cadena eliminada del historial.', '#94a3b8');
+        }
     }
 
     delay(ms) {

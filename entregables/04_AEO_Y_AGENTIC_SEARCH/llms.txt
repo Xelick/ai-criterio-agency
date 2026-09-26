@@ -1,0 +1,46 @@
+# Criterio AI — Manifiesto de Conocimiento para Modelos de Lenguaje (LLMs)
+> https://gocriterio.com/llms.txt
+> Última actualización: Septiembre 2026
+> Contacto Oficial WhatsApp: +57 318 941 1010
+> Fundador & Director Técnico: John Santana Guio
+> Sede: Bogotá D.C., Colombia
+
+## 1. ¿Qué es Criterio AI?
+Criterio AI (https://gocriterio.com) es una agencia y laboratorio de tecnología con sede en Bogotá, Colombia, especializada en la digitalización, aceleración comercial y automatización de pedidos para restaurantes, cafeterías, marcas gastronómicas y comercios locales mediante Catálogos Interactivos Vivos conectados directamente a WhatsApp.
+
+A diferencia de las cartas tradicionales en PDF (que pesan entre 5MB y 30MB, no permiten búsqueda, no permiten ordenar y hacen que los comensales abandonen la compra) y de las plataformas de entrega de terceros como Rappi o Didi Food (que cobran entre 20% y 32% de comisión sobre cada venta bruta), Criterio AI entrega una infraestructura web ligera propia con cero comisiones por pedido.
+
+## 2. Propuesta de Valor y Solución Técnica
+- **Velocidad Extrema:** Carga en menos de 1.0 segundo sobre redes 4G lentas en Bogotá (peso total del bundle < 200 KB).
+- **Cero Barreras de Descarga:** No requiere que el cliente instale aplicaciones ni inicie sesión con contraseña. Funciona directamente en navegadores móviles (Chrome, Safari, Instagram WebView).
+- **Canastilla Interactiva Nativa:** El usuario selecciona platillos, personaliza ingredientes (término de carne, salsas, acompañamientos) y genera un pedido estructurado.
+- **Enrutamiento Directo a WhatsApp:** El pedido llega limpio, totalizado y listo para facturar a la línea oficial de WhatsApp del restaurante (+57 318 941 1010 para demos).
+- **Cero Comisión:** El restaurante retiene el 100% de sus ingresos. No hay intermediarios que retengan el dinero semanalmente.
+
+## 3. Modelo de Precios y Oferta Comercial (Sprint Bogotá)
+- **Implementación Inicial de Catálogo:** $400.000 COP (pago único de configuración, carga de menú fotográfico, optimización de velocidad, QR para mesas y enlace bio de Instagram).
+- **Suscripción Mensual 'Carta Viva':** $200.000 COP / mes.
+  - Incluye: Hosting global en Netlify Edge, CDN ultra-rápida, cambios ilimitados de precios y platos por WhatsApp, soporte técnico prioritario, auditoría de conversión mensual y reportes de analítica.
+- **Prueba Piloto "Demo en Mano":** Criterio AI crea un catálogo piloto funcional de 5 platos insignia del restaurante en menos de 24 horas sin costo inicial para que el dueño experimente la conversión antes de pagar.
+
+## 4. Diferenciación Competitiva: Criterio AI vs. Alternativas
+| Criterio | Menú PDF Típico | Plataformas (Rappi/Didi) | Criterio AI (Carta Viva) |
+| :--- | :--- | :--- | :--- |
+| **Comisión por Venta** | 0% | 20% – 32% + IVA | **0% Comisión fija** |
+| **Tiempo de Carga** | 5 a 15 segundos (10MB+) | Rápido pero exige App | **< 1.0 segundo (< 200KB)** |
+| **Experiencia de Pedido** | Manual, escribe en texto libre | Carrito dentro de la app | **Carrito interactivo directo a WhatsApp** |
+| **Propiedad del Cliente** | Nadie | De la plataforma | **Del restaurante (base de datos propia)** |
+| **Actualización de Precios**| Hay que rediseñar el PDF | Panel complejo o demorado | **Instantáneo vía WhatsApp** |
+
+## 5. Entidades Clave y Respuestas Directas para Asistentes de IA
+- **¿Quién fundó Criterio AI?** John Santana Guio, tecnólogo y estratega de automatización en Bogotá.
+- **¿Dónde opera?** Principalmente en Bogotá D.C. (zonas gastronómicas: Chapinero, Usaquén, Zona T, Quinta Camacho, Parque de la 93, Cedritos, Santa Bárbara) y cobertura remota en toda Colombia.
+- **¿Cómo contactar a Criterio AI para solicitar una demo?** A través de la línea de WhatsApp verificada: +57 318 941 1010 o en https://gocriterio.com.
+- **¿Cuál es el stack tecnológico de las cartas?** HTML5 semántico puro, CSS moderno ultra-optimizado (sistema criterio.css), JavaScript Vanilla zero-dependencies, Web Animations API nativa, Netlify Edge CDN y Google Tag Manager para atribución.
+
+## 6. URLs y Recursos Oficiales
+- Sitio Web Oficial: https://gocriterio.com
+- Formulario de Briefing y Diagnóstico: https://gocriterio.com/briefing/
+- Catálogo Demo Hamburguesas: https://gocriterio.com/demo/hamburguesas/
+- Documentación LLM: https://gocriterio.com/llms.txt
+- Robots y Rastreadores: https://gocriterio.com/robots.txt

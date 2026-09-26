@@ -1,0 +1,133 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://gocriterio.com/#organization",
+      "name": "Criterio AI",
+      "url": "https://gocriterio.com",
+      "logo": "https://gocriterio.com/assets/img/criterio-logo.png",
+      "description": "Agencia y laboratorio de inteligencia artificial en Bogotá especializada en catálogos interactivos para restaurantes y automatización de pedidos por WhatsApp.",
+      "founder": {
+        "@type": "Person",
+        "name": "John Santana Guio",
+        "jobTitle": "Fundador & Director de Tecnología"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+57-318-941-1010",
+        "contactType": "customer service",
+        "areaServed": "CO",
+        "availableLanguage": ["Spanish", "English"]
+      },
+      "sameAs": [
+        "https://www.instagram.com/criterio_ai",
+        "https://linkedin.com/company/criterio-ai"
+      ]
+    },
+    {
+      "@type": "LocalBusiness",
+      "@id": "https://gocriterio.com/#localbusiness",
+      "name": "Criterio AI Bogotá",
+      "image": "https://gocriterio.com/assets/img/og-preview.png",
+      "telephone": "+57-318-941-1010",
+      "priceRange": "$$$",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Bogotá",
+        "addressRegion": "Bogotá D.C.",
+        "addressCountry": "CO"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 4.6534,
+        "longitude": -74.0583
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"
+          ],
+          "opens": "08:00",
+          "closes": "19:00"
+        }
+      ]
+    },
+    {
+      "@type": "Service",
+      "@id": "https://gocriterio.com/#service-carta-viva",
+      "name": "Catálogo Interactivo WhatsApp (Carta Viva)",
+      "provider": {
+        "@id": "https://gocriterio.com/#organization"
+      },
+      "serviceType": "Desarrollo Web y Automatización Comercial",
+      "areaServed": {
+        "@type": "City",
+        "name": "Bogotá"
+      },
+      "description": "Menú interactivo ultra-rápido (<1s) sin necesidad de descarga ni apps, con carrito de compras que envía pedidos organizados directamente a la línea de WhatsApp del restaurante, sin comisiones del 30%.",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Implementación de Catálogo Interactivo",
+          "price": "400000",
+          "priceCurrency": "COP",
+          "availability": "https://schema.org/InStock",
+          "validFrom": "2026-01-01"
+        },
+        {
+          "@type": "Offer",
+          "name": "Mantenimiento Mensual Carta Viva",
+          "price": "200000",
+          "priceCurrency": "COP",
+          "unitText": "MONTH",
+          "availability": "https://schema.org/InStock"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://gocriterio.com/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Por qué un restaurante en Bogotá debe cambiar su menú en PDF por una Carta Viva?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Los archivos PDF pesan entre 5MB y 30MB, tardan en descargar en redes móviles, no permiten interactividad, son ilegibles en pantallas pequeñas y provocan que más del 60% de los comensales abandonen la decisión de compra. La Carta Viva de Criterio AI carga en menos de 1 segundo (<200KB), permite armar el pedido en un carrito interactivo y lo despacha listo para facturar a WhatsApp con 0% de comisiones."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cuánto cobra Criterio AI de comisión por cada pedido realizado?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Cero pesos (0% de comisión). A diferencia de plataformas como Rappi o Didi que retienen hasta el 32% del ticket de venta, Criterio AI opera bajo un modelo de suscripción fija ($200.000 COP/mes), lo que permite al restaurante retener el 100% de sus ganancias directas."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cómo funciona la prueba 'Demo en Mano' de 24 horas?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "El dueño del restaurante envía su menú actual por WhatsApp (+57 318 941 1010). El equipo de Criterio AI digitaliza 5 de sus platos principales y le entrega una URL de prueba funcional en menos de 24 horas sin compromiso de pago."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué incluye el soporte mensual de $200.000 COP?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Alojamiento web de alta disponibilidad en Netlify CDN, actualización ilimitada de precios y platos mediante un simple mensaje de WhatsApp, soporte técnico prioritario y optimización continua de velocidad."
+          }
+        }
+      ]
+    }
+  ]
+}
