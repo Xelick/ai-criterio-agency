@@ -7,9 +7,9 @@ department: "Ventas & Negocios"
 role_for_downstream_ai: "Executor AI (Cursor / Claude Code / Antigravity)"
 status: "READY_FOR_EXECUTION"
 priority: "HIGH"
-created_at: "2026-09-26T00:49:20.074103"
+created_at: "2026-09-26T15:03:41.800893"
 business: "Criterio AI (gocriterio.com)"
-mission: "Llegar a los 116 negocios de comida de Bogotá con catálogo demo y cobrar anticipo del 50% en Las Perras."
+mission: "Prospectar 119 restaurantes de Bogotá sin web, presentar catálogo demo con anticipo 50% ($200k) y cerrar ventas directas."
 target_files:
   - "src/pages/briefing.html"
   - "src/styles/criterio.css"
@@ -24,7 +24,7 @@ acceptance_criteria:
 
 > **Generado por la Oficina Virtual Pixel Art de Criterio AI**
 > **Especialidad:** Ventas & Negocios | **Paso en Cadena:** 3
-> **Objetivo Global:** Llegar a los 116 negocios de comida de Bogotá con catálogo demo y cobrar anticipo del 50% en Las Perras.
+> **Objetivo Global:** Prospectar 119 restaurantes de Bogotá sin web, presentar catálogo demo con anticipo 50% ($200k) y cerrar ventas directas.
 
 ---
 

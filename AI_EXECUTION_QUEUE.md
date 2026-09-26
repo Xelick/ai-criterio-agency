@@ -1,7 +1,7 @@
 # 🤖 Criterio AI — Cola Maestra de Ejecución de Tareas para IAs
 > **Fuente:** Cuartel General Pixel Art (296 Agentes Autónomos)
-> **Última Actualización:** 2026-09-26 01:16:52
-> **Misión Activa:** Cumplir Sprint de 14 días y desbloquear gocriterio.com
+> **Última Actualización:** 2026-09-26 15:03:41
+> **Misión Activa:** Prospectar 119 restaurantes de Bogotá sin web, presentar catálogo demo con anticipo 50% ($200k) y cerrar ventas directas.
 
 Este repositorio contiene las tareas y especificaciones generadas por el equipo de especialistas para ser ejecutadas por IAs de codificación (**Cursor**, **Claude Code**, **Antigravity**, **GitHub Copilot CLI**).
 
