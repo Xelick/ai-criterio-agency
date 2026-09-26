@@ -1,7 +1,7 @@
 # 🤖 Criterio AI — Cola Maestra de Ejecución de Tareas para IAs
 > **Fuente:** Cuartel General Pixel Art (296 Agentes Autónomos)
-> **Última Actualización:** 2026-09-25 22:54:49
-> **Misión Activa:** Convertir casos de estudio de WhatsApp en carruseles virales de Instagram/LinkedIn y reactivar lista de correos.
+> **Última Actualización:** 2026-09-25 22:57:44
+> **Misión Activa:** Conectar el scraping de Google Maps con la generación automática de catálogos Netlify y respuestas IA en WhatsApp.
 
 Este repositorio contiene las tareas y especificaciones generadas por el equipo de especialistas para ser ejecutadas por IAs de codificación (**Cursor**, **Claude Code**, **Antigravity**, **GitHub Copilot CLI**).
 
@@ -11,6 +11,7 @@ Este repositorio contiene las tareas y especificaciones generadas por el equipo 
 
 | Estado | ID Tarea | Especialista | Entregable / Objetivo | Archivo .MD |
 | :---: | :--- | :--- | :--- | :--- |
+| 🟡 PENDIENTE | `TASK-20260925-01-agents-orchestrator` | **Agents Orchestrator** | [Estrategia & Nexus] Agents Orchestrator: Dirección y KPIs del Sprint | [Ver Tarea](tasks/TASK-20260925-01-agents-orchestrator.md) |
 | 🟡 PENDIENTE | `TASK-20260925-01-design-ui-designer` | **UI Designer** | [Diseño & Sistema] Rediseño del Héroe de Portada y eliminación del disco 'C' | [Ver Tarea](tasks/TASK-20260925-01-design-ui-designer.md) |
 | 🟡 PENDIENTE | `TASK-20260925-01-marketing-aeo-foundations` | **AEO Foundations Architect** | [Growth & Campañas] AEO Foundations Architect: Adquisición & Viralidad en Redes | [Ver Tarea](tasks/TASK-20260925-01-marketing-aeo-foundations.md) |
 | 🟡 PENDIENTE | `TASK-20260925-01-marketing-social-media-strategist` | **Social Media Strategist** | [Marketing & Growth] Estrategia de visibilidad y posicionamiento local en Bogotá | [Ver Tarea](tasks/TASK-20260925-01-marketing-social-media-strategist.md) |
@@ -18,14 +19,17 @@ Este repositorio contiene las tareas y especificaciones generadas por el equipo 
 | 🟡 PENDIENTE | `TASK-20260925-01-specialized-pricing-analyst` | **Pricing Analyst** | [Estrategia & Dirección] Tarifario y estructura de márgenes de Criterio AI | [Ver Tarea](tasks/TASK-20260925-01-specialized-pricing-analyst.md) |
 | 🟡 PENDIENTE | `TASK-20260925-02-design-ux-architect` | **UX Architect** | [Diseño & Sistema] Estructura del Hub en 5 Facetas Clave | [Ver Tarea](tasks/TASK-20260925-02-design-ux-architect.md) |
 | 🟡 PENDIENTE | `TASK-20260925-02-engineering-frontend-developer` | **Frontend Developer** | [Ingeniería & Web] Reparar el formulario de Netlify en /briefing/ | [Ver Tarea](tasks/TASK-20260925-02-engineering-frontend-developer.md) |
+| 🟡 PENDIENTE | `TASK-20260925-02-engineering-prompt-engineer` | **Prompt Engineer** | [Producto & Innovación] Prompts de generación de descripciones apetitosas para platos de comida | [Ver Tarea](tasks/TASK-20260925-02-engineering-prompt-engineer.md) |
 | 🟡 PENDIENTE | `TASK-20260925-02-marketing-agentic-search-optimizer` | **Agentic Search Optimizer** | [Growth & Campañas] Agentic Search Optimizer: Adquisición & Viralidad en Redes | [Ver Tarea](tasks/TASK-20260925-02-marketing-agentic-search-optimizer.md) |
 | 🟡 PENDIENTE | `TASK-20260925-02-marketing-content-creator` | **Content Creator** | [Marketing & Growth] Fichas de casos de estudio reales para prueba social | [Ver Tarea](tasks/TASK-20260925-02-marketing-content-creator.md) |
 | 🟡 PENDIENTE | `TASK-20260925-02-support-legal-compliance-checker` | **Legal Compliance Checker** | [Estrategia & Dirección] Verificación de Ley 1581 (Habeas Data), Ley 2300 y RNE en Colombia | [Ver Tarea](tasks/TASK-20260925-02-support-legal-compliance-checker.md) |
 | 🟡 PENDIENTE | `TASK-20260925-03-design-ui-finish-gate-reviewer` | **UI Finish-Gate Reviewer** | [Diseño & Sistema] Estandarización de radios de borde y sombras duras en criterio.css | [Ver Tarea](tasks/TASK-20260925-03-design-ui-finish-gate-reviewer.md) |
+| 🟡 PENDIENTE | `TASK-20260925-03-engineering-api-platform-engineer` | **API Platform Engineer** | [Tech Spec] API Platform Engineer: Arquitectura Técnica & Rendimiento | [Ver Tarea](tasks/TASK-20260925-03-engineering-api-platform-engineer.md) |
 | 🟡 PENDIENTE | `TASK-20260925-03-marketing-ai-citation-strategist` | **AI Citation Strategist** | [Growth & Campañas] AI Citation Strategist: Adquisición & Viralidad en Redes | [Ver Tarea](tasks/TASK-20260925-03-marketing-ai-citation-strategist.md) |
 | 🟡 PENDIENTE | `TASK-20260925-03-marketing-carousel-growth-engine` | **Carousel Growth Engine** | [Marketing & Growth] Diseño de narrativa 'Hoy vs. con Criterio' para redes sociales | [Ver Tarea](tasks/TASK-20260925-03-marketing-carousel-growth-engine.md) |
 | 🟡 PENDIENTE | `TASK-20260925-03-sales-offer-lead-gen-strategist` | **Offer & Lead Gen Strategist** | [Ventas & Prospección] Depuración de la base de datos de 1.374 negocios a los 119 de comida | [Ver Tarea](tasks/TASK-20260925-03-sales-offer-lead-gen-strategist.md) |
 | 🟡 PENDIENTE | `TASK-20260925-03-testing-performance-benchmarker` | **Performance Benchmarker** | [Testing & QA] Presupuesto web: peso < 300KB y LCP < 2.5s en 4G lenta | [Ver Tarea](tasks/TASK-20260925-03-testing-performance-benchmarker.md) |
+| 🟡 PENDIENTE | `TASK-20260925-04-engineering-ai-engineer` | **AI Engineer** | [Ingeniería & Web] Lógica de pedidos estructurados vía WhatsApp para catálogos | [Ver Tarea](tasks/TASK-20260925-04-engineering-ai-engineer.md) |
 | 🟡 PENDIENTE | `TASK-20260925-04-marketing-app-store-optimizer` | **App Store Optimizer** | [Growth & Campañas] App Store Optimizer: Adquisición & Viralidad en Redes | [Ver Tarea](tasks/TASK-20260925-04-marketing-app-store-optimizer.md) |
 | 🟡 PENDIENTE | `TASK-20260925-04-marketing-growth-hacker` | **Growth Hacker** | [Marketing & Growth] Estrategia del Sprint de 14 Días para 119 Restaurantes de Bogotá | [Ver Tarea](tasks/TASK-20260925-04-marketing-growth-hacker.md) |
 | 🟡 PENDIENTE | `TASK-20260925-04-sales-outreach` | **Sales Outreach** | [Ventas & Prospección] Gestión de los 119 prospectos de comida de Bogotá en lista_envio.html | [Ver Tarea](tasks/TASK-20260925-04-sales-outreach.md) |
