@@ -2162,6 +2162,136 @@ main.app-workspace {
     background: #86198f;
 }
 
+/* ========================================================
+   ⚔️ ONAGA LIVE EXECUTION COMMANDS CSS
+   ======================================================== */
+.cult-exec-section {
+    padding: 0 14px 14px 14px;
+}
+
+.cult-exec-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0f172a;
+    border-left: 4px solid var(--brand-gold);
+    padding: 8px 12px;
+    margin-bottom: 10px;
+}
+
+.cult-exec-title {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--brand-gold);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cult-exec-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.btn-cult-exec {
+    background: #18181b;
+    border: 1px solid #3f3f46;
+    color: #f1f5f9;
+    padding: 8px 10px;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s ease;
+}
+
+.btn-cult-exec:hover {
+    background: #27272a;
+    border-color: var(--brand-gold);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.btn-cult-exec.exec-master {
+    background: linear-gradient(135deg, #7f1d1d, #450a0a);
+    border: 1px solid #ef4444;
+    grid-column: 1 / -1;
+    padding: 10px 14px;
+}
+
+.btn-cult-exec.exec-master:hover {
+    background: linear-gradient(135deg, #991b1b, #7f1d1d);
+    border-color: #fde047;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+}
+
+.btn-cult-exec.exec-gold {
+    border-left: 3px solid #f59e0b;
+}
+
+.btn-cult-exec.exec-blue {
+    border-left: 3px solid #38bdf8;
+}
+
+.btn-cult-exec.exec-green {
+    border-left: 3px solid #10b981;
+}
+
+.btn-cult-exec.exec-purple {
+    border-left: 3px solid #a855f7;
+}
+
+.exec-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.exec-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.exec-name {
+    font-size: 10.5px;
+    font-weight: 800;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.exec-sub {
+    font-size: 8.5px;
+    color: #94a3b8;
+    margin-top: 2px;
+}
+
+.oracle-live-cta {
+    background: linear-gradient(90deg, #581c87, #831843);
+    border: 1px solid #f43f5e;
+    color: #ffffff;
+    font-size: 10.5px;
+    font-weight: 800;
+    padding: 6px 14px;
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+    transition: all 0.15s ease;
+}
+
+.oracle-live-cta:hover {
+    background: linear-gradient(90deg, #6b21a8, #9f1239);
+    box-shadow: 0 0 12px rgba(244, 63, 94, 0.6);
+    transform: translateY(-1px);
+}
+
 /* Bottlenecks Dialog */
 .bottleneck-dialog {
     max-width: 720px;

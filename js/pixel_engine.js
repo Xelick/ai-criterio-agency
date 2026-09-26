@@ -1386,16 +1386,22 @@ class PixelOfficeEngine {
 
     switchOnagaTab(tabName) {
         if (window.pixelAudio) window.pixelAudio.playClick();
-        const tabs = ['rituals', 'oracle', 'apiconfig'];
-        tabs.forEach(t => {
-            const btn = document.getElementById(`onagaTabBtn${t.charAt(0).toUpperCase() + t.slice(1)}`);
-            const pane = document.getElementById(`onagaPane${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        const tabMap = {
+            'rituals': { btn: 'onagaTabBtnRituals', pane: 'onagaPaneRituals' },
+            'oracle': { btn: 'onagaTabBtnOracle', pane: 'onagaPaneOracle' },
+            'apiconfig': { btn: 'onagaTabBtnApiConfig', pane: 'onagaPaneApiConfig' }
+        };
+
+        Object.keys(tabMap).forEach(key => {
+            const item = tabMap[key];
+            const btn = document.getElementById(item.btn);
+            const pane = document.getElementById(item.pane);
             if (btn) {
-                if (t === tabName) btn.classList.add('active');
+                if (key === tabName) btn.classList.add('active');
                 else btn.classList.remove('active');
             }
             if (pane) {
-                pane.style.display = (t === tabName) ? (t === 'oracle' ? 'flex' : 'block') : 'none';
+                pane.style.display = (key === tabName) ? (key === 'oracle' ? 'flex' : 'block') : 'none';
             }
         });
 
@@ -1423,6 +1429,170 @@ class PixelOfficeEngine {
         } else {
             badge.className = 'oracle-status-pill offline';
             badge.innerHTML = '⚡ Modo Oráculo Local Activo (Offline / Gratis)';
+        }
+    }
+
+    // =========================================================================
+    // ⚔️ REAL LIVE EXECUTION ACTIONS FROM ONAGA'S PULPIT
+    // =========================================================================
+
+    executeOnagaMasterChain() {
+        this.closeOnagaCultModal();
+        if (window.pixelAudio && window.pixelAudio.playPowerUp) {
+            window.pixelAudio.playPowerUp();
+        }
+        this.showToast('🚀 ¡DISPARANDO CADENA MAESTRA DE 43 AGENTES EN VIVO!', '#fde047', 260);
+
+        if (window.chainReactionEngine) {
+            // Load 43-step chain
+            if (window.chainReactionEngine.loadChainFromHistory) {
+                window.chainReactionEngine.loadChainFromHistory('chain-20260925-43-steps');
+            }
+            if (window.disciplinesPanel && window.disciplinesPanel.openExecutionModal) {
+                window.disciplinesPanel.openExecutionModal();
+            }
+            setTimeout(() => {
+                window.chainReactionEngine.triggerChain();
+            }, 300);
+        }
+    }
+
+    executeOnagaWebUnlock() {
+        this.closeOnagaCultModal();
+        if (window.pixelAudio && window.pixelAudio.playPowerUp) {
+            window.pixelAudio.playPowerUp();
+        }
+        this.showToast('💻 EJECUTANDO DESBLOQUEO WEB: Netlify Forms + WhatsApp + WCAG AA', '#38bdf8', 240);
+
+        if (window.chainReactionEngine) {
+            window.chainReactionEngine.loadPreset('preset-web-unlock');
+            if (window.disciplinesPanel && window.disciplinesPanel.openExecutionModal) {
+                window.disciplinesPanel.openExecutionModal();
+            }
+            setTimeout(() => {
+                window.chainReactionEngine.triggerChain();
+            }, 300);
+        }
+    }
+
+    executeOnagaBogotaProspecting() {
+        this.closeOnagaCultModal();
+        if (window.pixelAudio && window.pixelAudio.playPowerUp) {
+            window.pixelAudio.playPowerUp();
+        }
+        this.showToast('🍔 EJECUTANDO PROSPECCIÓN BOGOTÁ: 119 Restaurantes & Carta Viva', '#f59e0b', 240);
+
+        if (window.chainReactionEngine) {
+            window.chainReactionEngine.loadPreset('preset-bogota-sprint');
+            if (window.disciplinesPanel && window.disciplinesPanel.openExecutionModal) {
+                window.disciplinesPanel.openExecutionModal();
+            }
+            setTimeout(() => {
+                window.chainReactionEngine.triggerChain();
+            }, 300);
+        }
+    }
+
+    executeOnagaCartaViva() {
+        this.closeOnagaCultModal();
+        if (window.pixelAudio && window.pixelAudio.playPowerUp) {
+            window.pixelAudio.playPowerUp();
+        }
+        this.showToast('💰 EJECUTANDO LANZAMIENTO CARTA VIVA: $200k/mes + Catálogos $400k', '#10b981', 240);
+
+        if (window.chainReactionEngine) {
+            window.chainReactionEngine.loadPreset('preset-carta-viva');
+            if (window.disciplinesPanel && window.disciplinesPanel.openExecutionModal) {
+                window.disciplinesPanel.openExecutionModal();
+            }
+            setTimeout(() => {
+                window.chainReactionEngine.triggerChain();
+            }, 300);
+        }
+    }
+
+    executeOnagaQaAudit() {
+        this.closeOnagaCultModal();
+        if (window.pixelAudio && window.pixelAudio.playPowerUp) {
+            window.pixelAudio.playPowerUp();
+        }
+        this.showToast('🛡️ EJECUTANDO AUDITORÍA QA: Tokens visuales y rendimiento <1s', '#a855f7', 240);
+
+        if (window.chainReactionEngine) {
+            window.chainReactionEngine.loadPreset('preset-qa-audit');
+            if (window.disciplinesPanel && window.disciplinesPanel.openExecutionModal) {
+                window.disciplinesPanel.openExecutionModal();
+            }
+            setTimeout(() => {
+                window.chainReactionEngine.triggerChain();
+            }, 300);
+        }
+    }
+
+    openDailyReportFromOnaga() {
+        this.closeOnagaCultModal();
+        if (window.dailyReporter && window.dailyReporter.openModal) {
+            window.dailyReporter.openModal();
+        } else {
+            const reportModal = document.getElementById('dailyReportModal');
+            if (reportModal) reportModal.style.display = 'flex';
+        }
+    }
+
+    openBottlenecksFromOnaga() {
+        this.closeOnagaCultModal();
+        if (window.bottleneckDetector && window.bottleneckDetector.openModal) {
+            window.bottleneckDetector.openModal();
+        } else {
+            const bnModal = document.getElementById('bottleneckDetectorModal');
+            if (bnModal) bnModal.style.display = 'flex';
+        }
+    }
+
+    openGitRepoFromOnaga() {
+        this.closeOnagaCultModal();
+        if (window.gitConnector && window.gitConnector.openModal) {
+            window.gitConnector.openModal();
+        } else {
+            const gitModal = document.getElementById('gitRepoModal');
+            if (gitModal) gitModal.classList.remove('hidden');
+        }
+    }
+
+    executeCurrentOraclePlan() {
+        const orderText = (this.lastOnagaOracleResponse && this.lastOnagaOracleResponse.order) ||
+                          (document.getElementById('onagaGeminiOrderInput') && document.getElementById('onagaGeminiOrderInput').value) || '';
+
+        const orderLower = orderText.toLowerCase();
+        this.closeOnagaCultModal();
+
+        if (window.pixelAudio && window.pixelAudio.playPowerUp) {
+            window.pixelAudio.playPowerUp();
+        }
+        this.showToast(`⚡ ¡EJECUTANDO PLAN DE GEMINI EN VIVO CON LOS AGENTES!`, '#fde047', 260);
+
+        if (window.chainReactionEngine) {
+            if (orderLower.includes('web') || orderLower.includes('netlify') || orderLower.includes('formulario') || orderLower.includes('código')) {
+                window.chainReactionEngine.loadPreset('preset-web-unlock');
+            } else if (orderLower.includes('restaurante') || orderLower.includes('bogot') || orderLower.includes('venta') || orderLower.includes('carta viva') || orderLower.includes('precio')) {
+                window.chainReactionEngine.loadPreset('preset-bogota-sprint');
+            } else if (orderLower.includes('qa') || orderLower.includes('diseño') || orderLower.includes('auditoría')) {
+                window.chainReactionEngine.loadPreset('preset-qa-audit');
+            } else {
+                // Default to the full 43-agent chain
+                if (window.chainReactionEngine.loadChainFromHistory) {
+                    window.chainReactionEngine.loadChainFromHistory('chain-20260925-43-steps');
+                } else {
+                    window.chainReactionEngine.loadPreset('preset-web-unlock');
+                }
+            }
+
+            if (window.disciplinesPanel && window.disciplinesPanel.openExecutionModal) {
+                window.disciplinesPanel.openExecutionModal();
+            }
+            setTimeout(() => {
+                window.chainReactionEngine.triggerChain();
+            }, 350);
         }
     }
 
@@ -1686,8 +1856,10 @@ ${this.lastOnagaOracleResponse.text}
             this.masterOnaga.speechText = '¡Cosecho los frutos del trabajo de mis 296 fieles!';
             this.masterOnaga.speechTimer = 260;
         }
-        // Open git sync dialog or celebrate
-        if (window.gitConnector && window.gitConnector.refreshStatus) {
+        // Open git sync and deliverables explorer
+        if (window.gitConnector && window.gitConnector.openModal) {
+            window.gitConnector.openModal();
+        } else if (window.gitConnector && window.gitConnector.refreshStatus) {
             window.gitConnector.refreshStatus();
         }
     }

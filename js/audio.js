@@ -550,20 +550,25 @@ class PixelAudio {
         this.init();
         if (!this.ctx) return;
         const now = this.ctx.currentTime;
-        // Deep ominous Tibetan / Cult bell gong (low fundamental + mystical harmonic ring)
-        const fundamental = 110; // A2
-        [1, 2.76, 5.4, 8.1].forEach((mult, i) => {
+        // Subtle, mystical singing bowl / ethereal temple chime (soft, peaceful, sacred)
+        const fundamental = 432; // A4 healing harmonic
+        const harmonics = [1, 2.01, 3.02];
+        harmonics.forEach((mult, i) => {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
-            osc.type = i === 0 ? 'sine' : 'triangle';
+            osc.type = 'sine'; // Pure gentle sine wave (zero harshness)
             osc.frequency.setValueAtTime(fundamental * mult, now);
-            const initialGain = 0.15 / (i + 1);
-            gain.gain.setValueAtTime(initialGain, now);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.8);
+            
+            // Soft attack to prevent click/pop, gentle low volume (subtle)
+            const peakGain = 0.04 / (i + 1);
+            gain.gain.setValueAtTime(0.0001, now);
+            gain.gain.linearRampToValueAtTime(peakGain, now + 0.04);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
+            
             osc.connect(gain);
             gain.connect(this.ctx.destination);
             osc.start(now);
-            osc.stop(now + 1.85);
+            osc.stop(now + 1.25);
         });
     }
 

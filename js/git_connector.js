@@ -33,6 +33,24 @@ class GitConnector {
         setInterval(() => this.fetchStatus(true), 15000);
     }
 
+    openModal() {
+        const modal = document.getElementById('gitRepoModal');
+        if (modal) {
+            this.fetchStatus();
+            this.fetchDeliverables();
+            modal.classList.remove('hidden');
+            if (window.pixelAudio) window.pixelAudio.playClick();
+        }
+    }
+
+    closeModal() {
+        const modal = document.getElementById('gitRepoModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            if (window.pixelAudio) window.pixelAudio.playClick();
+        }
+    }
+
     bindUiEvents() {
         // Top header button to open Git modal
         const openBtn = document.getElementById('openGitRepoBtn');
@@ -41,10 +59,7 @@ class GitConnector {
 
         if (openBtn && modal) {
             openBtn.addEventListener('click', () => {
-                this.fetchStatus();
-                this.fetchDeliverables();
-                modal.classList.remove('hidden');
-                if (window.pixelAudio) window.pixelAudio.playClick();
+                this.openModal();
             });
         }
 
