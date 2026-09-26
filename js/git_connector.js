@@ -51,6 +51,29 @@ class GitConnector {
         }
     }
 
+    async saveDeliverableFile(filename, content) {
+        try {
+            const res = await fetch('/api/git/save_file', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ filename, content })
+            });
+            const data = await res.json();
+            this.fetchDeliverables();
+            return data;
+        } catch (e) {
+            console.warn("Could not save to server, falling back to download:", e);
+            const blob = new Blob([content], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+            return { success: false, fallback: true };
+        }
+    }
+
     bindUiEvents() {
         // Top header button to open Git modal
         const openBtn = document.getElementById('openGitRepoBtn');

@@ -861,7 +861,7 @@ python run_pipeline.py 4   # Ejecuta Auditoría QA & Sistema de Diseño</pre>
                     📜 Rituales del Culto
                 </button>
                 <button id="onagaTabBtnOracle" class="cult-tab-btn" onclick="window.pixelEngine.switchOnagaTab('oracle')">
-                    🔮 Comunión con Gemini (Órdenes Supremas)
+                    🔮 Órdenes Supremas (Antigravity & Gemini)
                 </button>
                 <button id="onagaTabBtnApiConfig" class="cult-tab-btn" onclick="window.pixelEngine.switchOnagaTab('apiconfig')">
                     ⚙️ Clave API Gemini
@@ -1023,18 +1023,21 @@ python run_pipeline.py 4   # Ejecuta Auditoría QA & Sistema de Diseño</pre>
                 </div>
             </div>
 
-            <!-- PANE 2: Comunión Directa con Gemini (Órdenes Supremas de Onaga) -->
+            <!-- PANE 2: Comunión Directa con Antigravity & Gemini (Órdenes Supremas de Onaga) -->
             <div id="onagaPaneOracle" class="onaga-tab-pane" style="display:none; flex-direction:column;">
                 <div class="oracle-banner">
                     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                         <div style="display:flex; align-items:center; gap:8px;">
-                            <span style="font-size:22px;">🔮</span>
+                            <span style="font-size:22px;">👑</span>
                             <div>
-                                <strong style="color:#fde047; font-size:11.5px;">CANAL DIRECTO ONAGA ⟷ GOOGLE GEMINI 1.5 FLASH</strong>
-                                <div style="font-size:9.5px; color:#cbd5e1;">Comanda a tus 296 agentes con inteligencia artificial divina y criterio de negocio</div>
+                                <strong style="color:#fde047; font-size:11.5px;">CANAL DIRECTO ONAGA ⟷ ANTIGRAVITY & GOOGLE GEMINI</strong>
+                                <div style="font-size:9.5px; color:#cbd5e1;">Comanda a Antigravity y a tus 296 agentes con directrices ejecutables en tiempo real</div>
                             </div>
                         </div>
-                        <span id="onagaOracleStatusBadge" class="oracle-status-pill online">🟢 Gemini Conectado</span>
+                        <div style="display:flex; gap:6px;">
+                            <span class="oracle-status-pill online" style="background:#065f46; color:#a7f3d0; border-color:#059669;">🟢 Antigravity Enlazado (tasks/)</span>
+                            <span id="onagaOracleStatusBadge" class="oracle-status-pill online">🟢 Gemini Conectado</span>
+                        </div>
                     </div>
                 </div>
 
@@ -1051,13 +1054,18 @@ python run_pipeline.py 4   # Ejecuta Auditoría QA & Sistema de Diseño</pre>
                 <!-- Input de la Orden -->
                 <div style="padding:0 14px 10px 14px;">
                     <label style="font-size:10px; font-weight:bold; color:var(--brand-gold); display:block; margin-bottom:4px;">
-                        👑 ORDEN SUPREMA DEL PATRIARCA ONAGA PARA GEMINI:
+                        👑 ORDEN SUPREMA DEL PATRIARCA ONAGA (COMANDO DIRECTO PARA ANTIGRAVITY & GEMINI):
                     </label>
-                    <div style="display:flex; gap:8px;">
-                        <textarea id="onagaGeminiOrderInput" class="oracle-textarea" rows="2" placeholder="Escribe tu orden suprema para Gemini... (ej: 'Gemini, indícale al equipo de Ventas y Frontend qué hacer hoy para vender 5 catálogos en Bogotá')"></textarea>
-                        <button id="sendOnagaOrderBtn" class="cult-action-btn btn-fire" style="min-width:145px; font-weight:bold; background:#7f1d1d; border-color:#ef4444;" onclick="window.pixelEngine.transmitOrderToGemini()">
-                            🔥 TRANSMITIR A GEMINI
-                        </button>
+                    <div style="display:flex; gap:8px; flex-direction:column;">
+                        <textarea id="onagaGeminiOrderInput" class="oracle-textarea" rows="2" placeholder="Escribe tu orden suprema para Antigravity... (ej: 'Antigravity, desbloquea el formulario de Netlify y ajusta los enlaces de WhatsApp a +57 318 941 1010')"></textarea>
+                        <div style="display:flex; gap:8px;">
+                            <button id="sendOnagaAntigravityBtn" class="cult-action-btn btn-fire" style="flex:1; font-weight:bold; background:#047857; border-color:#10b981; font-size:11px; padding:10px;" onclick="window.pixelEngine.transmitOrderToAntigravity()">
+                                🚀 ENVIAR ORDEN A ANTIGRAVITY (BUZÓN DIRECTO)
+                            </button>
+                            <button id="sendOnagaOrderBtn" class="cult-action-btn btn-fire" style="flex:1; font-weight:bold; background:#7f1d1d; border-color:#ef4444; font-size:11px; padding:10px;" onclick="window.pixelEngine.transmitOrderToGemini()">
+                                🔮 TRANSMITIR A GEMINI 1.5 FLASH
+                            </button>
+                        </div>
                     </div>
                 </div>
 

@@ -1742,7 +1742,99 @@ class PixelOfficeEngine {
         this.closeOnagaCultModal();
     }
 
-    saveOnagaDecreeAsTask() {
+    async transmitOrderToAntigravity(orderTextOverride = null) {
+        const orderInput = document.getElementById('onagaGeminiOrderInput');
+        const responseArea = document.getElementById('onagaGeminiResponseArea');
+        const sendAntigravityBtn = document.getElementById('sendOnagaAntigravityBtn');
+        
+        const orderText = orderTextOverride || (orderInput ? orderInput.value.trim() : '') || 'Plan de Choque para 119 Restaurantes de Bogotá y activación de Carta Viva';
+
+        if (sendAntigravityBtn) {
+            sendAntigravityBtn.disabled = true;
+            sendAntigravityBtn.innerHTML = '⏳ TRANSMITIENDO...';
+        }
+
+        if (window.pixelAudio && window.pixelAudio.playDivineLightning) {
+            window.pixelAudio.playDivineLightning();
+        }
+
+        try {
+            const res = await fetch('/api/onaga/order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    order: orderText,
+                    target_ai: 'antigravity',
+                    oracle_response: (this.lastOnagaOracleResponse && this.lastOnagaOracleResponse.text) || ''
+                })
+            });
+            const data = await res.json();
+
+            const promptText = `Antigravity, ejecuta la orden de Onaga: "${orderText}"`;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(promptText).catch(() => {});
+            }
+
+            if (responseArea) {
+                responseArea.innerHTML = `
+                    <div style="background:#022c22; border:2px solid #10b981; padding:16px; border-radius:4px; margin-top:8px;">
+                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                            <span style="font-size:24px;">🚀</span>
+                            <div>
+                                <div style="color:#34d399; font-weight:bold; font-size:13px;">¡ORDEN SUPREMA ENVIADA A ANTIGRAVITY CON ÉXITO!</div>
+                                <div style="color:#94a3b8; font-size:10px;">Buzón activo en el repositorio: <code>tasks/INBOX_ANTIGRAVITY.md</code></div>
+                            </div>
+                        </div>
+                        
+                        <div style="background:#064e3b; border-left:4px solid #34d399; padding:10px; margin-bottom:12px; color:#ecfdf5; font-size:11px;">
+                            <strong>📜 Orden Registrada:</strong> "${orderText}"
+                        </div>
+
+                        <div style="background:#0f172a; border:1px dashed #38bdf8; padding:10px; margin-bottom:12px;">
+                            <div style="color:#38bdf8; font-size:10.5px; font-weight:bold; margin-bottom:4px;">
+                                📋 Texto copiado automáticamente a tu portapapeles para el Chat de Antigravity:
+                            </div>
+                            <code style="color:#fde047; font-size:11px; display:block; padding:4px; background:#1e293b;">
+                                ${promptText}
+                            </code>
+                        </div>
+
+                        <div style="font-size:10.5px; color:#cbd5e1; line-height:1.5; margin-bottom:12px;">
+                            💡 <strong>Antigravity ya tiene la orden guardada en el disco del proyecto.</strong><br>
+                            Simplemente dile a Antigravity en tu chat: <em>"Ejecuta la orden de Onaga"</em> y la leerá de inmediato de <code>tasks/INBOX_ANTIGRAVITY.md</code>.
+                        </div>
+
+                        <div style="display:flex; gap:8px;">
+                            <button class="cult-mini-btn" style="background:#059669; color:#ffffff; font-weight:bold; padding:8px 14px;" onclick="navigator.clipboard.writeText('${promptText}'); window.pixelEngine.showToast('📋 Comando copiado al portapapeles', '#10b981');">
+                                📋 Volver a Copiar Instrucción
+                            </button>
+                            <button class="cult-mini-btn" style="background:#1e293b; color:#38bdf8; padding:8px 14px;" onclick="window.pixelEngine.openGitRepoFromOnaga();">
+                                📂 Ver en Cola de IAs & Tasks
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (this.masterOnaga) {
+                this.masterOnaga.speechText = `¡Antigravity ha recibido la orden suprema! ¡A trabajar!`;
+                this.masterOnaga.speechTimer = 300;
+                this.masterOnaga.speechColor = '#10b981';
+            }
+
+            this.showToast('🚀 ORDEN DE ONAGA TRANSMITIDA A ANTIGRAVITY (tasks/INBOX_ANTIGRAVITY.md)', '#10b981', 280);
+        } catch (err) {
+            console.error("Error transmitting order to Antigravity:", err);
+            this.showToast('⚠️ Error al conectar con el servidor local para Antigravity', '#ef4444');
+        } finally {
+            if (sendAntigravityBtn) {
+                sendAntigravityBtn.disabled = false;
+                sendAntigravityBtn.innerHTML = '🚀 ENVIAR ORDEN A ANTIGRAVITY (BUZÓN DIRECTO)';
+            }
+        }
+    }
+
+    async saveOnagaDecreeAsTask() {
         if (!this.lastOnagaOracleResponse || !this.lastOnagaOracleResponse.text) {
             this.showToast('⚠️ No hay decreto para guardar.', '#ef4444');
             return;
@@ -1750,24 +1842,25 @@ class PixelOfficeEngine {
         const content = `# DECRETO SUPREMO DEL GRAN PATRIARCA ONAGA
 **Fecha:** ${new Date().toISOString()}
 **Orden Transmitida:** "${this.lastOnagaOracleResponse.order}"
-**Canal:** Google Gemini 1.5 Flash ⟷ Cuartel General Criterio AI
+**Canal:** Antigravity & Google Gemini 1.5 ⟷ Cuartel General Criterio AI
 
 ${this.lastOnagaOracleResponse.text}
 `;
         if (window.gitConnector && window.gitConnector.saveDeliverableFile) {
-            window.gitConnector.saveDeliverableFile('DECRETO_ONAGA_GEMINI.md', content);
+            await window.gitConnector.saveDeliverableFile('DECRETO_ONAGA_SUPREMO.md', content);
         } else {
-            // Fallback download
-            const blob = new Blob([content], { type: 'text/markdown' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'DECRETO_ONAGA_GEMINI.md';
-            a.click();
-            URL.revokeObjectURL(url);
+            try {
+                await fetch('/api/git/save_file', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ filename: 'DECRETO_ONAGA_SUPREMO.md', content })
+                });
+            } catch (e) {
+                console.warn(e);
+            }
         }
         if (window.pixelAudio) window.pixelAudio.playClick();
-        this.showToast('💾 Decreto guardado como DECRETO_ONAGA_GEMINI.md', '#10b981');
+        this.showToast('💾 Decreto guardado como tasks/DECRETO_ONAGA_SUPREMO.md', '#10b981');
     }
 
     saveOnagaDirectApiKey() {

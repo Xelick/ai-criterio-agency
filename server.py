@@ -372,6 +372,38 @@ class PixelAgencyHandler(SimpleHTTPRequestHandler):
             self.send_json_response({"deliverables": deliverables, "total": len(deliverables)})
             return
 
+        elif url_path == '/api/onaga/order':
+            cfg = load_repo_config()
+            repo_path = cfg.get("repo_path", BASE_DIR)
+            inbox_path = os.path.join(repo_path, "tasks", "INBOX_ANTIGRAVITY.md")
+            log_path = os.path.join(repo_path, "tasks", "onaga_orders_log.json")
+            
+            latest_order = None
+            if os.path.exists(log_path):
+                try:
+                    with open(log_path, "r", encoding="utf-8") as lf:
+                        history = json.load(lf)
+                        if history:
+                            latest_order = history[-1]
+                except Exception:
+                    pass
+            
+            inbox_content = ""
+            if os.path.exists(inbox_path):
+                try:
+                    with open(inbox_path, "r", encoding="utf-8") as ibf:
+                        inbox_content = ibf.read()
+                except Exception:
+                    pass
+            
+            self.send_json_response({
+                "has_active_order": bool(latest_order),
+                "latest_order": latest_order,
+                "inbox_content": inbox_content,
+                "inbox_file": "tasks/INBOX_ANTIGRAVITY.md"
+            })
+            return
+
         super().do_GET()
 
     def do_POST(self):
@@ -499,6 +531,152 @@ class PixelAgencyHandler(SimpleHTTPRequestHandler):
             
             p_res = run_git(["push", remote, branch], cwd=repo_path)
             self.send_json_response(p_res)
+            return
+
+        elif url_path == '/api/onaga/order':
+            cfg = load_repo_config()
+            repo_path = cfg.get("repo_path", BASE_DIR)
+            tasks_dir = os.path.join(repo_path, "tasks")
+            os.makedirs(tasks_dir, exist_ok=True)
+            
+            order_text = req_data.get("order", "").strip() or "Cumplir Sprint de 14 días y desbloquear gocriterio.com"
+            target_ai = req_data.get("target_ai", "antigravity")
+            oracle_response = req_data.get("oracle_response", "")
+            timestamp_iso = datetime.datetime.now().isoformat()
+            date_human = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            task_id = f"TASK-ONAGA-{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}"
+
+            # 1. Write tasks/INBOX_ANTIGRAVITY.md
+            inbox_path = os.path.join(tasks_dir, "INBOX_ANTIGRAVITY.md")
+            inbox_md = f"""# 👑 BUZÓN DE ÓRDENES SUPREMAS DE ONAGA PARA ANTIGRAVITY
+> **Emisor:** Gran Patriarca Onaga (Líder del Culto de la Productividad)
+> **Receptor:** Antigravity (AI Senior Pair Programmer & Orchestrator)
+> **Fecha y Hora:** {date_human}
+> **Estado:** 🟡 PENDIENTE DE EJECUCIÓN INMEDIATA POR ANTIGRAVITY
+> **Prioridad:** 🔥 VITAL / DEFCON 1
+
+---
+
+## 📜 Orden Suprema Emitida:
+> ### "{order_text}"
+
+---
+
+## 🎯 Directrices para Antigravity:
+1. Lee detenidamente esta orden emitida desde el Altar de Onaga.
+2. Identifica los archivos de código o recursos que deben modificarse en el repositorio de Criterio AI.
+3. Ejecuta los cambios necesarios, asegurando calidad de código, accesibilidad WCAG AA, y contratos comerciales para Bogotá.
+4. Informa al usuario en el chat de Antigravity una vez implementada la directriz.
+
+---
+
+## 🔮 Contexto / Revelación del Oráculo:
+{oracle_response if oracle_response else "Orden directa sin canalización intermedia. Proceder con el rigor y máxima devoción de Onaga."}
+
+---
+*Fin de la Orden Suprema — Generada en tiempo real desde la Oficina Virtual de Criterio AI.*
+"""
+            with open(inbox_path, "w", encoding="utf-8") as ibf:
+                ibf.write(inbox_md)
+
+            # 2. Write tasks/TASK_ONAGA_ACTIVE_ORDER.md
+            active_task_path = os.path.join(tasks_dir, "TASK_ONAGA_ACTIVE_ORDER.md")
+            active_md = f"""---
+task_id: "{task_id}"
+title: "Orden Suprema de Onaga: {order_text.replace('"', "'")}"
+agent_id: "master-onaga"
+agent_name: "Gran Patriarca Onaga"
+department: "Dirección Suprema"
+role_for_downstream_ai: "Antigravity Senior Agent"
+status: "READY_FOR_EXECUTION"
+priority: "DEFCON_1_VITAL"
+created_at: "{timestamp_iso}"
+business: "Criterio AI (gocriterio.com)"
+---
+# 👑 [Gran Patriarca Onaga] {order_text}
+
+## ⚡ Prompt para Antigravity:
+```text
+Antigravity: El Gran Patriarca Onaga te ha transmitido la siguiente orden directa desde el Altar de la Productividad:
+"{order_text}"
+Por favor, analiza la base de código, ejecuta las acciones pertinentes y reporta el progreso de inmediato.
+```
+
+## 📋 Detalle de la Orden:
+{order_text}
+
+{oracle_response}
+"""
+            with open(active_task_path, "w", encoding="utf-8") as atf:
+                atf.write(active_md)
+
+            # 3. Append to onaga_orders_log.json
+            log_path = os.path.join(tasks_dir, "onaga_orders_log.json")
+            order_record = {
+                "task_id": task_id,
+                "order": order_text,
+                "target_ai": target_ai,
+                "created_at": timestamp_iso,
+                "status": "DISPATCHED_TO_ANTIGRAVITY"
+            }
+            history = []
+            if os.path.exists(log_path):
+                try:
+                    with open(log_path, "r", encoding="utf-8") as rlf:
+                        history = json.load(rlf)
+                except Exception:
+                    history = []
+            history.append(order_record)
+            with open(log_path, "w", encoding="utf-8") as wlf:
+                json.dump(history, wlf, indent=2, ensure_ascii=False)
+
+            # 4. Update execution queue
+            update_execution_queue(repo_path, mission_goal=order_text)
+
+            # 5. Git auto-commit if enabled
+            commit_res = None
+            if cfg.get("auto_commit", True):
+                run_git(["add", "tasks/INBOX_ANTIGRAVITY.md", "tasks/TASK_ONAGA_ACTIVE_ORDER.md", "tasks/onaga_orders_log.json", "AI_EXECUTION_QUEUE.md"], cwd=repo_path)
+                c_res = run_git(["commit", "-m", f"feat(onaga): orden de Onaga transmitida a Antigravity: {order_text[:50]}"], cwd=repo_path)
+                commit_res = c_res
+
+            self.send_json_response({
+                "success": True,
+                "task_id": task_id,
+                "order": order_text,
+                "target_ai": target_ai,
+                "inbox_file": "tasks/INBOX_ANTIGRAVITY.md",
+                "active_task_file": "tasks/TASK_ONAGA_ACTIVE_ORDER.md",
+                "prompt_for_antigravity": f"Antigravity, ejecuta la orden de Onaga: \"{order_text}\"",
+                "commit": commit_res
+            })
+            return
+
+        elif url_path == '/api/git/save_file':
+            cfg = load_repo_config()
+            repo_path = cfg.get("repo_path", BASE_DIR)
+            filename = req_data.get("filename", "output.md")
+            content = req_data.get("content", "")
+            
+            filename = os.path.basename(filename)
+            tasks_dir = os.path.join(repo_path, "tasks")
+            os.makedirs(tasks_dir, exist_ok=True)
+            target_file = os.path.join(tasks_dir, filename)
+            
+            with open(target_file, "w", encoding="utf-8") as f:
+                f.write(content)
+                
+            update_execution_queue(repo_path)
+            
+            if cfg.get("auto_commit", True):
+                run_git(["add", f"tasks/{filename}", "AI_EXECUTION_QUEUE.md"], cwd=repo_path)
+                run_git(["commit", "-m", f"feat(tasks): archivo {filename} guardado"], cwd=repo_path)
+                
+            self.send_json_response({
+                "success": True,
+                "filename": filename,
+                "path": f"tasks/{filename}"
+            })
             return
 
         self.send_response(404)
