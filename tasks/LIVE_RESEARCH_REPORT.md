@@ -1,0 +1,29 @@
+# 🛰️ Auditoría Técnica en Vivo — https://gocriterio.com
+> **Fecha:** 2026-09-26 20:48:46 | **Servidor:** Netlify | **Latencia:** 376.0ms
+> **Salud del Sitio:** 65/100 🔴 CRÍTICO
+
+---
+
+## 📊 Métricas Principales
+- **URL Auditada:** `https://gocriterio.com`
+- **Código HTTP:** `200 OK`
+- **Tiempo de Carga:** `376.0 ms`
+- **Tamaño HTML:** `23015 bytes`
+- **Título de la Página:** *Criterio AI — Consulting*
+- **Formularios Detectados:** `0`
+- **Enlaces WhatsApp Encontrados:** `0`
+
+---
+
+## ⚠️ Hallazgos y Bloqueos Identificados
+- 🔴 **No se detectó enlace directo a WhatsApp en el HTML principal**
+- 🔴 **Formulario Netlify de briefing no detectado en el DOM estático**
+
+---
+
+## 🛠️ Recomendaciones de Ejecución Inmediata
+- ⚡ Añadir botón flotante de WhatsApp hacia wa.me/573189411010
+- ⚡ Incluir <form name='briefing' method='POST' data-netlify='true'> oculto para prerender de Netlify
+
+---
+*Reporte generado por el Radar en Vivo de la Oficina Virtual.*

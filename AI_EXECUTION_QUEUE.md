@@ -1,7 +1,7 @@
 # 🤖 Criterio AI — Cola Maestra de Ejecución de Tareas para IAs
 > **Fuente:** Cuartel General Pixel Art (296 Agentes Autónomos)
-> **Última Actualización:** 2026-09-26 15:03:41
-> **Misión Activa:** Prospectar 119 restaurantes de Bogotá sin web, presentar catálogo demo con anticipo 50% ($200k) y cerrar ventas directas.
+> **Última Actualización:** 2026-09-26 20:48:46
+> **Misión Activa:** Criterio AI Sprint
 
 Este repositorio contiene las tareas y especificaciones generadas por el equipo de especialistas para ser ejecutadas por IAs de codificación (**Cursor**, **Claude Code**, **Antigravity**, **GitHub Copilot CLI**).
 
@@ -12,6 +12,7 @@ Este repositorio contiene las tareas y especificaciones generadas por el equipo 
 | Estado | ID Tarea | Especialista | Entregable / Objetivo | Archivo .MD |
 | :---: | :--- | :--- | :--- | :--- |
 | 🟡 PENDIENTE | `INBOX_ANTIGRAVITY` | **Agente** | INBOX_ANTIGRAVITY.md | [Ver Tarea](tasks/INBOX_ANTIGRAVITY.md) |
+| 🟡 PENDIENTE | `LIVE_RESEARCH_REPORT` | **Agente** | LIVE_RESEARCH_REPORT.md | [Ver Tarea](tasks/LIVE_RESEARCH_REPORT.md) |
 | 🟢 COMPLETADA | `TASK-20260925-01-agents-orchestrator` | **Agents Orchestrator** | [Estrategia & Nexus] Agents Orchestrator: Dirección y KPIs del Sprint | [Ver Tarea](tasks/TASK-20260925-01-agents-orchestrator.md) |
 | 🟢 COMPLETADA | `TASK-20260925-01-design-ui-designer` | **UI Designer** | [Diseño & Sistema] Rediseño del Héroe de Portada y eliminación del disco 'C' | [Ver Tarea](tasks/TASK-20260925-01-design-ui-designer.md) |
 | 🟢 COMPLETADA | `TASK-20260925-01-marketing-aeo-foundations` | **AEO Foundations Architect** | [Growth & Campañas] AEO Foundations Architect: Adquisición & Viralidad en Redes | [Ver Tarea](tasks/TASK-20260925-01-marketing-aeo-foundations.md) |
@@ -91,6 +92,7 @@ Este repositorio contiene las tareas y especificaciones generadas por el equipo 
 | 🟡 PENDIENTE | `TASK-20260926-06-marketing-bilibili-content-strategist` | **Bilibili Content Strategist** | [Growth & Campañas] Bilibili Content Strategist: Adquisición & Viralidad en Redes | [Ver Tarea](tasks/TASK-20260926-06-marketing-bilibili-content-strategist.md) |
 | 🟡 PENDIENTE | `TASK-20260926-07-marketing-book-co-author` | **Book Co-Author** | [Growth & Campañas] Book Co-Author: Adquisición & Viralidad en Redes | [Ver Tarea](tasks/TASK-20260926-07-marketing-book-co-author.md) |
 | 🟡 PENDIENTE | `TASK-20260926-08-marketing-carousel-growth-engine` | **Carousel Growth Engine** | [Marketing & Growth] Diseño de narrativa 'Hoy vs. con Criterio' para redes sociales | [Ver Tarea](tasks/TASK-20260926-08-marketing-carousel-growth-engine.md) |
+| 🟡 PENDIENTE | `TASK-LIVE-20260926-204846` | **Especialista Radar en Vivo** | Auditoría Técnica en Vivo — https://gocriterio.com | [Ver Tarea](tasks/TASK-LIVE-20260926-204846.md) |
 | 🟡 PENDIENTE | `TASK-ONAGA-20260926-011652` | **Gran Patriarca Onaga** | Orden Suprema de Onaga: Cumplir Sprint de 14 días y desbloquear gocriterio.com | [Ver Tarea](tasks/TASK_ONAGA_ACTIVE_ORDER.md) |
 
 ---
