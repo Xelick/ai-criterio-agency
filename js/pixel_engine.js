@@ -455,8 +455,8 @@ class PixelOfficeEngine {
         this.agents.forEach((a, idx) => {
             if (a.isBeingDragged) return; // Suspended in air by user!
 
-            // Periodically emit work spark or bottleneck alarm if sprinting
-            if ((a.isSprinting || a.hasUrgentBottleneck) && Math.random() < 0.05) {
+            // Periodically emit work spark or bottleneck alarm if sprinting (lightweight 60fps throttle)
+            if ((a.isSprinting || a.hasUrgentBottleneck) && this.particles.length < 35 && Math.random() < 0.012) {
                 if (a.hasUrgentBottleneck) {
                     this.addParticle(a.currentX, a.currentY - 12, Math.random() < 0.5 ? '⚠️' : '🔥', '#ef4444');
                 } else {
@@ -2389,16 +2389,24 @@ ${this.lastOnagaOracleResponse.text}
             toast.time--;
         }
 
-        // 5. Floating Action & Ambient Particles
-        this.particles.forEach(p => {
-            ctx.save();
-            ctx.globalAlpha = Math.max(0, Math.min(1, p.life));
-            ctx.font = '13px monospace';
+        // 5. Floating Action & Ambient Particles (Ultra-Fast Batch Rendering)
+        if (this.particles.length > 0) {
+            ctx.font = '12px monospace';
             ctx.textAlign = 'center';
-            ctx.fillStyle = p.color || '#fde047';
-            ctx.fillText(p.char, p.x, p.y);
-            ctx.restore();
-        });
+            ctx.textBaseline = 'middle';
+            let lastColor = '';
+
+            for (let i = 0; i < this.particles.length; i++) {
+                const p = this.particles[i];
+                ctx.globalAlpha = p.life > 1 ? 1 : (p.life < 0 ? 0 : p.life);
+                if (p.color !== lastColor) {
+                    ctx.fillStyle = p.color || '#fde047';
+                    lastColor = p.color;
+                }
+                ctx.fillText(p.char, (p.x + 0.5) | 0, (p.y + 0.5) | 0);
+            }
+            ctx.globalAlpha = 1.0;
+        }
 
         // 6. Squad & Dynamic Speech Bubbles
         const nowMs = performance.now();
@@ -2440,16 +2448,16 @@ ${this.lastOnagaOracleResponse.text}
     }
 
     addParticle(x, y, char = '✨', color = '#38bdf8', vx = null, vy = null) {
-        if (this.particles.length > 160) this.particles.shift();
+        if (this.particles.length >= 45) this.particles.shift();
         this.particles.push({
-            x: x + (Math.random() * 16 - 8),
-            y: y + (Math.random() * 10 - 5),
-            vx: vx !== null ? vx : (Math.random() - 0.5) * 30,
-            vy: vy !== null ? vy : -25 - Math.random() * 35,
+            x: x + (Math.random() * 12 - 6),
+            y: y + (Math.random() * 8 - 4),
+            vx: vx !== null ? vx : (Math.random() - 0.5) * 20,
+            vy: vy !== null ? vy : -18 - Math.random() * 20,
             char: char,
             color: color,
             life: 1.0,
-            decay: 0.8 + Math.random() * 0.4
+            decay: 1.5 + Math.random() * 0.5
         });
     }
 
@@ -2460,13 +2468,13 @@ ${this.lastOnagaOracleResponse.text}
         const casinoIcons = ['🪙', '💰', '💎', '7️⃣', '✨', '⭐'];
         const colors = ['#fde047', '#f59e0b', '#38bdf8', '#ef4444', '#10b981'];
 
-        // Erupt 8-12 floating casino coins and jewels
-        const count = Math.min(18, 8 + Math.floor(stepNum / 3));
+        // Erupt 6-8 floating casino coins and jewels (optimized)
+        const count = Math.min(8, 4 + Math.floor(stepNum / 6));
         for (let i = 0; i < count; i++) {
             const angle = (Math.PI * 2 * i) / count + (Math.random() * 0.4 - 0.2);
-            const speed = 25 + Math.random() * 40;
+            const speed = 20 + Math.random() * 30;
             const vx = Math.cos(angle) * speed;
-            const vy = -35 - Math.sin(Math.abs(angle)) * 30;
+            const vy = -25 - Math.sin(Math.abs(angle)) * 25;
             const icon = casinoIcons[i % casinoIcons.length];
             const col = colors[i % colors.length];
             this.addParticle(x, y, icon, col, vx, vy);
@@ -2474,7 +2482,7 @@ ${this.lastOnagaOracleResponse.text}
 
         // Floating combo text
         const comboText = stepNum >= 10 ? `x${stepNum} 🔥` : `x${stepNum}!`;
-        this.addParticle(x, y - 22, comboText, '#fde047', 0, -45);
+        this.addParticle(x, y - 22, comboText, '#fde047', 0, -35);
 
         if (agent) {
             this.showSpeechBubble(agent.id, `🎰 +${stepNum * 100} XP (x${stepNum})`, 1800, '#fde047');
@@ -2486,21 +2494,21 @@ ${this.lastOnagaOracleResponse.text}
         const icons = ['🪙', '💰', '💎', '7️⃣', '✨', '👑', '🔥'];
         const colors = ['#fde047', '#f59e0b', '#ef4444', '#38bdf8', '#10b981'];
 
-        // Shower of 60+ gold coins falling across camera viewport
-        for (let i = 0; i < 65; i++) {
+        // Shower of 22 gold coins falling across camera viewport
+        for (let i = 0; i < 22; i++) {
             const startX = this.camera.x + Math.random() * (this.canvas.width / this.camera.zoom);
-            const startY = this.camera.y - 20 - Math.random() * 80;
+            const startY = this.camera.y - 20 - Math.random() * 60;
             const icon = icons[Math.floor(Math.random() * icons.length)];
             const col = colors[Math.floor(Math.random() * colors.length)];
-            const vx = (Math.random() - 0.5) * 40;
-            const vy = 50 + Math.random() * 70; // Falling down like coin rain
+            const vx = (Math.random() - 0.5) * 30;
+            const vy = 45 + Math.random() * 55;
             this.addParticle(startX, startY, icon, col, vx, vy);
         }
 
         if (this.masterOnaga) {
             this.masterOnaga.speechText = `🎰 ¡¡JACKPOT SUPREMO!! ¡${totalSteps} ENTREGABLES CONSEGUIDOS! 💰`;
             this.masterOnaga.speechTimer = 350;
-            for (let j = 0; j < 15; j++) {
+            for (let j = 0; j < 6; j++) {
                 this.addParticle(this.masterOnaga.currentX, this.masterOnaga.currentY - 30, '👑', '#fde047');
             }
         }
