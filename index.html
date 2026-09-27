@@ -57,6 +57,9 @@
                 <span>🐙 Git Repo</span>
                 <span id="gitBranchBadge" class="git-badge">main</span>
             </button>
+            <button id="openLiveRadarBtn" class="action-btn" style="background:#065f46; border-color:#34d399; color:#a7f3d0;" title="Radar en Vivo: Auditoría web de gocriterio.com, búsqueda en la red y conexión directa con Antigravity">
+                <span>🛰️</span> Radar en Vivo (Web & IAs)
+            </button>
             <button id="openOpsGuideBtn" class="action-btn" style="background:#1e1b4b; border-color:#818cf8; color:#c7d2fe;" title="Aprende cómo poner a trabajar a los agentes y qué necesitan de ti">
                 <span>🚀</span> ¿Cómo Ponerlos a Trabajar?
             </button>
@@ -937,6 +940,9 @@ python run_pipeline.py 4   # Ejecuta Auditoría QA & Sistema de Diseño</pre>
                         <button class="action-btn btn-git" style="flex:1; font-size:10px; padding:6px;" onclick="window.pixelEngine.openGitRepoFromOnaga()">
                             🐙 Cola de IAs & Git (tasks/)
                         </button>
+                        <button class="action-btn" style="flex:1; font-size:10px; padding:6px; background:#065f46; border-color:#34d399; color:#a7f3d0;" onclick="window.liveRadar.openModal()">
+                            🛰️ Radar en Vivo (Web & IAs)
+                        </button>
                     </div>
                 </div>
 
@@ -1136,6 +1142,135 @@ python run_pipeline.py 4   # Ejecuta Auditoría QA & Sistema de Diseño</pre>
         </div>
     </div>
 
+    <!-- Live Radar & Web Intelligence Modal -->
+    <div id="liveRadarModal" class="modal-overlay" style="display:none;">
+        <div class="cult-modal-content" style="max-width: 840px; width: 95%; max-height: 90vh;">
+            <div class="cult-modal-header" style="background: linear-gradient(135deg, #064e3b, #0f172a); border-bottom: 2px solid #10b981;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 26px;">🛰️</span>
+                    <div>
+                        <div style="font-weight: bold; font-size: 14px; color: #a7f3d0; text-transform: uppercase; letter-spacing: 1px;">
+                            Radar en Vivo — Inteligencia Web & Conexión Antigravity
+                        </div>
+                        <div style="font-size: 10px; color: #6ee7b7;">
+                            Auditoría de sitios en tiempo real, búsqueda de mercado y despacho directo de órdenes a IAs
+                        </div>
+                    </div>
+                </div>
+                <button id="closeLiveRadarBtn" class="modal-close" style="color: #a7f3d0;">✕</button>
+            </div>
+
+            <!-- Tab Buttons -->
+            <div style="display: flex; border-bottom: 1px solid #1e293b; background: #0b1120;">
+                <button class="disciplines-tab-btn radar-tab-btn active" data-tab="audit">
+                    ⚡ Auditoría en Vivo (gocriterio.com)
+                </button>
+                <button class="disciplines-tab-btn radar-tab-btn" data-tab="search">
+                    🌐 Búsqueda Web en Tiempo Real
+                </button>
+                <button class="disciplines-tab-btn radar-tab-btn" data-tab="antigravity">
+                    🤖 Puente con Antigravity
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="cult-modal-body" style="padding: 16px; max-height: calc(90vh - 160px); overflow-y: auto;">
+                
+                <!-- Tab 1: Live Audit -->
+                <div id="radarTab_audit" class="radar-tab-view" style="display: block;">
+                    <div style="background: #0f172a; padding: 12px; border-radius: 6px; border: 1px solid #1e293b; margin-bottom: 12px;">
+                        <label style="font-size: 11px; font-weight: bold; color: #cbd5e1; display: block; margin-bottom: 6px;">
+                            🎯 URL del Objetivo a Auditar:
+                        </label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="radarAuditUrlInput" class="chat-input" style="flex: 1;" value="https://gocriterio.com" placeholder="https://...">
+                            <button id="radarRunAuditBtn" class="action-btn" style="background: #047857; border-color: #10b981; color: #ffffff; font-weight: bold; padding: 0 16px;">
+                                <span>🔍</span> AUDITAR AHORA EN VIVO
+                            </button>
+                        </div>
+                        <div style="font-size: 9.5px; color: #94a3b8; margin-top: 6px;">
+                            * El servidor realiza una petición HTTP real, mide la latencia de Netlify, audita el formulario de briefing y verifica el enlace oficial de WhatsApp.
+                        </div>
+                    </div>
+
+                    <div id="radarAuditResults">
+                        <div style="text-align: center; padding: 20px; color: #64748b; font-size: 11px; border: 1px dashed #1e293b; border-radius: 6px;">
+                            Haz clic en <strong>[AUDITAR AHORA EN VIVO]</strong> para escanear gocriterio.com en tiempo real.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Market Search -->
+                <div id="radarTab_search" class="radar-tab-view" style="display: none;">
+                    <div style="background: #0f172a; padding: 12px; border-radius: 6px; border: 1px solid #1e293b; margin-bottom: 12px;">
+                        <label style="font-size: 11px; font-weight: bold; color: #cbd5e1; display: block; margin-bottom: 6px;">
+                            🔎 Consulta de Mercado / Competencia en Vivo:
+                        </label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="radarSearchInput" class="chat-input" style="flex: 1;" value="restaurantes bogota domicilios whatsapp" placeholder="Escribe lo que quieres buscar en la red...">
+                            <button id="radarRunSearchBtn" class="action-btn" style="background: #0284c7; border-color: #38bdf8; color: #ffffff; font-weight: bold; padding: 0 16px;">
+                                <span>🔎</span> BUSCAR EN LA WEB
+                            </button>
+                        </div>
+                        <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px;">
+                            <span class="radar-query-pill" data-query="restaurantes bogota domicilios whatsapp" style="background:#1e293b; color:#cbd5e1; padding:2px 8px; border-radius:12px; font-size:9.5px; cursor:pointer;">💡 Restaurantes Bogotá</span>
+                            <span class="radar-query-pill" data-query="cartas digitales qr bogota restaurantes" style="background:#1e293b; color:#cbd5e1; padding:2px 8px; border-radius:12px; font-size:9.5px; cursor:pointer;">💡 Cartas QR Bogotá</span>
+                            <span class="radar-query-pill" data-query="automatizacion pedidos whatsapp restaurantes" style="background:#1e293b; color:#cbd5e1; padding:2px 8px; border-radius:12px; font-size:9.5px; cursor:pointer;">💡 Automatización WhatsApp</span>
+                            <span class="radar-query-pill" data-query="inteligencia artificial para gastronomia colombia" style="background:#1e293b; color:#cbd5e1; padding:2px 8px; border-radius:12px; font-size:9.5px; cursor:pointer;">💡 IA en Gastronomía</span>
+                        </div>
+                    </div>
+
+                    <div id="radarSearchResults">
+                        <div style="text-align: center; padding: 20px; color: #64748b; font-size: 11px; border: 1px dashed #1e293b; border-radius: 6px;">
+                            Escribe una consulta o elige una píldora táctica para buscar en Google Trends y la Wikipedia.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Antigravity Bridge -->
+                <div id="radarTab_antigravity" class="radar-tab-view" style="display: none;">
+                    <div style="background: #1e1b4b; border: 1px solid #4338ca; border-radius: 6px; padding: 12px; margin-bottom: 12px;">
+                        <div style="font-size: 12px; font-weight: bold; color: #c7d2fe; margin-bottom: 4px;">
+                            🤖 ¿Cómo Funciona la Conexión con Antigravity en Tiempo Real?
+                        </div>
+                        <div style="font-size: 10.5px; color: #e0e7ff; line-height: 1.5;">
+                            1. <strong>Buzón de Órdenes:</strong> Cualquier tarea, auditoría o requerimiento que generes aquí se deposita instantáneamente en <code>tasks/INBOX_ANTIGRAVITY.md</code> y se añade a la cola de trabajo.<br>
+                            2. <strong>Ejecución en Antigravity:</strong> En el chat de Antigravity, escribe: <em>"Antigravity, revisa el buzón de órdenes e implementa los cambios"</em>.<br>
+                            3. <strong>Poder Ilimitado de Antigravity:</strong> Antigravity usa sus herramientas nativas (<code>search_web</code>, <code>read_url_content</code>, <code>run_command</code>, <code>replace_file_content</code>) para buscar información en vivo en toda la web, corregir el código fuente y levantar subagentes especializados.
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-size: 11px; font-weight: bold; color: #cbd5e1; display: block; margin-bottom: 6px;">
+                            📜 Instrucción Directa para Antigravity:
+                        </label>
+                        <textarea id="radarAntigravityOrderInput" class="chat-input" rows="3" style="width: 100%; font-size: 11px;" placeholder="Escribe aquí la orden que quieres transmitirle a Antigravity...">Ejecutar auditoría en gocriterio.com, corregir el formulario de Netlify briefing y configurar el botón oficial de WhatsApp wa.me/573189411010</textarea>
+                    </div>
+
+                    <div style="margin-bottom: 12px;">
+                        <button id="radarDispatchAntigravityBtn" class="action-btn" style="width: 100%; background: #6d28d9; border-color: #a78bfa; font-size: 12px; padding: 10px; font-weight: bold; color: #ffffff;">
+                            <span>🚀</span> TRANSMITIR ORDEN AL BUZÓN DE ANTIGRAVITY (tasks/INBOX_ANTIGRAVITY.md)
+                        </button>
+                    </div>
+
+                    <div id="radarInboxStatusBox" style="background: #090d16; border: 1px solid #1e293b; border-radius: 4px; padding: 10px;">
+                        <div style="color: #64748b; font-size: 10px;">Cargando estado del buzón...</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="cult-modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="font-size: 10px; color: #64748b;">
+                    🛰️ Conectado a Servidor Local Python (<code>localhost:8080/api/agent/*</code>)
+                </div>
+                <button class="cult-action-btn btn-close" onclick="window.liveRadar.closeModal()">
+                    ✕ Cerrar Radar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Embedded Data (Ensures 100% immediate load offline, with file:// and with http://) -->
     <script src="js/taskforce_data.js"></script>
     <script src="js/agents_data.js"></script>
@@ -1150,6 +1285,7 @@ python run_pipeline.py 4   # Ejecuta Auditoría QA & Sistema de Diseño</pre>
     <script src="js/git_connector.js"></script>
     <script src="js/bottleneck_detector.js"></script>
     <script src="js/daily_reporter.js"></script>
+    <script src="js/live_radar.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

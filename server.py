@@ -8,6 +8,7 @@ import datetime
 import re
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from socketserver import ThreadingMixIn
+import live_engine
 
 # Fix Windows console encoding for UTF-8
 if sys.platform == 'win32':
@@ -404,6 +405,37 @@ class PixelAgencyHandler(SimpleHTTPRequestHandler):
             })
             return
 
+        elif url_path == '/api/agent/live_status':
+            cfg = load_repo_config()
+            repo_path = cfg.get("repo_path", BASE_DIR)
+            report_path = os.path.join(repo_path, "tasks", "LIVE_RESEARCH_REPORT.md")
+            inbox_path = os.path.join(repo_path, "tasks", "INBOX_ANTIGRAVITY.md")
+            
+            report_content = ""
+            if os.path.exists(report_path):
+                try:
+                    with open(report_path, "r", encoding="utf-8") as rf:
+                        report_content = rf.read()
+                except Exception:
+                    pass
+
+            inbox_content = ""
+            if os.path.exists(inbox_path):
+                try:
+                    with open(inbox_path, "r", encoding="utf-8") as ibf:
+                        inbox_content = ibf.read()
+                except Exception:
+                    pass
+
+            self.send_json_response({
+                "has_live_report": bool(report_content),
+                "live_report": report_content,
+                "has_active_inbox": bool(inbox_content),
+                "inbox_content": inbox_content,
+                "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            })
+            return
+
         super().do_GET()
 
     def do_POST(self):
@@ -676,6 +708,95 @@ Por favor, analiza la base de código, ejecuta las acciones pertinentes y report
                 "success": True,
                 "filename": filename,
                 "path": f"tasks/{filename}"
+            })
+            return
+
+        elif url_path == '/api/agent/run_live':
+            cfg = load_repo_config()
+            repo_path = cfg.get("repo_path", BASE_DIR)
+            action = req_data.get("action", "audit_site")
+            agent_id = req_data.get("agent_id", "agent-radar-live")
+            agent_name = req_data.get("agent_name", "Especialista Radar en Vivo")
+            
+            result_payload = {}
+            md_to_save = ""
+            report_title = "Reporte de Inteligencia en Vivo"
+            
+            if action == 'audit_site':
+                target_url = req_data.get("url", "https://gocriterio.com")
+                audit_res = live_engine.audit_target_site(target_url)
+                result_payload = audit_res
+                md_to_save = audit_res.get("markdown_report", "")
+                report_title = f"Auditoría Técnica en Vivo — {target_url}"
+                
+            elif action == 'market_search':
+                query = req_data.get("query", "restaurantes bogota domicilios whatsapp")
+                search_res = live_engine.live_market_search(query)
+                result_payload = search_res
+                md_to_save = search_res.get("markdown_report", "")
+                report_title = f"Inteligencia de Mercado en Vivo — {query}"
+                
+            elif action == 'dispatch_antigravity':
+                task_content = req_data.get("content", "").strip() or "Ejecutar auditoría e implementar mejoras en gocriterio.com"
+                order_res = req_data.get("order", task_content)
+                now_human = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                task_id = f"TASK-ANTIGRAVITY-{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}"
+                
+                inbox_md = f"""# 🚀 TAREA EN VIVO DESPACHADA A ANTIGRAVITY
+> **Emisor:** {agent_name} ({agent_id})
+> **Receptor:** Antigravity (AI Senior Pair Programmer)
+> **Fecha:** {now_human}
+> **Estado:** 🟡 PENDIENTE DE RESOLUCIÓN POR ANTIGRAVITY
+
+---
+
+## 🎯 Instrucción / Misión:
+> ### "{order_res}"
+
+---
+
+## 📋 Contexto y Hallazgos Previos:
+{task_content}
+
+---
+*Transmitido en tiempo real desde la Oficina Virtual de Criterio AI.*
+"""
+                tasks_dir = os.path.join(repo_path, "tasks")
+                os.makedirs(tasks_dir, exist_ok=True)
+                with open(os.path.join(tasks_dir, "INBOX_ANTIGRAVITY.md"), "w", encoding="utf-8") as ibf:
+                    ibf.write(inbox_md)
+                
+                result_payload = {
+                    "success": True,
+                    "task_id": task_id,
+                    "dispatched": True,
+                    "inbox_file": "tasks/INBOX_ANTIGRAVITY.md",
+                    "instruction": order_res
+                }
+                md_to_save = inbox_md
+                report_title = f"Despacho Antigravity — {order_res[:40]}"
+            
+            # Save deliverable if we have markdown
+            files_saved = None
+            if md_to_save:
+                files_saved = live_engine.save_live_report_to_tasks(
+                    repo_path=repo_path,
+                    report_title=report_title,
+                    md_content=md_to_save,
+                    agent_name=agent_name
+                )
+                update_execution_queue(repo_path)
+                
+                if cfg.get("auto_commit", True):
+                    run_git(["add", "tasks/", "AI_EXECUTION_QUEUE.md"], cwd=repo_path)
+                    run_git(["commit", "-m", f"feat(live-radar): {report_title[:50]}"], cwd=repo_path)
+
+            self.send_json_response({
+                "success": True,
+                "action": action,
+                "data": result_payload,
+                "saved_files": files_saved,
+                "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             })
             return
 
