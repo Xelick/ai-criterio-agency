@@ -1,6 +1,6 @@
 # 🤖 Criterio AI — Cola Maestra de Ejecución de Tareas para IAs
 > **Fuente:** Cuartel General Pixel Art (296 Agentes Autónomos)
-> **Última Actualización:** 2026-09-26 20:48:46
+> **Última Actualización:** 2026-09-26 20:50:25
 > **Misión Activa:** Criterio AI Sprint
 
 Este repositorio contiene las tareas y especificaciones generadas por el equipo de especialistas para ser ejecutadas por IAs de codificación (**Cursor**, **Claude Code**, **Antigravity**, **GitHub Copilot CLI**).
@@ -93,6 +93,7 @@ Este repositorio contiene las tareas y especificaciones generadas por el equipo 
 | 🟡 PENDIENTE | `TASK-20260926-07-marketing-book-co-author` | **Book Co-Author** | [Growth & Campañas] Book Co-Author: Adquisición & Viralidad en Redes | [Ver Tarea](tasks/TASK-20260926-07-marketing-book-co-author.md) |
 | 🟡 PENDIENTE | `TASK-20260926-08-marketing-carousel-growth-engine` | **Carousel Growth Engine** | [Marketing & Growth] Diseño de narrativa 'Hoy vs. con Criterio' para redes sociales | [Ver Tarea](tasks/TASK-20260926-08-marketing-carousel-growth-engine.md) |
 | 🟡 PENDIENTE | `TASK-LIVE-20260926-204846` | **Especialista Radar en Vivo** | Auditoría Técnica en Vivo — https://gocriterio.com | [Ver Tarea](tasks/TASK-LIVE-20260926-204846.md) |
+| 🟡 PENDIENTE | `TASK-LIVE-20260926-205025` | **Especialista Radar en Vivo** | Inteligencia de Mercado en Vivo — restaurantes bogota | [Ver Tarea](tasks/TASK-LIVE-20260926-205025.md) |
 | 🟡 PENDIENTE | `TASK-ONAGA-20260926-011652` | **Gran Patriarca Onaga** | Orden Suprema de Onaga: Cumplir Sprint de 14 días y desbloquear gocriterio.com | [Ver Tarea](tasks/TASK_ONAGA_ACTIVE_ORDER.md) |
 
 ---

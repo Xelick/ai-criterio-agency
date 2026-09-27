@@ -1,29 +1,35 @@
-# 🛰️ Auditoría Técnica en Vivo — https://gocriterio.com
-> **Fecha:** 2026-09-26 20:48:46 | **Servidor:** Netlify | **Latencia:** 376.0ms
-> **Salud del Sitio:** 65/100 🔴 CRÍTICO
+# 🌐 Inteligencia de Mercado en Vivo — "restaurantes bogota"
+> **Fecha:** 2026-09-26 20:50:25 | **Tiempo de Respuesta:** 593.0ms
+> **Motor:** Google Trends & Wikipedia Knowledge Graph
 
 ---
 
-## 📊 Métricas Principales
-- **URL Auditada:** `https://gocriterio.com`
-- **Código HTTP:** `200 OK`
-- **Tiempo de Carga:** `376.0 ms`
-- **Tamaño HTML:** `23015 bytes`
-- **Título de la Página:** *Criterio AI — Consulting*
-- **Formularios Detectados:** `0`
-- **Enlaces WhatsApp Encontrados:** `0`
+## 📈 Intenciones de Búsqueda Reales (Google Search)
+Las búsquedas más frecuentes relacionadas con este objetivo son:
+- 🔍 **restaurantes bogota para cumpleaÃ±os**
+- 🔍 **restaurantes bogota mejor valorados**
+- 🔍 **restaurantes bogota norte**
+- 🔍 **restaurantes bogota carnes**
+- 🔍 **restaurantes bogota elegantes**
+- 🔍 **restaurantes bogota zona t**
+- 🔍 **restaurantes bogota centro**
+- 🔍 **restaurantes bogota 24 horas**
 
 ---
 
-## ⚠️ Hallazgos y Bloqueos Identificados
-- 🔴 **No se detectó enlace directo a WhatsApp en el HTML principal**
-- 🔴 **Formulario Netlify de briefing no detectado en el DOM estático**
+## 📚 Base de Conocimiento y Artículos de Contexto
+### 📌 [Turismo en Bogotá](https://es.wikipedia.org/wiki/Turismo%20en%20Bogot%C3%A1)
+Bogotá "Restaurantes en Bogotá - Zona M - La Macarena" Consultado en enero de 2011. Museos y galerías de Bogotá Parques de Bogotá Historia de Bogotá Turismo...
+### 📌 [Atentado en Zona Rosa de Bogotá de 2003](https://es.wikipedia.org/wiki/Atentado%20en%20Zona%20Rosa%20de%20Bogot%C3%A1%20de%202003)
+indiscriminadamente granadas de fragmentación en los restaurantes Bogotá Beer Company y al Restaurante Palos de Moguer, al parecer el blanco eran unos ciudadanos...
+### 📌 [Bogotá](https://es.wikipedia.org/wiki/Bogot%C3%A1)
+Bogotá, oficialmente Bogotá, Distrito Capital​​ (antiguamente conocida como Santafé de Bogotá),​​ es la capital de la República de Colombia y del departamento...
+### 📌 [La Macarena (Bogotá)](https://es.wikipedia.org/wiki/La%20Macarena%20%28Bogot%C3%A1%29)
+Bogotatravelguide.com "Restaurantes en Bogotá - Zona M - La Macarena" Consultado en enero de 2011. Turismo en Bogotá Alberto Escovar, Guía Bogotá Centro, Guías...
 
 ---
 
-## 🛠️ Recomendaciones de Ejecución Inmediata
-- ⚡ Añadir botón flotante de WhatsApp hacia wa.me/573189411010
-- ⚡ Incluir <form name='briefing' method='POST' data-netlify='true'> oculto para prerender de Netlify
-
----
-*Reporte generado por el Radar en Vivo de la Oficina Virtual.*
+## 💡 Oportunidad Táctica para Criterio AI
+- **Foco Territorial:** Bogotá (Chapinero, Usaquén, Zona G, Zona T).
+- **Canal de Conversión Predilecto:** WhatsApp Business con catálogos dinámicos sin intermediarios de 30% de comisión.
+- **Diferenciador Tecnológico:** Respuestas en tiempo real con agentes de IA entrenados en la carta del restaurante.
