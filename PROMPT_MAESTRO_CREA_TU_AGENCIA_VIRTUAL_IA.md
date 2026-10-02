@@ -1,7 +1,15 @@
 # ⚡ PROMPT MAESTRO & PLANTILLA UNIVERSAL: CREA TU PROPIA AGENCIA VIRTUAL DE AGENTES DE IA
 
-> **Propósito:** Plantilla lista para copiar y pegar en cualquier IA (**Antigravity**, **Cursor**, **Claude Code**, **ChatGPT**) para que construya un **Cuartel General Virtual en Pixel Art** con agentes autónomos, detector de cuellos de botella, radar web en vivo y conector Git adaptado a **tu propia empresa y problema**.
+> **Repositorio Base Original:** [The Agency (GitHub: msitarzewski/agency-agents)](https://github.com/msitarzewski/agency-agents) · [Sitio Oficial & App](https://agencyagents.app)  
+> **Propósito:** Plantilla lista para copiar y pegar en cualquier IA (**Antigravity**, **Cursor**, **Claude Code**, **ChatGPT**) para conectar el catálogo de más de 296 especialistas de **The Agency** en un **Cuartel General Virtual en Pixel Art** con detector de cuellos de botella, radar web en vivo y conector Git adaptado a **tu propia empresa y problema**.  
 > **Formatos Disponibles:** PDF, Word (.docx) y Markdown en Google Drive.
+
+---
+
+## 🎭 0. ¿DE DÓNDE SALE "THE AGENCY"?
+El catálogo de los 296 agentes no es un invento aislado: proviene del proyecto de código abierto **[The Agency](https://github.com/msitarzewski/agency-agents)** creado por `@msitarzewski`.
+- Es una colección de más de 296 personalidades y roles especializados de IA probados en producción (ingeniería, diseño, marketing, ventas, seguridad, etc.).
+- Nuestra capa añade el motor visual Pixel Art, la orquestación en pisos, la detección automática de cuellos de botella y la conexión con IAs de código.
 
 ---
 
@@ -26,7 +34,7 @@ Antes de copiar el prompt, rellena mentalmente o reemplaza los siguientes corche
 ```text
 Actúa como Arquitecto de Software Senior y Diseñador de Sistemas Agénticos.
 
-Tu misión es construir desde cero un Cuartel General de Agencia Virtual Gamificado en Pixel Art (Canvas 2D HTML5 a 60 FPS) impulsado por un equipo de [NUMERO_DE_AGENTES] agentes de IA autónomos, diseñado específicamente para mi empresa:
+Tu misión es tomar como base el catálogo de especialistas de "The Agency" (https://github.com/msitarzewski/agency-agents) y construir desde cero un Cuartel General de Agencia Virtual Gamificado en Pixel Art (Canvas 2D HTML5 a 60 FPS) impulsado por un equipo de [NUMERO_DE_AGENTES] agentes de IA autónomos, diseñado específicamente para mi empresa:
 
 ================ DATOS DE MI EMPRESA ================
 • Empresa: [NOMBRE_DE_TU_EMPRESA]
